@@ -1,0 +1,146 @@
+.site-shell {
+  max-width: 980px;
+  margin: 32px auto;
+  padding: 20px;
+  display: grid;
+  gap: 22px;
+}
+
+.hero,
+.details,
+.story,
+.gallery,
+.rsvp,
+.photo-band {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+
+.hero {
+  padding: 56px 24px;
+  text-align: center;
+  background-image: radial-gradient(circle at top right, #f7efe2 0, transparent 40%),
+    radial-gradient(circle at bottom left, #f1e7db 0, transparent 35%);
+}
+
+.eyebrow {
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.hero h1 {
+  margin: 12px 0;
+  font-size: clamp(2.2rem, 6vw, 4.2rem);
+}
+
+.date {
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.hero-copy {
+  max-width: 650px;
+  margin: 16px auto 24px;
+}
+
+.cta,
+.secondary {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.cta {
+  color: #fff;
+  background: var(--action);
+}
+
+.secondary {
+  color: var(--heading);
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.cta:hover,
+.secondary:hover {
+  transform: translateY(-1px);
+}
+
+.photo-band {
+  overflow: hidden;
+  max-height: 380px;
+}
+
+.photo-band img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.details {
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.details article {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  background: #fff;
+}
+
+.details h2,
+.story h2,
+.gallery h2,
+.rsvp h2 {
+  margin-top: 0;
+}
+
+.story,
+.gallery,
+.rsvp {
+  padding: 24px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tile {
+  min-height: 130px;
+  border-radius: 14px;
+  border: 1px dashed #c3b4a4;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  background: #fffaf5;
+}
+
+@media (max-width: 760px) {
+  .site-shell {
+    margin: 16px auto;
+    padding: 12px;
+    gap: 14px;
+  }
+
+  .hero {
+    padding: 38px 18px;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+}
