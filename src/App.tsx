@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import heroImg from './assets/hero.png'
+import fallbackHeroImg from './assets/hero.png'
+import { weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
 import './App.css'
 
@@ -34,7 +35,21 @@ function App() {
     return () => window.clearInterval(timer)
   }, [])
 
-  const marqueePhotos = [...siteData.saveTheDate.photos, ...siteData.saveTheDate.photos]
+  const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
+  const venueImage = weddingImages.venue[0]
+  const saveDateItems =
+    weddingImages.saveTheDate.length > 0
+      ? weddingImages.saveTheDate
+      : siteData.saveTheDate.photos
+  const marqueePhotos = [...saveDateItems, ...saveDateItems]
+
+  const getDressImages = (title: string) => {
+    const normalized = title.toLowerCase()
+    if (normalized.includes('ladies')) {
+      return weddingImages.dressLadies
+    }
+    return weddingImages.dressGentlemen
+  }
 
   return (
     <main className="site-shell">
@@ -55,7 +70,7 @@ function App() {
       </section>
 
       <section className="panel photo-band" aria-label="Prenup photo preview">
-        <img src={heroImg} alt="Couple prenup preview" loading="lazy" />
+        <img src={heroImage} alt="Couple prenup preview" loading="lazy" />
       </section>
 
       <section className="panel countdown" id="countdown">
@@ -102,9 +117,18 @@ function App() {
       <section className="panel story" id="story">
         <h2>{siteData.story.title}</h2>
         <div className="story-grid">
-          {siteData.story.chapters.map((chapter) => (
+          {siteData.story.chapters.map((chapter, index) => (
             <article key={chapter.title} className="story-card">
-              <div className="placeholder-img">{chapter.imageLabel}</div>
+              {weddingImages.story.length > 0 ? (
+                <img
+                  src={weddingImages.story[index % weddingImages.story.length]}
+                  alt={chapter.title}
+                  className="story-photo"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="placeholder-img">{chapter.imageLabel}</div>
+              )}
               <div>
                 <h3>{chapter.title}</h3>
                 <p>{chapter.body}</p>
@@ -132,8 +156,12 @@ function App() {
       <section className="panel dress" id="dress-code">
         <h2>{siteData.dressCode.title}</h2>
         <p>{siteData.dressCode.summary}</p>
-        {siteData.dressCode.sections.map((section) => (
-          <article key={section.title} className="dress-block">
+        {siteData.dressCode.sections.map((section) => {
+          const dressImages = getDressImages(section.title)
+          const sectionSamples = dressImages.length > 0 ? dressImages : section.samples
+
+          return (
+            <article key={section.title} className="dress-block">
             <h3>{section.title}</h3>
             <div className="swatches" aria-label={`${section.title} motif colors`}>
               {section.palette.map((color) => (
@@ -142,14 +170,24 @@ function App() {
             </div>
             <p>{section.note}</p>
             <div className="sample-slider" aria-label={`${section.title} outfit samples`}>
-              {section.samples.map((sample) => (
-                <div className="sample-card" key={sample}>
-                  {sample}
+              {sectionSamples.map((sample, idx) => (
+                <div className="sample-card" key={`${section.title}-${idx}`}>
+                  {dressImages.length > 0 ? (
+                    <img
+                      src={sample}
+                      alt={`${section.title} sample ${idx + 1}`}
+                      className="sample-photo"
+                      loading="lazy"
+                    />
+                  ) : (
+                    sample
+                  )}
                 </div>
               ))}
             </div>
-          </article>
-        ))}
+            </article>
+          )
+        })}
       </section>
 
       <section className="panel venue" id="venue">
@@ -157,7 +195,11 @@ function App() {
         <p className="eyebrow">{siteData.venue.subtitle}</p>
         <h3>{siteData.venue.name}</h3>
         <p>{siteData.venue.address}</p>
-        <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
+        {venueImage ? (
+          <img src={venueImage} alt={siteData.venue.name} className="venue-photo-img" loading="lazy" />
+        ) : (
+          <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
+        )}
         <a href={siteData.venue.mapUrl} target="_blank" rel="noreferrer">
           {siteData.venue.mapLabel}
         </a>
@@ -170,7 +212,16 @@ function App() {
           <div className="marquee-track">
             {marqueePhotos.map((photo, idx) => (
               <div className="marquee-item" key={`${photo}-${idx}`}>
-                {photo}
+                {weddingImages.saveTheDate.length > 0 ? (
+                  <img
+                    src={photo}
+                    alt={`Save the date ${idx + 1}`}
+                    className="marquee-photo"
+                    loading="lazy"
+                  />
+                ) : (
+                  photo
+                )}
               </div>
             ))}
           </div>

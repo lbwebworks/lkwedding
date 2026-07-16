@@ -38,3 +38,23 @@ Deployment pipeline is configured in `.github/workflows/deploy.yml`.
 1. Open repository Settings -> Pages.
 2. Set Source to `GitHub Actions`.
 3. Push to `main`.
+
+## Image Drop Folders (Auto-Loaded)
+
+Drop image files into these folders and the app will automatically pick them up:
+
+- `src/assets/wedding/hero/`
+- `src/assets/wedding/story/`
+- `src/assets/wedding/dress/ladies/`
+- `src/assets/wedding/dress/gentlemen/`
+- `src/assets/wedding/venue/`
+- `src/assets/wedding/save-the-date/`
+
+Supported image types:
+
+- `.png`, `.jpg`, `.jpeg`, `.webp`, `.avif`
+
+Notes:
+
+- Files are loaded in filename order, so you can control sequence with names like `01.jpg`, `02.jpg`, etc.
+- If a folder has no images, the UI falls back to text placeholders.
