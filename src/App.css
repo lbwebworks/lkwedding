@@ -20,8 +20,8 @@
 .hero {
   padding: 56px 24px;
   text-align: center;
-  background-image: radial-gradient(circle at top right, #f7efe2 0, transparent 40%),
-    radial-gradient(circle at bottom left, #f1e7db 0, transparent 35%);
+  background-image: radial-gradient(circle at top right, #e8f1fb 0, transparent 40%),
+    radial-gradient(circle at bottom left, #dbe8f6 0, transparent 35%);
 }
 
 .eyebrow {
@@ -63,7 +63,7 @@
 .secondary {
   color: var(--heading);
   border: 1px solid var(--line);
-  background: #fff;
+  background: #f3f8ff;
 }
 
 .cta:hover,
@@ -93,7 +93,7 @@
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 16px;
-  background: #fff;
+  background: #fdfefe;
 }
 
 .details h2,
@@ -118,11 +118,11 @@
 .tile {
   min-height: 130px;
   border-radius: 14px;
-  border: 1px dashed #c3b4a4;
+  border: 1px dashed #8fa8c4;
   display: grid;
   place-items: center;
   color: var(--muted);
-  background: #fffaf5;
+  background: #edf4fc;
 }
 
 @media (max-width: 760px) {
