@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import fallbackHeroImg from './assets/hero.png'
-import { weddingImages } from './data/imageLibrary'
+import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
 import './App.css'
 
@@ -36,12 +36,48 @@ function App() {
   }, [])
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
-  const venueImage = weddingImages.venue[0]
+  const venueImages = weddingImageEntries.venue
   const saveDateItems =
     weddingImages.saveTheDate.length > 0
       ? weddingImages.saveTheDate
       : siteData.saveTheDate.photos
-  const marqueePhotos = [...saveDateItems, ...saveDateItems]
+  const saveDateCards = [...saveDateItems, ...saveDateItems]
+
+  const getVenuePriority = (fileName: string) => {
+    const lower = fileName.toLowerCase()
+    if (lower.includes('church')) {
+      return 0
+    }
+    if (lower.includes('venue') || lower.includes('reception')) {
+      return 1
+    }
+    return 2
+  }
+
+  const orderedVenueImages = [...venueImages].sort(
+    (a, b) => getVenuePriority(a.fileName) - getVenuePriority(b.fileName),
+  )
+
+  const pickStoryImage = (chapterTitle: string, index: number): string => {
+    if (weddingImageEntries.story.length === 0) {
+      return ''
+    }
+
+    const title = chapterTitle.toLowerCase()
+    const keywords =
+      title.includes('proposal')
+        ? ['proposal']
+        : title.includes('distance')
+          ? ['distance', 'long']
+          : ['coffee', 'meet', 'tim']
+
+    const matched = weddingImageEntries.story.find((entry) => {
+      const lowerFileName = entry.fileName.toLowerCase()
+      return keywords.some((keyword) => lowerFileName.includes(keyword))
+    })
+
+    return matched?.src ?? weddingImageEntries.story[index % weddingImageEntries.story.length].src
+  }
 
   const getDressImages = (title: string) => {
     const normalized = title.toLowerCase()
@@ -69,8 +105,12 @@ function App() {
         </div>
       </section>
 
-      <section className="panel photo-band" aria-label="Prenup photo preview">
-        <img src={heroImage} alt="Couple prenup preview" loading="lazy" />
+      <section
+        className="panel photo-band"
+        aria-label="Prenup photo preview"
+        style={{ backgroundImage: `url(${heroImage})` }}
+      >
+        <div className="photo-band-overlay" aria-hidden="true" />
       </section>
 
       <section className="panel countdown" id="countdown">
@@ -119,9 +159,9 @@ function App() {
         <div className="story-grid">
           {siteData.story.chapters.map((chapter, index) => (
             <article key={chapter.title} className="story-card">
-              {weddingImages.story.length > 0 ? (
+              {weddingImageEntries.story.length > 0 ? (
                 <img
-                  src={weddingImages.story[index % weddingImages.story.length]}
+                  src={pickStoryImage(chapter.title, index)}
                   alt={chapter.title}
                   className="story-photo"
                   loading="lazy"
@@ -195,8 +235,23 @@ function App() {
         <p className="eyebrow">{siteData.venue.subtitle}</p>
         <h3>{siteData.venue.name}</h3>
         <p>{siteData.venue.address}</p>
-        {venueImage ? (
-          <img src={venueImage} alt={siteData.venue.name} className="venue-photo-img" loading="lazy" />
+        {orderedVenueImages.length > 0 ? (
+          <div className="venue-photo-list">
+            {orderedVenueImages.map((entry, index) => {
+              const caption = entry.fileName.toLowerCase().includes('church')
+                ? 'Church'
+                : entry.fileName.toLowerCase().includes('venue')
+                  ? 'Reception Venue'
+                  : `Location ${index + 1}`
+
+              return (
+                <figure key={entry.fileName} className="venue-photo-row">
+                  <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
+                  <figcaption>{caption}</figcaption>
+                </figure>
+              )
+            })}
+          </div>
         ) : (
           <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
         )}
@@ -208,21 +263,21 @@ function App() {
       <section className="panel save-date" id="save-the-date">
         <h2>{siteData.saveTheDate.title}</h2>
         <p>{siteData.saveTheDate.subtitle}</p>
-        <div className="marquee-wrap" aria-label="Save the date gallery">
-          <div className="marquee-track">
-            {marqueePhotos.map((photo, idx) => (
-              <div className="marquee-item" key={`${photo}-${idx}`}>
+        <div className="save-date-slider" aria-label="Save the date gallery">
+          <div className="save-date-track">
+            {saveDateCards.map((photo, idx) => (
+              <article className="save-date-card" key={`${photo}-${idx}`}>
                 {weddingImages.saveTheDate.length > 0 ? (
                   <img
                     src={photo}
                     alt={`Save the date ${idx + 1}`}
-                    className="marquee-photo"
+                    className="save-date-photo"
                     loading="lazy"
                   />
                 ) : (
                   photo
                 )}
-              </div>
+              </article>
             ))}
           </div>
         </div>
