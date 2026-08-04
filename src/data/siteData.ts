@@ -222,27 +222,35 @@ export const siteData: SiteData = {
     groups: [
       {
         title: 'Parents Of The Groom',
-        names: ['Name Placeholder 1', 'Name Placeholder 2'],
+        names: ['Alfredo Budaden', 'Angelina Budaden'],
       },
       {
         title: 'Parents Of The Bride',
-        names: ['Name Placeholder 1', 'Name Placeholder 2'],
+        names: ['Reynaldo Lacza', 'Julieta Lacza'],
+      },
+      {
+        title: 'Male Principal Sponsors',
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Francis DC Alcantara'],
+      },
+      {
+        title: 'Female Principal Sponsors',
+        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
       {
         title: 'Best Man',
-        names: ['Name Placeholder'],
+        names: ['Alfredo Budaden'],
       },
       {
         title: 'Maid Of Honor',
-        names: ['Name Placeholder'],
+        names: ['Krizel Jane Lockhart'],
       },
       {
         title: 'Groomsmen',
-        names: ['Name Placeholder 1', 'Name Placeholder 2', 'Name Placeholder 3'],
+        names: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden', 'Gerald Lucero', 'Rhenish Rhey Sabado', 'John Reynold Villamar', 'Ervin Garcia', 'Jose Rafael Soriaga', 'Jeffrey Lumapag', 'Christian Era Jaime', 'Eagle Mark Jaime'],
       },
       {
         title: 'Bridesmaids',
-        names: ['Name Placeholder 1', 'Name Placeholder 2', 'Name Placeholder 3'],
+        names: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden', 'Claudine Faye Claveria', 'Charlene Mae Claveria', 'Camille Shane Claveria', 'Rosette De Mesa', 'Rosette Ramos', 'Anna Joy Gonzales', 'Coleen Keith Garcia', 'Erin Eliza Yamanaka'],
       },
     ],
   },
