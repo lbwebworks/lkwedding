@@ -49,8 +49,9 @@
 .hero h1 {
   margin: 10px 0 8px;
   font-size: clamp(2.1rem, 6vw, 4.1rem);
-  font-family: var(--font-display);
-  letter-spacing: 0.03em;
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 .hero-subtitle {
@@ -179,6 +180,15 @@ a {
   font-family: var(--font-modern);
 }
 
+.countdown h2,
+.calendar h2,
+.rsvp h2 {
+  font-family: var(--font-modern);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 1.1rem;
+}
+
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
@@ -218,6 +228,19 @@ a {
 .program,
 .save-date {
   font-family: var(--font-reading);
+}
+
+.story h2,
+.program h2,
+.dress h2,
+.venue h2,
+.save-date h2,
+.details h2,
+.faq h2 {
+  font-family: var(--font-elegant);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 1.35rem;
 }
 
 .story-card {
@@ -296,7 +319,23 @@ a {
 .entourage h2,
 .entourage h3 {
   font-family: var(--font-display);
-  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.story-card h3,
+.dress-block h3,
+.info-grid h3,
+.venue h3 {
+  font-family: var(--font-elegant);
+  letter-spacing: 0.04em;
+}
+
+.timeline h3,
+.faq summary,
+.eyebrow,
+.date {
+  font-family: var(--font-modern);
 }
 
 .faq {
@@ -312,8 +351,10 @@ a {
 }
 
 .closing h2 {
-  font-family: var(--font-display);
-  letter-spacing: 0.04em;
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  font-size: clamp(2rem, 5vw, 3.2rem);
 }
 
 .dress-block {
