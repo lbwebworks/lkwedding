@@ -258,10 +258,6 @@ export const siteData: SiteData = {
     title: 'Details',
     items: [
       {
-        title: 'Attire',
-        description: 'Formal/Casual Attire. Motif: Dusty Blue.',
-      },
-      {
         title: 'Parking',
         description: 'Please arrive early to secure parking and avoid delays.',
       },

@@ -511,7 +511,7 @@ a {
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    font-size: 1.02rem;
+    font-size: 0.94rem;
     color: var(--heading);
     margin-bottom: 16px;
   }
@@ -520,6 +520,17 @@ a {
   .panel h2::after {
     content: ' - ';
     color: rgba(167, 191, 216, 0.65);
+  }
+
+  .panel h3 {
+    font-size: 0.82rem;
+    line-height: 1.22;
+  }
+
+  .panel p,
+  .panel li {
+    font-size: 0.78rem;
+    line-height: 1.32;
   }
 
   .eyebrow {
@@ -643,6 +654,17 @@ a {
     color: var(--heading);
   }
 
+  .entourage-grid h3 {
+    font-size: 0.76rem;
+    line-height: 1.2;
+  }
+
+  .entourage-grid p {
+    font-size: 0.74rem;
+    line-height: 1.28;
+    margin: 4px 0;
+  }
+
   .placeholder-img {
     min-height: 136px;
     background: linear-gradient(135deg, #466383, #2d4661);
@@ -730,7 +752,7 @@ a {
   }
 
   .faq summary {
-    font-size: 0.95rem;
+    font-size: 0.84rem;
   }
 
   .closing {
