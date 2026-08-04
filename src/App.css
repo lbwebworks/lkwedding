@@ -110,8 +110,7 @@ a {
   min-height: 320px;
   position: relative;
   background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
+  background-position: top center;
   background-attachment: fixed;
 }
 
