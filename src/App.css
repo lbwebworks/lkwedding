@@ -12,6 +12,7 @@
   border-radius: 0;
   padding: 24px;
   overflow: hidden;
+  font-family: var(--font-reading);
 }
 
 .panel + .panel {
@@ -34,6 +35,7 @@
   text-align: center;
   padding: 54px 24px;
   background-image: linear-gradient(180deg, rgba(135, 168, 203, 0.2), transparent 70%);
+  font-family: var(--font-elegant);
 }
 
 .eyebrow {
@@ -47,11 +49,14 @@
 .hero h1 {
   margin: 10px 0 8px;
   font-size: clamp(2.1rem, 6vw, 4.1rem);
+  font-family: var(--font-display);
+  letter-spacing: 0.03em;
 }
 
 .hero-subtitle {
   color: var(--heading);
   font-style: italic;
+  font-family: var(--font-elegant);
 }
 
 .date {
@@ -83,6 +88,8 @@ a {
   border-radius: 999px;
   padding: 12px 18px;
   transition: transform 0.2s ease;
+  font-family: var(--font-modern);
+  letter-spacing: 0.02em;
 }
 
 .cta {
@@ -156,6 +163,7 @@ a {
   display: block;
   font-size: 1.5rem;
   color: var(--heading);
+  font-family: var(--font-modern);
 }
 
 .count-grid span {
@@ -163,6 +171,12 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
+  font-family: var(--font-modern);
+}
+
+.countdown,
+.calendar {
+  font-family: var(--font-modern);
 }
 
 .calendar-grid {
@@ -198,6 +212,12 @@ a {
 .story-grid {
   display: grid;
   gap: 14px;
+}
+
+.story,
+.program,
+.save-date {
+  font-family: var(--font-reading);
 }
 
 .story-card {
@@ -256,6 +276,44 @@ a {
 .timeline .time {
   color: var(--heading);
   font-weight: 700;
+  font-family: var(--font-modern);
+}
+
+.dress,
+.venue,
+.details {
+  font-family: var(--font-elegant);
+}
+
+.rsvp {
+  font-family: var(--font-modern);
+}
+
+.entourage {
+  font-family: var(--font-modern);
+}
+
+.entourage h2,
+.entourage h3 {
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+.faq {
+  font-family: var(--font-reading);
+}
+
+.faq summary {
+  font-family: var(--font-modern);
+}
+
+.closing {
+  font-family: var(--font-elegant);
+}
+
+.closing h2 {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
 }
 
 .dress-block {
