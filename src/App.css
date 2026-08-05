@@ -489,19 +489,47 @@ a {
 }
 
 .entourage-grid {
+  position: relative;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 12px;
+}
+
+.entourage-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--line);
+  opacity: 0.75;
+  transform: translateX(-0.5px);
 }
 
 .info-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.entourage-grid article,
 .info-grid article {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 12px;
   background: var(--surface-2);
+}
+
+.entourage-grid article {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.entourage-grid article:nth-child(odd) {
+  text-align: right;
+}
+
+.entourage-grid article:nth-child(even) {
+  text-align: left;
 }
 
 .faq details {
@@ -794,11 +822,14 @@ a {
   }
 
   .dress-block,
-  .entourage-grid article,
   .info-grid article,
   .faq details {
     background: var(--surface-2);
     border-color: rgba(120, 147, 174, 0.45);
+  }
+
+  .entourage-grid::before {
+    background: rgba(120, 147, 174, 0.45);
   }
 
   .swatches {
