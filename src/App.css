@@ -1,13 +1,35 @@
 .site-shell {
   max-width: 1020px;
-  margin: 30px auto;
-  padding: 18px;
+  margin: 0 auto;
   display: grid;
-  gap: 18px;
+  gap: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.photo-band-fixed-layer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(1020px, calc(100vw - 36px));
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.photo-band-fixed-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transform: scale(1.06);
+  display: block;
 }
 
 .panel {
-  background: transparent;
+  background: var(--bg);
   border: 0;
   border-radius: 0;
   padding: 24px;
@@ -110,6 +132,7 @@ a {
 }
 
 .photo-band {
+  background: transparent;
   padding: 0;
   overflow: hidden;
   border-radius: 0;
@@ -117,9 +140,11 @@ a {
   height: 50vh;
   min-height: 320px;
   position: relative;
-  background-repeat: no-repeat;
-  background-position: top center;
-  background-attachment: fixed;
+}
+
+.panel.photo-band::before,
+.panel.photo-band + .panel::before {
+  content: none;
 }
 
 .photo-band-overlay {
@@ -555,7 +580,7 @@ a {
 
 .closing {
   text-align: center;
-  background: linear-gradient(180deg, rgba(110, 143, 178, 0.2), transparent);
+  background: var(--bg);
 }
 
 @keyframes marquee {
@@ -568,10 +593,14 @@ a {
 }
 
 @media (max-width: 860px) {
+  .photo-band-fixed-layer {
+    width: calc(100vw - 24px);
+  }
+
   .site-shell {
-    margin: 14px auto;
+    margin: 0 auto 14px;
     padding: 12px;
-    gap: 12px;
+    gap: 0;
   }
 
   .panel {
@@ -610,16 +639,20 @@ a {
 }
 
 @media (max-width: 560px) {
+  .photo-band-fixed-layer {
+    width: min(420px, calc(100vw - 16px));
+  }
+
   .site-shell {
     max-width: 420px;
-    margin: 8px auto;
+    margin: 0 auto 8px;
     padding: 8px;
-    gap: 8px;
+    gap: 0;
   }
 
   .panel {
     padding: 22px 16px;
-    background: transparent;
+    background: var(--bg);
     border: 0;
     border-radius: 0;
   }
@@ -707,7 +740,7 @@ a {
 
   .photo-band {
     height: 50vh;
-    background-attachment: fixed;
+    background: transparent;
   }
 
   .count-grid {
@@ -887,7 +920,7 @@ a {
 
   .closing {
     text-align: center;
-    background: linear-gradient(180deg, rgba(110, 143, 178, 0.25), transparent 80%);
+    background: var(--bg);
   }
 }
 

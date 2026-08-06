@@ -88,7 +88,12 @@ function App() {
   }
 
   return (
-    <main className="site-shell">
+    <>
+      <div className="photo-band-fixed-layer" aria-hidden="true">
+        <img src={heroImage} alt="" className="photo-band-fixed-image" />
+      </div>
+
+      <main className="site-shell">
       <section className="panel hero" id="home">
         <p className="eyebrow">{siteData.hero.eyebrow}</p>
         <h1>{siteData.hero.title}</h1>
@@ -105,11 +110,7 @@ function App() {
         </div>
       </section>
 
-      <section
-        className="panel photo-band"
-        aria-label="Prenup photo preview"
-        style={{ backgroundImage: `url(${heroImage})` }}
-      >
+      <section className="panel photo-band" aria-label="Prenup photo preview">
         <div className="photo-band-overlay" aria-hidden="true" />
       </section>
 
@@ -339,7 +340,8 @@ function App() {
         <h2>{siteData.footer.names}</h2>
         <p>{siteData.hero.date}</p>
       </section>
-    </main>
+      </main>
+    </>
   )
 }
 
