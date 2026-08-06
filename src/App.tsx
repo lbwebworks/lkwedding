@@ -83,14 +83,6 @@ function App() {
     return matched?.src ?? weddingImageEntries.story[index % weddingImageEntries.story.length].src
   }
 
-  const getDressImages = (title: string) => {
-    const normalized = title.toLowerCase()
-    if (normalized.includes('ladies')) {
-      return weddingImages.dressLadies
-    }
-    return weddingImages.dressGentlemen
-  }
-
   return (
     <>
       <div className="photo-band-fixed-layer" aria-hidden="true">
