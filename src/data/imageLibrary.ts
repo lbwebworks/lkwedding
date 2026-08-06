@@ -49,5 +49,7 @@ export const weddingImages = {
 
 export const weddingImageEntries = {
   story: pickFolderEntries('story'),
+  dressLadies: pickFolderEntries('dress/ladies'),
+  dressGentlemen: pickFolderEntries('dress/gentlemen'),
   venue: pickFolderEntries('venue'),
 }

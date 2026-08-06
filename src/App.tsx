@@ -37,6 +37,10 @@ function App() {
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
   const venueImages = weddingImageEntries.venue
+  const dressImageEntries = {
+    Ladies: weddingImageEntries.dressLadies,
+    Gentlemen: weddingImageEntries.dressGentlemen,
+  }
   const saveDateItems =
     weddingImages.saveTheDate.length > 0
       ? weddingImages.saveTheDate
@@ -198,34 +202,50 @@ function App() {
         <h2>{siteData.dressCode.title}</h2>
         <p>{siteData.dressCode.summary}</p>
         {siteData.dressCode.sections.map((section) => {
-          const dressImages = getDressImages(section.title)
-          const sectionSamples = dressImages.length > 0 ? dressImages : section.samples
+          const sectionDressEntries = dressImageEntries[section.title as keyof typeof dressImageEntries] ?? []
+          const formalEntry =
+            sectionDressEntries.find((entry) => entry.fileName.toLowerCase().includes('formal')) ??
+            sectionDressEntries[0]
+          const casualEntries = sectionDressEntries.filter((entry) => entry.fileName.toLowerCase().includes('casual'))
+          const fallbackSamples = section.samples.map((sample) => ({ src: sample, fileName: sample }))
+          const casualSampleEntries = casualEntries.length > 0 ? casualEntries : fallbackSamples
 
           return (
-            <article key={section.title} className="dress-block">
-            <h3>{section.title}</h3>
-            <div className="swatches" aria-label={`${section.title} motif colors`}>
-              {section.palette.map((color) => (
-                <span key={color} style={{ background: color }} />
-              ))}
-            </div>
-            <p>{section.note}</p>
-            <div className="sample-slider" aria-label={`${section.title} outfit samples`}>
-              {sectionSamples.map((sample, idx) => (
-                <div className="sample-card" key={`${section.title}-${idx}`}>
-                  {dressImages.length > 0 ? (
+            <article key={section.title} className={`dress-block dress-block--${section.title.toLowerCase()}`}>
+              <h3>{section.title}</h3>
+              <div className="swatches" aria-label={`${section.title} motif colors`}>
+                {section.palette.map((color) => (
+                  <span key={color} style={{ background: color }} />
+                ))}
+              </div>
+              <p>{section.note}</p>
+              <div className="dress-layout" aria-label={`${section.title} outfit samples`}>
+                <figure className="sample-card sample-card--formal">
+                  {formalEntry ? (
                     <img
-                      src={sample}
-                      alt={`${section.title} sample ${idx + 1}`}
+                      src={formalEntry.src}
+                      alt={`${section.title} formal sample`}
                       className="sample-photo"
                       loading="lazy"
                     />
                   ) : (
-                    sample
+                    <span>{section.samples[0]}</span>
                   )}
+                </figure>
+
+                <div className="sample-stack">
+                  {casualSampleEntries.slice(0, 2).map((sample, idx) => (
+                    <figure className="sample-card sample-card--casual" key={`${section.title}-${sample.fileName}-${idx}`}>
+                      <img
+                        src={sample.src}
+                        alt={`${section.title} casual sample ${idx + 1}`}
+                        className="sample-photo"
+                        loading="lazy"
+                      />
+                    </figure>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
             </article>
           )
         })}
@@ -236,26 +256,43 @@ function App() {
         <p className="eyebrow">{siteData.venue.subtitle}</p>
         <h3>{siteData.venue.name}</h3>
         <p>{siteData.venue.address}</p>
-        {orderedVenueImages.length > 0 ? (
-          <div className="venue-photo-list">
-            {orderedVenueImages.map((entry, index) => {
-              const caption = entry.fileName.toLowerCase().includes('church')
-                ? 'Church'
-                : entry.fileName.toLowerCase().includes('venue')
-                  ? 'Reception Venue'
-                  : `Location ${index + 1}`
+        <div className="venue-location-list" aria-label="Wedding venue maps">
+          {siteData.venue.locations.map((location, index) => {
+            const entry = orderedVenueImages[index]
+            const caption = location.title
+            const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`
+            const externalUrl = location.mapUrl
 
-              return (
-                <figure key={entry.fileName} className="venue-photo-row">
-                  <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
-                  <figcaption>{caption}</figcaption>
-                </figure>
-              )
-            })}
-          </div>
-        ) : (
-          <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
-        )}
+            return (
+              <article className="venue-location-card" key={location.title}>
+                <h4>{location.title}</h4>
+                <div className="venue-location-content">
+                  {entry ? (
+                    <figure className="venue-photo-row venue-photo-row--paired">
+                      <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
+                      <figcaption>{caption}</figcaption>
+                    </figure>
+                  ) : (
+                    <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
+                  )}
+
+                  <div className="venue-map-frame">
+                    <iframe
+                      title={`${location.title} map`}
+                      src={embedUrl}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      allowFullScreen
+                    />
+                  </div>
+                </div>
+                <a href={externalUrl} target="_blank" rel="noreferrer">
+                  {location.linkLabel}
+                </a>
+              </article>
+            )
+          })}
+        </div>
         <a href={siteData.venue.mapUrl} target="_blank" rel="noreferrer">
           {siteData.venue.mapLabel}
         </a>

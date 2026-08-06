@@ -45,7 +45,12 @@ export type SiteData = {
     subtitle: string
     name: string
     address: string
-    mapUrl: string
+    locations: Array<{
+      title: string
+      query: string
+      linkLabel: string
+      mapUrl: string
+    }>
     mapLabel: string
     photoLabel: string
   }
@@ -190,7 +195,20 @@ export const siteData: SiteData = {
     subtitle: 'Ceremony And Reception',
     name: 'Iglesia Ni Cristo [Pampanga West] - Guagua / Casa Agustin Resort',
     address: 'Purok 1, Betis, Guagua, Pampanga, 2003',
-    mapUrl: 'https://maps.app.goo.gl/REeGgoan8pzyj46K8',
+    locations: [
+      {
+        title: 'Church',
+        query: 'Iglesia Ni Cristo [Pampanga West] - Guagua, Purok 1, Betis, Guagua, Pampanga, Philippines',
+        linkLabel: 'Open Church Map',
+        mapUrl: 'https://maps.app.goo.gl/Xt4SoRauhdvY3Xra8',
+      },
+      {
+        title: 'Reception',
+        query: 'Casa Agustin Resort, Guagua, Pampanga, Philippines',
+        linkLabel: 'Open Reception Map',
+        mapUrl: 'https://maps.app.goo.gl/REeGgoan8pzyj46K8',
+      },
+    ],
     mapLabel: 'View On Map',
     photoLabel: 'Venue Photo Placeholder',
   },
