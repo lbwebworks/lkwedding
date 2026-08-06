@@ -273,13 +273,12 @@ a {
 }
 
 .story-card {
-  border: 1px solid var(--line);
   border-radius: 12px;
   display: grid;
   gap: 12px;
   padding: 12px;
   grid-template-columns: 190px 1fr;
-  background: var(--surface-2);
+  background: transparent;
 }
 
 .story-card h3,
@@ -387,11 +386,11 @@ a {
 }
 
 .dress-block {
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  border: 0;
+  border-radius: 0;
   padding: 12px;
   margin-top: 12px;
-  background: var(--surface-2);
+  background: transparent;
 }
 
 .swatches {
@@ -478,11 +477,12 @@ a {
 
 .venue-photo-row figcaption {
   margin-top: 6px;
-  text-align: center;
+  text-align: left;
   color: var(--muted);
   font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  line-height: 1.45;
 }
 
 .venue-location-list {
@@ -501,6 +501,10 @@ a {
   color: var(--heading);
   font-family: var(--font-elegant);
   letter-spacing: 0.04em;
+}
+
+.venue-location-card > a {
+  justify-self: start;
 }
 
 .venue-location-content {
@@ -881,18 +885,16 @@ a {
 
   .story-card {
     grid-template-columns: 1fr;
-    background: var(--surface-2);
-    border-color: rgba(120, 147, 174, 0.45);
+    background: transparent;
     padding: 10px;
   }
 
   .story-card > div {
-    background: rgba(8, 16, 27, 0.72);
-    border: 1px solid rgba(167, 191, 216, 0.2);
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 8px 18px rgba(4, 10, 18, 0.35);
-    backdrop-filter: blur(2px);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   .story-card h3,

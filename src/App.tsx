@@ -253,14 +253,10 @@ function App() {
 
       <section className="panel venue" id="venue">
         <h2>{siteData.venue.title}</h2>
-        <p className="eyebrow">{siteData.venue.subtitle}</p>
-        <h3>{siteData.venue.name}</h3>
-        <p>{siteData.venue.address}</p>
         <div className="venue-location-list" aria-label="Wedding venue maps">
           {siteData.venue.locations.map((location, index) => {
             const entry = orderedVenueImages[index]
             const caption = location.title
-            const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`
             const externalUrl = location.mapUrl
 
             return (
@@ -270,7 +266,7 @@ function App() {
                   {entry ? (
                     <figure className="venue-photo-row venue-photo-row--paired">
                       <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
-                      <figcaption>{caption}</figcaption>
+                      <figcaption>{location.query}</figcaption>
                     </figure>
                   ) : (
                     <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
@@ -279,7 +275,7 @@ function App() {
                   <div className="venue-map-frame">
                     <iframe
                       title={`${location.title} map`}
-                      src={embedUrl}
+                      src={`https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`}
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       allowFullScreen
@@ -293,9 +289,6 @@ function App() {
             )
           })}
         </div>
-        <a href={siteData.venue.mapUrl} target="_blank" rel="noreferrer">
-          {siteData.venue.mapLabel}
-        </a>
       </section>
 
       <section className="panel save-date" id="save-the-date">

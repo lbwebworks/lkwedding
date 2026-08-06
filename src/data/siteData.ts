@@ -198,7 +198,7 @@ export const siteData: SiteData = {
     locations: [
       {
         title: 'Church',
-        query: 'Iglesia Ni Cristo [Pampanga West] - Guagua, Purok 1, Betis, Guagua, Pampanga, Philippines',
+        query: 'Iglesia Ni Cristo [Pampanga West] - Guagua, Purok 1, Betis, Guagua, Pampanga 2003, Philippines',
         linkLabel: 'Open Church Map',
         mapUrl: 'https://maps.app.goo.gl/Xt4SoRauhdvY3Xra8',
       },
