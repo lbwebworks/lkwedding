@@ -88,7 +88,7 @@ export type SiteData = {
     title: string
     items: Array<{
       question: string
-      answer: string
+      answer: string[]
     }>
   }
   footer: {
@@ -286,20 +286,51 @@ export const siteData: SiteData = {
     title: 'Frequently Asked Questions',
     items: [
       {
-        question: 'Is the dress code strictly required?',
-        answer: 'Yes, we kindly request guests to follow the motif and formal/casual guidance.',
+        question: '🚗 Is parking available at the venue?',
+        answer: [
+          'Yes. There is ample parking available at the venue for all our guests.',
+          'Our coordinators and venue staff will also be there to assist if needed.',
+        ],
       },
       {
-        question: 'Can I bring a plus one?',
-        answer: 'Please refer to your invitation details and RSVP form for guest count allowance.',
+        question: '👥 May I bring a "Plus One"?',
+        answer: [
+          "As much as we'd love to celebrate with everyone, we have carefully planned our guest list due to venue capacity.",
+          'Kindly refer to your invitation to see the number of seats reserved for you.',
+          'We respectfully ask that only those whose names appear on our guest list attend the celebration. We truly appreciate your understanding and cooperation.',
+        ],
       },
       {
-        question: 'What time should I arrive?',
-        answer: 'Please arrive at least 30 minutes before the ceremony starts.',
+        question: '📸 Can I take photos or videos during the ceremony?',
+        answer: [
+          'We kindly ask everyone to keep our wedding ceremony unplugged and camera-free.',
+          'Please allow our professional photographers and videographers to capture these once-in-a-lifetime moments while you simply enjoy being present with us.',
+          "Don't worry - our reception is the perfect time to take all the photos and videos you'd like!",
+          "We can't wait to celebrate and make memories with all of you. Don't forget to share your photos using our official hashtags: #ExclusiveLEEforKISH #ALoveLEEKiSH #FinalLEEmayKISHtheBride",
+        ],
       },
       {
-        question: 'Where can I confirm attendance?',
-        answer: 'You can confirm through our RSVP form once the link is published.',
+        question: '🪑 Can I sit anywhere during the reception?',
+        answer: [
+          "To help everyone have the best experience, we've carefully arranged the seating plan with family groups, friendships, and everyone's comfort in mind.",
+          'Upon arrival, our coordinators will gladly assist you in finding your designated table and seat after registration.',
+          'We kindly ask everyone to remain in their assigned seats throughout the program. Thank you for helping us make the celebration organized and enjoyable for everyone!',
+        ],
+      },
+      {
+        question: '⏰ What time should I arrive?',
+        answer: [
+          'We recommend arriving 30 minutes before the ceremony to allow enough time for registration and seating.',
+          'We would love for everyone to be seated before the bridal procession begins.',
+        ],
+      },
+      {
+        question: '👗 Is there a dress code?',
+        answer: [
+          'Yes! We kindly request our guests to wear semi-formal attire in shades of dusty blue to complement our wedding motif.',
+          'We also ask everyone to avoid wearing white, ivory, or cream.',
+          'Thank you for helping us make our special day even more beautiful! 💙',
+        ],
       },
     ],
   },
