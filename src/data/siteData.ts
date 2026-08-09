@@ -49,6 +49,7 @@ export type SiteData = {
       title: string
       query: string
       linkLabel: string
+      mapEmbedUrl: string
       mapUrl: string
     }>
     mapLabel: string
@@ -200,13 +201,17 @@ export const siteData: SiteData = {
         title: 'Church',
         query: 'Iglesia Ni Cristo [Pampanga West] - Guagua, Purok 1, Betis, Guagua, Pampanga 2003, Philippines',
         linkLabel: 'Open Church Map',
-        mapUrl: 'https://maps.app.goo.gl/Xt4SoRauhdvY3Xra8',
+        mapEmbedUrl: 'https://www.google.com/maps?output=embed&q=14.9640171,120.6302814&z=17',
+        mapUrl:
+          'https://www.google.com/maps/place/Iglesia+Ni+Cristo+[Pampanga+West]+-+Guagua/@14.9678971,120.6275269,14.83z/data=!4m7!3m6!1s0x339658cfe88ebe85:0x51f20d9a0d9573dc!8m2!3d14.9640171!4d120.6302814!15sCllJZ2xlc2lhIE5pIENyaXN0byBbUGFtcGFuZ2EgV2VzdF0gLSBHdWFndWEsIFB1cm9rIDEsIEJldGlzLCBHdWFndWEsIFBhbXBhbmdhLCBQaGlsaXBwaW5lcyIDiAEBkgEQcGxhY2Vfb2Zfd29yc2hpcOABAA!16s/g/1thfbzm2?entry=ttu',
       },
       {
         title: 'Reception',
         query: 'Casa Agustin Resort, Guagua, Pampanga, Philippines',
         linkLabel: 'Open Reception Map',
-        mapUrl: 'https://maps.app.goo.gl/REeGgoan8pzyj46K8',
+        mapEmbedUrl: 'https://www.google.com/maps?output=embed&q=14.9726755,120.6372336&z=17',
+        mapUrl:
+          'https://www.google.com/maps/place/Casa+Agustin+Resort/@14.9725913,120.6372537,18.94z/data=!4m6!3m5!1s0x3396594ee33bce89:0x3c4c4e21af795a53!8m2!3d14.9726755!4d120.6372336!16s/g/11rwy72j87?entry=ttu',
       },
     ],
     mapLabel: 'View On Map',

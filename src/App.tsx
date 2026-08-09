@@ -290,7 +290,7 @@ function App() {
                     <div className="venue-map-frame venue-media venue-media--map">
                       <iframe
                         title={`${location.title} map`}
-                        src={`https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`}
+                        src={location.mapEmbedUrl}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
                         allowFullScreen
