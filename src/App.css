@@ -302,7 +302,7 @@ a {
   inset: 0;
   background: linear-gradient(180deg, rgba(7, 15, 25, 0.04) 30%, rgba(7, 15, 25, 0.18) 58%, rgba(7, 15, 25, 0.84) 100%);
   opacity: 0.82;
-  transition: opacity 0.28s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
