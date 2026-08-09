@@ -277,29 +277,35 @@ function App() {
             return (
               <article className="venue-location-card" key={location.title}>
                 <h4>{location.title}</h4>
-                <div className="venue-location-content">
-                  {entry ? (
-                    <figure className="venue-photo-row venue-photo-row--paired">
-                      <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
-                      <figcaption>{location.query}</figcaption>
-                    </figure>
-                  ) : (
-                    <div className="placeholder-img venue-photo">{siteData.venue.photoLabel}</div>
-                  )}
+                <div className="venue-location-grid">
+                  <div className="venue-location-row venue-location-row--media">
+                    {entry ? (
+                      <figure className="venue-media venue-media--image">
+                        <img src={entry.src} alt={caption} className="venue-photo-img" loading="lazy" />
+                      </figure>
+                    ) : (
+                      <div className="placeholder-img venue-media venue-media--image">{siteData.venue.photoLabel}</div>
+                    )}
 
-                  <div className="venue-map-frame">
-                    <iframe
-                      title={`${location.title} map`}
-                      src={`https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      allowFullScreen
-                    />
+                    <div className="venue-map-frame venue-media venue-media--map">
+                      <iframe
+                        title={`${location.title} map`}
+                        src={`https://www.google.com/maps?q=${encodeURIComponent(location.query)}&output=embed`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+
+                  <div className="venue-location-row venue-location-row--meta">
+                    <div className="venue-location-address">{location.query}</div>
+
+                    <a href={externalUrl} target="_blank" rel="noreferrer">
+                      {location.linkLabel}
+                    </a>
                   </div>
                 </div>
-                <a href={externalUrl} target="_blank" rel="noreferrer">
-                  {location.linkLabel}
-                </a>
               </article>
             )
           })}
