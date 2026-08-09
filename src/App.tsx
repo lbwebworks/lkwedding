@@ -22,6 +22,7 @@ function App() {
   const [countdown, setCountdown] = useState(() =>
     getCountdownParts(siteData.hero.weddingDateISO),
   )
+  const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null)
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -155,20 +156,42 @@ function App() {
         <h2>{siteData.story.title}</h2>
         <div className="story-grid">
           {siteData.story.chapters.map((chapter, index) => (
-            <article key={chapter.title} className="story-card">
-              {weddingImageEntries.story.length > 0 ? (
-                <img
-                  src={pickStoryImage(chapter.title, index)}
-                  alt={chapter.title}
-                  className="story-photo"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="placeholder-img">{chapter.imageLabel}</div>
-              )}
-              <div>
-                <h3>{chapter.title}</h3>
-                <p>{chapter.body}</p>
+            <article
+              key={chapter.title}
+              className={`story-card${activeStoryIndex === index ? ' is-active' : ''}`}
+              tabIndex={0}
+              onPointerDown={(event) => {
+                if (event.pointerType === 'touch') {
+                  setActiveStoryIndex(index)
+                }
+              }}
+              onPointerUp={(event) => {
+                if (event.pointerType === 'touch') {
+                  setActiveStoryIndex(null)
+                }
+              }}
+              onPointerCancel={() => setActiveStoryIndex(null)}
+              onPointerLeave={(event) => {
+                if (event.pointerType === 'touch') {
+                  setActiveStoryIndex(null)
+                }
+              }}
+            >
+              <div className="story-media">
+                {weddingImageEntries.story.length > 0 ? (
+                  <img
+                    src={pickStoryImage(chapter.title, index)}
+                    alt={chapter.title}
+                    className="story-photo"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="placeholder-img story-fallback">{chapter.imageLabel}</div>
+                )}
+                <div className="story-caption">
+                  <h3>{chapter.title}</h3>
+                  <p>{chapter.body}</p>
+                </div>
               </div>
             </article>
           ))}
