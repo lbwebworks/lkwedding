@@ -10,7 +10,7 @@
 .photo-band-fixed-layer {
   position: fixed;
   top: 0;
-  bottom: 0;
+  height: 100svh;
   left: 50%;
   width: min(1020px, calc(100vw - 36px));
   transform: translateX(-50%);
@@ -137,7 +137,7 @@ a {
   overflow: hidden;
   border-radius: 0;
   width: 100%;
-  height: 50vh;
+  height: 50svh;
   min-height: 320px;
   position: relative;
 }
@@ -911,7 +911,7 @@ a {
   }
 
   .photo-band {
-    height: 50vh;
+    height: 50svh;
     background: transparent;
   }
 
