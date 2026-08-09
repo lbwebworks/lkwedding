@@ -126,8 +126,7 @@ a {
   color: var(--heading);
 }
 
-.cta:hover,
-.secondary:hover {
+.cta:hover {
   transform: translateY(-1px);
 }
 
@@ -415,6 +414,38 @@ a {
 
 .rsvp {
   font-family: var(--font-modern);
+}
+
+.rsvp-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.rsvp-button {
+  display: inline-block;
+  min-width: 180px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.rsvp-sticky-button {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 52px;
+  min-width: 0;
+  transform: translateX(-50%);
+  text-align: center;
+  padding: 15px 25px;
+  font-size: 1.2rem;
+  line-height: 1.1;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
 }
 
 .entourage {
@@ -768,6 +799,7 @@ a {
     margin: 0 auto 14px;
     padding: 12px;
     gap: 0;
+    padding-bottom: 192px;
   }
 
   .panel {
@@ -820,6 +852,7 @@ a {
     margin: 0;
     padding: 0;
     gap: 0;
+    padding-bottom: 232px;
   }
 
   .panel {
@@ -1166,6 +1199,34 @@ a {
   .closing {
     text-align: center;
     background: var(--bg);
+  }
+
+  .rsvp-actions {
+    justify-content: center;
+  }
+
+  .rsvp-button {
+    width: auto;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .rsvp-sticky-button {
+    left: 50%;
+    bottom: 10px;
+    transform: translateX(-50%);
+    padding: 15px 15px;
+    font-size: 1.2rem;
+  }
+
+  .secondary.rsvp-sticky-button {
+    width: auto;
+    max-width: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    white-space: nowrap;
   }
 }
 

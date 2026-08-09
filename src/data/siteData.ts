@@ -235,10 +235,11 @@ export const siteData: SiteData = {
     title: 'RSVP',
     description:
       'Please respond so we can prepare seating, catering, and your best possible experience on our big day.',
-    deadline: 'Please confirm your attendance before September 5, 2026.',
-    buttonLabel: 'Google Form Link Placeholder',
-    buttonUrl: '#',
-    buttonDisabled: true,
+    deadline: 'Please confirm your attendance on or before September 12, 2026.',
+    buttonLabel: 'Open RSVP Form',
+    buttonUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSfauH9uhHz90QOeYDGblW21KUGaS-rM7_Mrw0s3ryMA8HT3cA/viewform?usp=publish-editor',
+    buttonDisabled: false,
   },
   entourage: {
     title: 'Entourage',

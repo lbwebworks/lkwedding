@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import fallbackHeroImg from './assets/hero.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
@@ -23,6 +23,8 @@ function App() {
     getCountdownParts(siteData.hero.weddingDateISO),
   )
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null)
+  const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
+  const rsvpSectionRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -34,6 +36,27 @@ function App() {
     }, 1000)
 
     return () => window.clearInterval(timer)
+  }, [])
+
+  useEffect(() => {
+    const section = rsvpSectionRef.current
+
+    if (!section) {
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setShowStickyRsvpButton(!entry.isIntersecting)
+      },
+      {
+        threshold: 0.15,
+      },
+    )
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
   }, [])
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
@@ -97,14 +120,6 @@ function App() {
         <p className="hero-subtitle">{siteData.hero.subtitle}</p>
         <p className="date">{siteData.hero.date}</p>
         <p className="hero-copy">{siteData.hero.intro}</p>
-        <div className="hero-actions">
-          <a className="cta" href="#rsvp">
-            {siteData.hero.ctaLabel}
-          </a>
-          <a className="secondary" href="#details">
-            View Details
-          </a>
-        </div>
       </section>
 
       <section className="panel photo-band" aria-label="Prenup photo preview">
@@ -335,21 +350,6 @@ function App() {
         </div>
       </section>
 
-      <section className="panel rsvp" id="rsvp">
-        <h2>{siteData.rsvp.title}</h2>
-        <p>{siteData.rsvp.description}</p>
-        <p className="rsvp-deadline">{siteData.rsvp.deadline}</p>
-        <a
-          className="secondary"
-          href={siteData.rsvp.buttonUrl}
-          aria-disabled={siteData.rsvp.buttonDisabled}
-          target={siteData.rsvp.buttonDisabled ? undefined : '_blank'}
-          rel={siteData.rsvp.buttonDisabled ? undefined : 'noreferrer'}
-        >
-          {siteData.rsvp.buttonLabel}
-        </a>
-      </section>
-
       <section className="panel entourage" id="entourage">
         <h2>{siteData.entourage.title}</h2>
         <div className="entourage-grid">
@@ -388,12 +388,41 @@ function App() {
         ))}
       </section>
 
+      <section className="panel rsvp" id="rsvp" ref={rsvpSectionRef}>
+        <h2>{siteData.rsvp.title}</h2>
+        <p>{siteData.rsvp.description}</p>
+        <p className="rsvp-deadline">{siteData.rsvp.deadline}</p>
+        <div className="rsvp-actions">
+          <a
+            className="secondary rsvp-button"
+            href={siteData.rsvp.buttonUrl}
+            aria-disabled={siteData.rsvp.buttonDisabled}
+            target={siteData.rsvp.buttonDisabled ? undefined : '_blank'}
+            rel={siteData.rsvp.buttonDisabled ? undefined : 'noreferrer'}
+          >
+            {siteData.rsvp.buttonLabel}
+          </a>
+        </div>
+      </section>
+
       <section className="panel closing" id="closing">
         <p className="eyebrow">{siteData.footer.line}</p>
         <h2>{siteData.footer.names}</h2>
         <p>{siteData.hero.date}</p>
       </section>
       </main>
+
+      {showStickyRsvpButton ? (
+        <a
+          className="secondary rsvp-sticky-button"
+          href={siteData.rsvp.buttonUrl}
+          aria-disabled={siteData.rsvp.buttonDisabled}
+          target={siteData.rsvp.buttonDisabled ? undefined : '_blank'}
+          rel={siteData.rsvp.buttonDisabled ? undefined : 'noreferrer'}
+        >
+          {siteData.rsvp.buttonLabel}
+        </a>
+      ) : null}
     </>
   )
 }
