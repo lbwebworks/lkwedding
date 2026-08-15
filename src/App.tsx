@@ -57,9 +57,10 @@ type SaveDateTileProps = {
   items: string[]
   showAsImage: boolean
   seedIndex: number
+  onOpenImage?: (imageSrc: string) => void
 }
 
-function SaveDateTile({ items, showAsImage, seedIndex }: SaveDateTileProps) {
+function SaveDateTile({ items, showAsImage, seedIndex, onOpenImage }: SaveDateTileProps) {
   const [currentIndex, setCurrentIndex] = useState(() =>
     getInitialSaveDateIndex(items.length, seedIndex),
   )
@@ -112,7 +113,13 @@ function SaveDateTile({ items, showAsImage, seedIndex }: SaveDateTileProps) {
   const currentItem = items[currentIndex % items.length] ?? ''
 
   return (
-    <article className={`save-date-card${isVisible ? '' : ' is-hidden'}`}>
+    <button
+      type="button"
+      className={`save-date-card${isVisible ? '' : ' is-hidden'}`}
+      onClick={() => onOpenImage?.(currentItem)}
+      disabled={!showAsImage || !onOpenImage}
+      aria-label={`Open save the date image ${seedIndex + 1}`}
+    >
       {showAsImage ? (
         <img
           src={currentItem}
@@ -123,7 +130,7 @@ function SaveDateTile({ items, showAsImage, seedIndex }: SaveDateTileProps) {
       ) : (
         <div className="save-date-label">{currentItem}</div>
       )}
-    </article>
+    </button>
   )
 }
 
@@ -132,6 +139,7 @@ function App() {
     getCountdownParts(siteData.hero.weddingDateISO),
   )
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null)
+  const [activeSaveDateIndex, setActiveSaveDateIndex] = useState<number | null>(null)
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
 
@@ -168,6 +176,50 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    if (activeSaveDateIndex === null) {
+      return
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveSaveDateIndex(null)
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        setActiveSaveDateIndex((current) => {
+          if (current === null || saveDateEntries.length === 0) {
+            return current
+          }
+
+          return (current - 1 + saveDateEntries.length) % saveDateEntries.length
+        })
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        setActiveSaveDateIndex((current) => {
+          if (current === null || saveDateEntries.length === 0) {
+            return current
+          }
+
+          return (current + 1) % saveDateEntries.length
+        })
+      }
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [activeSaveDateIndex])
+
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
   const venueImages = weddingImageEntries.venue
   const dressImageEntries = {
@@ -175,10 +227,58 @@ function App() {
     Gentlemen: weddingImageEntries.dressGentlemen,
   }
   const saveDateItems =
-    weddingImages.saveTheDate.length > 0
-      ? weddingImages.saveTheDate
+    weddingImageEntries.saveTheDate.length > 0
+      ? weddingImageEntries.saveTheDate.map((entry) => entry.src)
       : siteData.saveTheDate.photos
-  const saveDateUsesImages = weddingImages.saveTheDate.length > 0
+  const saveDateEntries = weddingImageEntries.saveTheDate
+  const saveDateUsesImages = saveDateEntries.length > 0
+
+  const openSaveDateViewer = (imageSrc: string) => {
+    if (saveDateEntries.length === 0) {
+      return
+    }
+
+    const nextIndex = saveDateEntries.findIndex((entry) => entry.src === imageSrc)
+    setActiveSaveDateIndex(nextIndex >= 0 ? nextIndex : 0)
+  }
+
+  const closeSaveDateViewer = () => {
+    setActiveSaveDateIndex(null)
+  }
+
+  const showPreviousSaveDateImage = () => {
+    if (saveDateEntries.length === 0) {
+      return
+    }
+
+    setActiveSaveDateIndex((current) => {
+      if (current === null) {
+        return current
+      }
+
+      return (current - 1 + saveDateEntries.length) % saveDateEntries.length
+    })
+  }
+
+  const showNextSaveDateImage = () => {
+    if (saveDateEntries.length === 0) {
+      return
+    }
+
+    setActiveSaveDateIndex((current) => {
+      if (current === null) {
+        return current
+      }
+
+      return (current + 1) % saveDateEntries.length
+    })
+  }
+
+  const activeSaveDateEntry =
+    activeSaveDateIndex !== null && saveDateEntries.length > 0
+      ? saveDateEntries[activeSaveDateIndex % saveDateEntries.length]
+      : null
+  const activeSaveDateViewerIndex = activeSaveDateIndex ?? 0
 
   const getVenuePriority = (fileName: string) => {
     const lower = fileName.toLowerCase()
@@ -461,6 +561,7 @@ function App() {
                 items={saveDateItems}
                 showAsImage={saveDateUsesImages}
                 seedIndex={idx}
+                onOpenImage={saveDateUsesImages ? openSaveDateViewer : undefined}
               />
             ),
           )}
@@ -528,6 +629,59 @@ function App() {
         <p>{siteData.hero.date}</p>
       </section>
       </main>
+
+      {activeSaveDateEntry ? (
+        <div className="image-viewer-backdrop" role="presentation" onClick={closeSaveDateViewer}>
+          <div
+            className="image-viewer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Save the date image viewer"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="secondary image-viewer-close"
+              onClick={closeSaveDateViewer}
+              aria-label="Close image viewer"
+            >
+              Close
+            </button>
+
+            <button
+              type="button"
+              className="image-viewer-nav image-viewer-nav--prev"
+              onClick={showPreviousSaveDateImage}
+              aria-label="Previous image"
+            >
+              &lt;
+            </button>
+
+            <div className="image-viewer-frame">
+              <img
+                src={activeSaveDateEntry.src}
+                alt={activeSaveDateEntry.fileName}
+                className="image-viewer-image"
+              />
+              <div className="image-viewer-meta">
+                <span>{activeSaveDateEntry.fileName}</span>
+                <span>
+                  {activeSaveDateViewerIndex + 1} / {saveDateEntries.length}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="image-viewer-nav image-viewer-nav--next"
+              onClick={showNextSaveDateImage}
+              aria-label="Next image"
+            >
+              &gt;
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       {showStickyRsvpButton ? (
         <a

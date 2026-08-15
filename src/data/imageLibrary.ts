@@ -13,6 +13,9 @@ const asSortedEntries = (modules: Record<string, string>): ImageEntry[] =>
 
 const toUrls = (entries: ImageEntry[]) => entries.map((entry) => entry.src)
 
+const sortEntriesByFileName = (entries: ImageEntry[]) =>
+  [...entries].sort((a, b) => a.fileName.localeCompare(b.fileName))
+
 const allWeddingImages = import.meta.glob<string>([
   '../assets/wedding/**/*.png',
   '../assets/wedding/**/*.jpg',
@@ -44,7 +47,7 @@ export const weddingImages = {
   dressLadies: toUrls(pickFolderEntries('dress/ladies')),
   dressGentlemen: toUrls(pickFolderEntries('dress/gentlemen')),
   venue: toUrls(pickFolderEntries('venue')),
-  saveTheDate: toUrls(pickFolderEntries('save-the-date')),
+  saveTheDate: toUrls(sortEntriesByFileName(pickFolderEntries('save-the-date'))),
 }
 
 export const weddingImageEntries = {
@@ -52,4 +55,5 @@ export const weddingImageEntries = {
   dressLadies: pickFolderEntries('dress/ladies'),
   dressGentlemen: pickFolderEntries('dress/gentlemen'),
   venue: pickFolderEntries('venue'),
+  saveTheDate: sortEntriesByFileName(pickFolderEntries('save-the-date')),
 }
