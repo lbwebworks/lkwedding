@@ -3,6 +3,10 @@ export type ImageEntry = {
   fileName: string
 }
 
+export type SaveDateImageEntry = ImageEntry & {
+  thumbnailSrc: string
+}
+
 const asSortedEntries = (modules: Record<string, string>): ImageEntry[] =>
   Object.entries(modules)
     .sort(([a], [b]) => a.localeCompare(b))
@@ -15,6 +19,8 @@ const toUrls = (entries: ImageEntry[]) => entries.map((entry) => entry.src)
 
 const sortEntriesByFileName = (entries: ImageEntry[]) =>
   [...entries].sort((a, b) => a.fileName.localeCompare(b.fileName))
+
+const getFileStem = (fileName: string) => fileName.replace(/\.[^.]+$/, '').toLowerCase()
 
 const allWeddingImages = import.meta.glob<string>([
   '../assets/wedding/**/*.png',
@@ -41,13 +47,25 @@ const pickFolderEntries = (folderPath: string) =>
     ),
   )
 
+const saveDateFullEntries = sortEntriesByFileName(pickFolderEntries('save-the-date'))
+const saveDateThumbEntries = sortEntriesByFileName(pickFolderEntries('save-the-date-thumbs'))
+const saveDateThumbMap = new Map(
+  saveDateThumbEntries.map((entry) => [getFileStem(entry.fileName), entry.src]),
+)
+
+const toSaveDateEntries = (entries: ImageEntry[]): SaveDateImageEntry[] =>
+  entries.map((entry) => ({
+    ...entry,
+    thumbnailSrc: saveDateThumbMap.get(getFileStem(entry.fileName)) ?? entry.src,
+  }))
+
 export const weddingImages = {
   hero: toUrls(pickFolderEntries('hero')),
   story: toUrls(pickFolderEntries('story')),
   dressLadies: toUrls(pickFolderEntries('dress/ladies')),
   dressGentlemen: toUrls(pickFolderEntries('dress/gentlemen')),
   venue: toUrls(pickFolderEntries('venue')),
-  saveTheDate: toUrls(sortEntriesByFileName(pickFolderEntries('save-the-date'))),
+  saveTheDate: toUrls(saveDateFullEntries),
 }
 
 export const weddingImageEntries = {
@@ -55,5 +73,5 @@ export const weddingImageEntries = {
   dressLadies: pickFolderEntries('dress/ladies'),
   dressGentlemen: pickFolderEntries('dress/gentlemen'),
   venue: pickFolderEntries('venue'),
-  saveTheDate: sortEntriesByFileName(pickFolderEntries('save-the-date')),
+  saveTheDate: toSaveDateEntries(saveDateFullEntries),
 }

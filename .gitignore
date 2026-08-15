@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+src/assets/wedding/save-the-date-thumbs/
 
 # Editor directories and files
 .vscode/*

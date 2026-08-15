@@ -5,7 +5,8 @@ Wedding invitation website built with React + TypeScript + Vite.
 ## Scripts
 
 - `npm run dev`: start local development server.
-- `npm run build`: run typecheck and production build.
+- `npm run build`: run thumbnail generation, typecheck, and production build.
+- `npm run generate:save-date-thumbnails`: generate WebP thumbnails for the save-the-date gallery.
 - `npm run preview`: preview production build locally.
 - `npm run lint`: run ESLint.
 
@@ -57,4 +58,5 @@ Supported image types:
 Notes:
 
 - Files are loaded in filename order, so you can control sequence with names like `01.jpg`, `02.jpg`, etc.
+- Save-the-date thumbnails are generated automatically during `npm run build` into `src/assets/wedding/save-the-date-thumbs/` and the gallery uses those thumbnails while the viewer opens the full-size images.
 - If a folder has no images, the UI falls back to text placeholders.

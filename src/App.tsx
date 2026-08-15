@@ -39,35 +39,49 @@ function getInitialSaveDateIndex(length: number, seedIndex: number) {
   return (seedIndex + Math.floor(Math.random() * length)) % length
 }
 
-function getNextSaveDateIndex(length: number, currentIndex: number) {
-  if (length <= 1) {
+
+
+function getNextDistinctSaveDateIndex(items: string[], currentIndex: number) {
+  if (items.length <= 1) {
     return 0
   }
 
-  let nextIndex = currentIndex
+  const currentItem = items[currentIndex % items.length] ?? ''
 
-  while (nextIndex === currentIndex) {
-    nextIndex = Math.floor(Math.random() * length)
+  for (let offset = 1; offset <= items.length; offset += 1) {
+    const nextIndex = (currentIndex + offset) % items.length
+    const nextItem = items[nextIndex] ?? ''
+
+    if (nextItem !== currentItem) {
+      return nextIndex
+    }
   }
 
-  return nextIndex
+  return currentIndex
 }
 
 type SaveDateTileProps = {
-  items: string[]
+  thumbnails: string[]
+  fullSizeImages: string[]
   showAsImage: boolean
   seedIndex: number
   onOpenImage?: (imageSrc: string) => void
 }
 
-function SaveDateTile({ items, showAsImage, seedIndex, onOpenImage }: SaveDateTileProps) {
+function SaveDateTile({
+  thumbnails,
+  fullSizeImages,
+  showAsImage,
+  seedIndex,
+  onOpenImage,
+}: SaveDateTileProps) {
   const [currentIndex, setCurrentIndex] = useState(() =>
-    getInitialSaveDateIndex(items.length, seedIndex),
+    getInitialSaveDateIndex(fullSizeImages.length, seedIndex),
   )
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (fullSizeImages.length === 0) {
       return
     }
 
@@ -88,7 +102,7 @@ function SaveDateTile({ items, showAsImage, seedIndex, onOpenImage }: SaveDateTi
             return
           }
 
-          setCurrentIndex((current) => getNextSaveDateIndex(items.length, current))
+          setCurrentIndex((current) => getNextDistinctSaveDateIndex(fullSizeImages, current))
           setIsVisible(true)
           scheduleNextSwap()
         }, SAVE_DATE_FADE_DURATION_MS)
@@ -108,27 +122,29 @@ function SaveDateTile({ items, showAsImage, seedIndex, onOpenImage }: SaveDateTi
         window.clearTimeout(swapTimerId)
       }
     }
-  }, [items.length])
+  }, [fullSizeImages.length])
 
-  const currentItem = items[currentIndex % items.length] ?? ''
+  const currentFullSizeImage = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
+  const currentThumbnail = thumbnails[currentIndex % thumbnails.length] ?? currentFullSizeImage
+  const currentLabel = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
 
   return (
     <button
       type="button"
       className={`save-date-card${isVisible ? '' : ' is-hidden'}`}
-      onClick={() => onOpenImage?.(currentItem)}
+      onClick={() => onOpenImage?.(currentFullSizeImage)}
       disabled={!showAsImage || !onOpenImage}
       aria-label={`Open save the date image ${seedIndex + 1}`}
     >
       {showAsImage ? (
         <img
-          src={currentItem}
+          src={currentThumbnail}
           alt={`Save the date ${seedIndex + 1}`}
           className="save-date-photo"
           loading="lazy"
         />
       ) : (
-        <div className="save-date-label">{currentItem}</div>
+        <div className="save-date-label">{currentLabel}</div>
       )}
     </button>
   )
@@ -232,6 +248,8 @@ function App() {
       : siteData.saveTheDate.photos
   const saveDateEntries = weddingImageEntries.saveTheDate
   const saveDateUsesImages = saveDateEntries.length > 0
+  const saveDateThumbnailImages = saveDateEntries.map((entry) => entry.thumbnailSrc)
+  const saveDateFullImages = saveDateEntries.map((entry) => entry.src)
 
   const openSaveDateViewer = (imageSrc: string) => {
     if (saveDateEntries.length === 0) {
@@ -558,7 +576,8 @@ function App() {
             (_, idx) => (
               <SaveDateTile
                 key={`save-date-tile-${idx}`}
-                items={saveDateItems}
+                thumbnails={saveDateUsesImages ? saveDateThumbnailImages : saveDateItems}
+                fullSizeImages={saveDateUsesImages ? saveDateFullImages : saveDateItems}
                 showAsImage={saveDateUsesImages}
                 seedIndex={idx}
                 onOpenImage={saveDateUsesImages ? openSaveDateViewer : undefined}
