@@ -5,6 +5,11 @@ import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
 import './App.css'
 
+const SAVE_DATE_VISIBLE_COUNT = 6
+const SAVE_DATE_MIN_SWAP_DELAY_MS = 5000
+const SAVE_DATE_MAX_SWAP_DELAY_MS = 10000
+const SAVE_DATE_FADE_DURATION_MS = 3000
+
 function getCountdownParts(targetDateISO: string) {
   const now = new Date().getTime()
   const target = new Date(targetDateISO).getTime()
@@ -17,6 +22,109 @@ function getCountdownParts(targetDateISO: string) {
   const seconds = totalSeconds % 60
 
   return { days, hours, minutes, seconds }
+}
+
+function getRandomSaveDateDelay() {
+  return (
+    SAVE_DATE_MIN_SWAP_DELAY_MS +
+    Math.floor(Math.random() * (SAVE_DATE_MAX_SWAP_DELAY_MS - SAVE_DATE_MIN_SWAP_DELAY_MS + 1))
+  )
+}
+
+function getInitialSaveDateIndex(length: number, seedIndex: number) {
+  if (length <= 0) {
+    return 0
+  }
+
+  return (seedIndex + Math.floor(Math.random() * length)) % length
+}
+
+function getNextSaveDateIndex(length: number, currentIndex: number) {
+  if (length <= 1) {
+    return 0
+  }
+
+  let nextIndex = currentIndex
+
+  while (nextIndex === currentIndex) {
+    nextIndex = Math.floor(Math.random() * length)
+  }
+
+  return nextIndex
+}
+
+type SaveDateTileProps = {
+  items: string[]
+  showAsImage: boolean
+  seedIndex: number
+}
+
+function SaveDateTile({ items, showAsImage, seedIndex }: SaveDateTileProps) {
+  const [currentIndex, setCurrentIndex] = useState(() =>
+    getInitialSaveDateIndex(items.length, seedIndex),
+  )
+  const [isVisible, setIsVisible] = useState(true)
+
+  useEffect(() => {
+    if (items.length === 0) {
+      return
+    }
+
+    let cancelled = false
+    let hideTimerId: number | undefined
+    let swapTimerId: number | undefined
+
+    const scheduleNextSwap = () => {
+      hideTimerId = window.setTimeout(() => {
+        if (cancelled) {
+          return
+        }
+
+        setIsVisible(false)
+
+        swapTimerId = window.setTimeout(() => {
+          if (cancelled) {
+            return
+          }
+
+          setCurrentIndex((current) => getNextSaveDateIndex(items.length, current))
+          setIsVisible(true)
+          scheduleNextSwap()
+        }, SAVE_DATE_FADE_DURATION_MS)
+      }, getRandomSaveDateDelay())
+    }
+
+    scheduleNextSwap()
+
+    return () => {
+      cancelled = true
+
+      if (hideTimerId !== undefined) {
+        window.clearTimeout(hideTimerId)
+      }
+
+      if (swapTimerId !== undefined) {
+        window.clearTimeout(swapTimerId)
+      }
+    }
+  }, [items.length])
+
+  const currentItem = items[currentIndex % items.length] ?? ''
+
+  return (
+    <article className={`save-date-card${isVisible ? '' : ' is-hidden'}`}>
+      {showAsImage ? (
+        <img
+          src={currentItem}
+          alt={`Save the date ${seedIndex + 1}`}
+          className="save-date-photo"
+          loading="lazy"
+        />
+      ) : (
+        <div className="save-date-label">{currentItem}</div>
+      )}
+    </article>
+  )
 }
 
 function App() {
@@ -70,7 +178,7 @@ function App() {
     weddingImages.saveTheDate.length > 0
       ? weddingImages.saveTheDate
       : siteData.saveTheDate.photos
-  const saveDateCards = [...saveDateItems, ...saveDateItems]
+  const saveDateUsesImages = weddingImages.saveTheDate.length > 0
 
   const getVenuePriority = (fileName: string) => {
     const lower = fileName.toLowerCase()
@@ -345,23 +453,17 @@ function App() {
       <section className="panel save-date" id="save-the-date">
         <h2>{siteData.saveTheDate.title}</h2>
         <p>{siteData.saveTheDate.subtitle}</p>
-        <div className="save-date-slider" aria-label="Save the date gallery">
-          <div className="save-date-track">
-            {saveDateCards.map((photo, idx) => (
-              <article className="save-date-card" key={`${photo}-${idx}`}>
-                {weddingImages.saveTheDate.length > 0 ? (
-                  <img
-                    src={photo}
-                    alt={`Save the date ${idx + 1}`}
-                    className="save-date-photo"
-                    loading="lazy"
-                  />
-                ) : (
-                  photo
-                )}
-              </article>
-            ))}
-          </div>
+        <div className="save-date-grid" aria-label="Save the date gallery">
+          {Array.from({ length: Math.min(SAVE_DATE_VISIBLE_COUNT, saveDateItems.length) }).map(
+            (_, idx) => (
+              <SaveDateTile
+                key={`save-date-tile-${idx}`}
+                items={saveDateItems}
+                showAsImage={saveDateUsesImages}
+                seedIndex={idx}
+              />
+            ),
+          )}
         </div>
       </section>
 

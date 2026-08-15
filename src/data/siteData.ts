@@ -148,8 +148,8 @@ export const siteData: SiteData = {
     items: [
       {
         time: '1:30 PM',
-        title: 'Guest Arrival',
-        note: 'Welcome and seat guidance',
+        title: 'Ceremony Guest Arrival',
+        note: 'Welcome and seat at the church',
       },
       {
         time: '2:00 PM',
@@ -157,8 +157,18 @@ export const siteData: SiteData = {
         note: 'Iglesia Ni Cristo [Pampanga West] - Guagua',
       },
       {
+        time: '3:15 PM',
+        title: 'Travel to Reception',
+        note: '',
+      },
+      {
+        time: '3:30 PM',
+        title: 'Reception Guests Arrrival',
+        note: 'Welcome and seating at Casa Agustin Resort',
+      },
+      {
         time: '4:00 PM',
-        title: 'Reception',
+        title: 'Reception Begins',
         note: 'Casa Agustin Resort',
       },
       {
@@ -259,7 +269,7 @@ export const siteData: SiteData = {
       },
       {
         title: 'Male Principal Sponsors',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Francis DC Alcantara'],
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
         title: 'Female Principal Sponsors',
@@ -324,9 +334,8 @@ export const siteData: SiteData = {
       {
         question: '👥 May I bring a "Plus One"?',
         answer: [
-          "As much as we'd love to celebrate with everyone, we have carefully planned our guest list due to venue capacity.",
-          'Kindly refer to your invitation to see the number of seats reserved for you.',
-          'We respectfully ask that only those whose names appear on our guest list attend the celebration. We truly appreciate your understanding and cooperation.',
+          "You're welcome to ask! If you'd like to bring someone along, simply contact us before the wedding.",
+          'While we may be able to accommodate approved companions, reception meals and reserved seating are limited to our confirmed guest list.',
         ],
       },
       {
