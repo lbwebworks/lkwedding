@@ -224,13 +224,29 @@ a {
 }
 
 .calendar-grid span {
+  display: grid;
+  place-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
   min-height: 34px;
-  display: grid;
-  place-items: center;
   background: var(--surface-2);
   font-size: 0.95rem;
+  text-align: center;
+}
+
+.calendar-grid.days span {
+  aspect-ratio: 1;
+  min-height: 0;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .calendar-grid.headings span {
@@ -240,11 +256,89 @@ a {
   min-height: 24px;
 }
 
-.calendar-grid .calendar-highlight {
-  background: var(--action-strong);
-  color: #0e1f31;
-  border-color: var(--action-strong);
-  font-weight: 700;
+.calendar-grid .calendar-weekend {
+  color: var(--heading);
+}
+
+.calendar-grid .calendar-sunday {
+  background: linear-gradient(180deg, rgba(142, 175, 205, 0.34), rgba(92, 127, 165, 0.2));
+  border-color: rgba(145, 176, 205, 0.58);
+  color: var(--heading);
+}
+
+.calendar-grid .calendar-saturday {
+  background: linear-gradient(180deg, rgba(103, 132, 166, 0.28), rgba(67, 95, 126, 0.18));
+  border-color: rgba(122, 151, 182, 0.52);
+  color: var(--heading);
+}
+
+.calendar-grid .calendar-wedding-day {
+  background-color: #d96f8a;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border-color: rgba(154, 181, 205, 0.95);
+  color: transparent;
+  font-size: 0;
+  font-weight: 800;
+  box-shadow:
+    0 0 0 1px rgba(236, 244, 250, 0.26) inset,
+    0 10px 22px rgba(95, 126, 159, 0.28),
+    0 0 18px rgba(127, 160, 190, 0.42);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.calendar-grid .calendar-wedding-day::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.calendar-grid .calendar-wedding-day::after {
+  content: '';
+  position: absolute;
+  inset: -35%;
+  background: linear-gradient(120deg, transparent 30%, rgba(227, 236, 244, 0.3) 50%, transparent 70%);
+  animation: wedding-shine 4.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.calendar-grid .calendar-wedding-day:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow:
+    0 0 0 1px rgba(236, 244, 250, 0.34) inset,
+    0 14px 28px rgba(95, 126, 159, 0.34),
+    0 0 24px rgba(127, 160, 190, 0.5);
+}
+
+.calendar-grid .calendar-empty {
+  visibility: hidden;
+  pointer-events: none;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+@keyframes wedding-shine {
+  0%,
+  68%,
+  100% {
+    transform: translateX(-18%) rotate(0.001deg);
+    opacity: 0;
+  }
+
+  78% {
+    opacity: 0.6;
+  }
+
+  84% {
+    transform: translateX(18%) rotate(0.001deg);
+    opacity: 0;
+  }
 }
 
 .story-grid {
@@ -389,21 +483,43 @@ a {
 
 .timeline {
   display: grid;
-  gap: 10px;
+  gap: 0;
 }
 
 .timeline article {
   display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 12px;
-  border-left: 2px solid var(--line);
-  padding: 10px 0 10px 12px;
+  grid-template-columns: minmax(108px, 126px) 1fr;
+  gap: 16px;
+  border-top: 1px dashed rgba(182, 202, 224, 0.42);
+  padding: 16px 0 18px;
+  align-items: start;
+}
+
+.timeline article:first-child {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .timeline .time {
-  color: var(--heading);
-  font-weight: 700;
+  color: var(--action-strong);
+  font-weight: 800;
   font-family: var(--font-modern);
+  font-size: 1.04rem;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+}
+
+.timeline h3 {
+  margin-bottom: 8px;
+  font-size: clamp(1.02rem, 1.85vw, 1.32rem);
+  line-height: 1.18;
+}
+
+.timeline p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.96rem;
+  line-height: 1.42;
 }
 
 .dress,
@@ -978,6 +1094,17 @@ a {
     color: var(--text);
   }
 
+  .calendar-grid.days span {
+    min-height: 0;
+    padding: 0;
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    text-align: center;
+  }
+
   .calendar-grid.headings span {
     color: var(--muted);
   }
@@ -986,6 +1113,18 @@ a {
     background: var(--action-strong);
     color: #0e1f31;
     border-color: var(--action-strong);
+  }
+
+  .calendar-grid .calendar-wedding-day {
+    border-color: rgba(154, 181, 205, 0.98);
+    box-shadow:
+      0 0 0 1px rgba(236, 244, 250, 0.22) inset,
+      0 8px 18px rgba(95, 126, 159, 0.24),
+      0 0 16px rgba(127, 160, 190, 0.38);
+  }
+
+  .calendar-grid .calendar-wedding-day::after {
+    background: linear-gradient(120deg, transparent 30%, rgba(227, 236, 244, 0.26) 50%, transparent 70%);
   }
 
   .story-grid {

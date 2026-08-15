@@ -116,8 +116,8 @@ export const siteData: SiteData = {
   },
   calendar: {
     month: 'September 2026',
-    weekDays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-    dayCells: [null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+    weekDays: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+    dayCells: [null, null, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     highlightDay: 20,
   },
   story: {
@@ -157,17 +157,22 @@ export const siteData: SiteData = {
         note: 'Iglesia Ni Cristo [Pampanga West] - Guagua',
       },
       {
-        time: '5:00 PM',
-        title: 'Reception Proper',
+        time: '4:00 PM',
+        title: 'Reception',
         note: 'Casa Agustin Resort',
       },
       {
-        time: '6:30 PM',
-        title: 'Dinner And Toasts',
+        time: 'To Be Announced',
+        title: 'Games and Programs',
         note: 'Family and friends program',
       },
       {
-        time: '8:00 PM',
+        time: 'To Be Announced',
+        title: 'Dinner',
+        note: 'Family and friends program',
+      },
+      {
+        time: 'To Be Announced',
         title: 'Celebration',
         note: 'Dance and photo moments',
       },

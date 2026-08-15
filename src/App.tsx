@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import fallbackHeroImg from './assets/hero.png'
+import calendarDayImage from './assets/wedding/calendar/sept_20.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
 import './App.css'
@@ -151,17 +152,31 @@ function App() {
       <section className="panel calendar" id="calendar">
         <h2>{siteData.calendar.month}</h2>
         <div className="calendar-grid headings">
-          {siteData.calendar.weekDays.map((day) => (
-            <span key={day}>{day}</span>
+          {siteData.calendar.weekDays.map((day, idx) => (
+            <span
+              key={day}
+              className={idx === 0 ? 'calendar-weekend calendar-sunday' : idx === 6 ? 'calendar-weekend calendar-saturday' : ''}
+            >
+              {day}
+            </span>
           ))}
         </div>
         <div className="calendar-grid days">
           {siteData.calendar.dayCells.map((day, idx) => (
             <span
               key={`cell-${idx}-${day ?? 'empty'}`}
-              className={day === siteData.calendar.highlightDay ? 'calendar-highlight' : ''}
+              aria-label={day === siteData.calendar.highlightDay ? `Wedding day ${day}` : day ? `Day ${day}` : undefined}
+              className={[
+                day === null ? 'calendar-empty' : '',
+                idx % 7 === 0 ? 'calendar-weekend calendar-sunday' : '',
+                idx % 7 === 6 ? 'calendar-weekend calendar-saturday' : '',
+                day === siteData.calendar.highlightDay ? 'calendar-wedding-day' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              style={day === siteData.calendar.highlightDay ? { backgroundImage: `url(${calendarDayImage})` } : undefined}
             >
-              {day ?? ''}
+              {day === siteData.calendar.highlightDay ? '' : day ?? ''}
             </span>
           ))}
         </div>
