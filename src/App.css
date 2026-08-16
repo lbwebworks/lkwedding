@@ -173,6 +173,21 @@ a {
   margin-bottom: 14px;
 }
 
+.panel h2 {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: clamp(0.94rem, 1.4vw, 1.15rem);
+  color: var(--heading);
+  margin-bottom: 16px;
+}
+
+.panel h2::before,
+.panel h2::after {
+  content: ' - ';
+  color: rgba(167, 191, 216, 0.65);
+}
+
 .count-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -240,6 +255,7 @@ a {
   position: relative;
   overflow: hidden;
   line-height: 1;
+  z-index: 0;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -280,10 +296,13 @@ a {
   color: transparent;
   font-size: 0;
   font-weight: 800;
+  z-index: 2;
   box-shadow:
     0 0 0 1px rgba(236, 244, 250, 0.26) inset,
     0 10px 22px rgba(95, 126, 159, 0.28),
-    0 0 18px rgba(127, 160, 190, 0.42);
+    0 0 20px rgba(127, 160, 190, 0.55),
+    0 0 44px rgba(217, 111, 138, 0.5),
+    0 0 72px rgba(127, 160, 190, 0.36);
   transform: translateY(-1px) scale(1.02);
 }
 
@@ -307,11 +326,14 @@ a {
 }
 
 .calendar-grid .calendar-wedding-day:hover {
+  z-index: 3;
   transform: translateY(-2px) scale(1.04);
   box-shadow:
     0 0 0 1px rgba(236, 244, 250, 0.34) inset,
     0 14px 28px rgba(95, 126, 159, 0.34),
-    0 0 24px rgba(127, 160, 190, 0.5);
+    0 0 28px rgba(127, 160, 190, 0.62),
+    0 0 56px rgba(217, 111, 138, 0.58),
+    0 0 88px rgba(127, 160, 190, 0.42);
 }
 
 .calendar-grid .calendar-empty {
@@ -1132,18 +1154,7 @@ a {
   }
 
   .panel h2 {
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.2em;
     font-size: 0.94rem;
-    color: var(--heading);
-    margin-bottom: 16px;
-  }
-
-  .panel h2::before,
-  .panel h2::after {
-    content: ' - ';
-    color: rgba(167, 191, 216, 0.65);
   }
 
   .panel h3 {
@@ -1260,10 +1271,13 @@ a {
 
   .calendar-grid .calendar-wedding-day {
     border-color: rgba(154, 181, 205, 0.98);
+    z-index: 2;
     box-shadow:
       0 0 0 1px rgba(236, 244, 250, 0.22) inset,
       0 8px 18px rgba(95, 126, 159, 0.24),
-      0 0 16px rgba(127, 160, 190, 0.38);
+      0 0 18px rgba(127, 160, 190, 0.5),
+      0 0 36px rgba(217, 111, 138, 0.46),
+      0 0 60px rgba(127, 160, 190, 0.3);
   }
 
   .calendar-grid .calendar-wedding-day::after {
@@ -1358,7 +1372,7 @@ a {
   }
 
   .timeline article {
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: 84px 1fr;
     gap: 10px;
     border-left: 0;
     border-top: 1px dashed rgba(182, 202, 224, 0.45);
@@ -1374,6 +1388,8 @@ a {
     text-align: right;
     padding-top: 1px;
     color: var(--action-strong);
+    font-size: 0.92rem;
+    white-space: nowrap;
   }
 
   .dress-block,
