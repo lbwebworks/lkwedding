@@ -250,7 +250,7 @@ export const siteData: SiteData = {
     title: 'RSVP',
     description:
       'Please respond so we can prepare seating, catering, and your best possible experience on our big day.',
-    deadline: 'Please confirm your attendance on or before September 12, 2026.',
+    deadline: 'Please confirm your attendance on or before September 15, 2026.',
     buttonLabel: 'Open RSVP Form',
     buttonUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSfauH9uhHz90QOeYDGblW21KUGaS-rM7_Mrw0s3ryMA8HT3cA/viewform?usp=publish-editor',
@@ -260,19 +260,19 @@ export const siteData: SiteData = {
     title: 'Entourage',
     groups: [
       {
-        title: 'Parents Of The Groom',
+        title: "Groom's Parents",
         names: ['Alfredo Budaden', 'Angelina Budaden'],
       },
       {
-        title: 'Parents Of The Bride',
+        title: "Bride's Parents",
         names: ['Reynaldo Lacza', 'Julieta Lacza'],
       },
       {
-        title: 'Male Principal Sponsors',
+        title: 'Principal Sponsors',
         names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
-        title: 'Female Principal Sponsors',
+        title: 'Principal Sponsors',
         names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
       {
@@ -327,24 +327,26 @@ export const siteData: SiteData = {
       {
         question: '🚗 Is parking available at the venue?',
         answer: [
-          'Yes. There is ample parking available at the venue for all our guests.',
-          'Our coordinators and venue staff will also be there to assist if needed.',
+          'Yes. Parking is available at the venue. Our coordinators will gladly assist you upon arrival.',
         ],
       },
       {
-        question: '👥 May I bring a "Plus One"?',
+        question: '⏰ What time should I arrive?',
         answer: [
-          "You're welcome to ask! If you'd like to bring someone along, simply contact us before the wedding.",
-          'While we may be able to accommodate approved companions, reception meals and reserved seating are limited to our confirmed guest list.',
+          'We recommend arriving 30 minutes before the ceremony to allow enough time for parking, registration, and seating.',
+        ],
+      },
+      {
+        question: '👗 Is there a dress code?',
+        answer: [
+          'Yes. We kindly invite our guests to wear semi-formal attire in shades of Dusty Blue, in keeping with our wedding motif.',
         ],
       },
       {
         question: '📸 Can I take photos or videos during the ceremony?',
         answer: [
-          'We kindly ask everyone to keep our wedding ceremony unplugged and camera-free.',
-          'Please allow our professional photographers and videographers to capture these once-in-a-lifetime moments while you simply enjoy being present with us.',
-          "Don't worry - our reception is the perfect time to take all the photos and videos you'd like!",
-          "We can't wait to celebrate and make memories with all of you. Don't forget to share your photos using our official hashtags: #ExclusiveLEEforKISH #ALoveLEEKiSH #FinalLEEmayKISHtheBride",
+          'We kindly ask everyone to refrain from taking photos or videos during the ceremony and allow our official photographers to capture these special moments.',
+          "You're welcome to take photos before and after the ceremony.",
         ],
       },
       {
@@ -356,18 +358,25 @@ export const siteData: SiteData = {
         ],
       },
       {
-        question: '⏰ What time should I arrive?',
+        question: '👤 May I bring a companion?',
         answer: [
-          'We recommend arriving 30 minutes before the ceremony to allow enough time for registration and seating.',
-          'We would love for everyone to be seated before the bridal procession begins.',
+          "You're welcome to ask! If you'd like to bring a companion who isn't included on our guest list, please contact us before the wedding or submit a companion request through the RSVP form.",
+          "We'll do our best to accommodate approved companions based on our final reception arrangements. While approved companions are welcome to enjoy the resort, reception seating, meals, and refreshments are reserved for our confirmed guests.",
         ],
       },
       {
-        question: '👗 Is there a dress code?',
+        question: '📝 How do I RSVP?',
         answer: [
-          'Yes! We kindly request our guests to wear semi-formal attire in shades of dusty blue to complement our wedding motif.',
-          'We also ask everyone to avoid wearing white, ivory, or cream.',
-          'Thank you for helping us make our special day even more beautiful! 💙',
+          'Please submit one RSVP per invitation using the RSVP form on this website.',
+          'If your invitation includes multiple guests, kindly confirm everyone included in your invitation using the same form.',
+          "After the RSVP deadline, we'll finalize our guest list, seating arrangements, and companion requests. If you've requested approval for a companion, we'll get in touch with you once we've completed our final arrangements.",
+        ],
+      },
+      {
+        question: '🎁 Will there be a gift registry?',
+        answer: [
+          'Your presence is truly the greatest gift we could ask for.',
+          "If you'd still like to bless us with a gift, a monetary gift would be sincerely appreciated as we begin this new chapter together.",
         ],
       },
     ],
