@@ -624,17 +624,10 @@ a {
 
 .dress-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.95fr);
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, auto);
   gap: 12px;
   margin-top: 12px;
-  align-items: stretch;
-}
-
-.sample-stack {
-  display: grid;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  min-height: 100%;
 }
 
 .sample-card {
@@ -648,27 +641,54 @@ a {
 }
 
 .sample-card--formal {
-  min-height: 100%;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: center;
   padding: 10px;
 }
 
+.sample-card--casual-1 {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.sample-card--casual-2 {
+  grid-column: 2;
+  grid-row: 2;
+}
+
 .sample-card--casual {
-  min-height: 0;
+  align-self: center;
   padding: 6px;
+}
+
+.sample-photo-button {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: block;
+  cursor: pointer;
+  border-radius: inherit;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sample-photo-button:hover,
+.sample-photo-button:focus-visible {
+  transform: scale(1.02);
+}
+
+.sample-photo-button:focus-visible {
+  outline: 2px solid rgba(241, 248, 255, 0.9);
+  outline-offset: 3px;
 }
 
 .sample-photo {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto;
   object-position: center;
   display: block;
-}
-
-.sample-card--casual .sample-photo {
-  width: 82%;
-  height: 82%;
-  max-height: 82%;
 }
 
 .sample-card > span {
@@ -1382,10 +1402,14 @@ a {
 
   .dress-layout {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
   }
 
-  .sample-stack {
-    grid-template-rows: repeat(2, minmax(140px, 1fr));
+  .sample-card--formal,
+  .sample-card--casual-1,
+  .sample-card--casual-2 {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .sample-card--formal {
@@ -1394,12 +1418,6 @@ a {
 
   .sample-card--casual {
     min-height: 130px;
-  }
-
-  .sample-card--casual .sample-photo {
-    width: 50%;
-    height: 50%;
-    max-height: 50%;
   }
 
   .entourage-grid::before {

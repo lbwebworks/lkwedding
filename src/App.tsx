@@ -156,6 +156,9 @@ function App() {
   )
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null)
   const [activeSaveDateIndex, setActiveSaveDateIndex] = useState<number | null>(null)
+  const [dressViewer, setDressViewer] = useState<{ images: { src: string; alt: string }[]; index: number } | null>(
+    null,
+  )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
@@ -236,7 +239,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (activeStoryIndex === null && activeSaveDateIndex === null) {
+    if (activeStoryIndex === null && activeSaveDateIndex === null && dressViewer === null) {
       return
     }
 
@@ -244,6 +247,7 @@ function App() {
       if (event.key === 'Escape') {
         setActiveStoryIndex(null)
         setActiveSaveDateIndex(null)
+        setDressViewer(null)
         return
       }
 
@@ -256,6 +260,17 @@ function App() {
             }
 
             return (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length
+          })
+          return
+        }
+
+        if (dressViewer !== null) {
+          setDressViewer((current) => {
+            if (current === null || current.images.length === 0) {
+              return current
+            }
+
+            return { ...current, index: (current.index - 1 + current.images.length) % current.images.length }
           })
           return
         }
@@ -282,6 +297,17 @@ function App() {
           return
         }
 
+        if (dressViewer !== null) {
+          setDressViewer((current) => {
+            if (current === null || current.images.length === 0) {
+              return current
+            }
+
+            return { ...current, index: (current.index + 1) % current.images.length }
+          })
+          return
+        }
+
         setActiveSaveDateIndex((current) => {
           if (current === null || saveDateEntries.length === 0) {
             return current
@@ -300,7 +326,7 @@ function App() {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [activeSaveDateIndex, activeStoryIndex])
+  }, [activeSaveDateIndex, activeStoryIndex, dressViewer])
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
   const venueImages = weddingImageEntries.venue
@@ -324,16 +350,29 @@ function App() {
 
     const nextIndex = saveDateEntries.findIndex((entry) => entry.src === imageSrc)
     setActiveSaveDateIndex(nextIndex >= 0 ? nextIndex : 0)
+    setDressViewer(null)
   }
 
   const openStoryViewer = (index: number) => {
     setActiveSaveDateIndex(null)
+    setDressViewer(null)
     setActiveStoryIndex(index)
+  }
+
+  const openDressViewer = (images: { src: string; alt: string }[], index: number) => {
+    if (images.length === 0) {
+      return
+    }
+
+    setActiveStoryIndex(null)
+    setActiveSaveDateIndex(null)
+    setDressViewer({ images, index })
   }
 
   const closeSaveDateViewer = () => {
     setActiveStoryIndex(null)
     setActiveSaveDateIndex(null)
+    setDressViewer(null)
   }
 
   const showPreviousSaveDateImage = () => {
@@ -361,6 +400,26 @@ function App() {
       }
 
       return (current + 1) % saveDateEntries.length
+    })
+  }
+
+  const showPreviousDressImage = () => {
+    setDressViewer((current) => {
+      if (current === null || current.images.length === 0) {
+        return current
+      }
+
+      return { ...current, index: (current.index - 1 + current.images.length) % current.images.length }
+    })
+  }
+
+  const showNextDressImage = () => {
+    setDressViewer((current) => {
+      if (current === null || current.images.length === 0) {
+        return current
+      }
+
+      return { ...current, index: (current.index + 1) % current.images.length }
     })
   }
 
@@ -545,6 +604,14 @@ function App() {
           const casualEntries = sectionDressEntries.filter((entry) => entry.fileName.toLowerCase().includes('casual'))
           const fallbackSamples = section.samples.map((sample) => ({ src: sample, fileName: sample }))
           const casualSampleEntries = casualEntries.length > 0 ? casualEntries : fallbackSamples
+          const visibleCasualEntries = casualSampleEntries.slice(0, 2)
+          const sectionGalleryImages = [
+            ...(formalEntry ? [{ src: formalEntry.src, alt: `${section.title} formal sample` }] : []),
+            ...visibleCasualEntries.map((sample, idx) => ({
+              src: sample.src,
+              alt: `${section.title} casual sample ${idx + 1}`,
+            })),
+          ]
 
           return (
             <article key={section.title} className={`dress-block dress-block--${section.title.toLowerCase()}`}>
@@ -558,29 +625,44 @@ function App() {
               <div className="dress-layout" aria-label={`${section.title} outfit samples`}>
                 <figure className="sample-card sample-card--formal">
                   {formalEntry ? (
-                    <img
-                      src={formalEntry.src}
-                      alt={`${section.title} formal sample`}
-                      className="sample-photo"
-                      loading="lazy"
-                    />
+                    <button
+                      type="button"
+                      className="sample-photo-button"
+                      onClick={() => openDressViewer(sectionGalleryImages, 0)}
+                      aria-label={`View ${section.title} formal sample`}
+                    >
+                      <img
+                        src={formalEntry.src}
+                        alt={`${section.title} formal sample`}
+                        className="sample-photo"
+                        loading="lazy"
+                      />
+                    </button>
                   ) : (
                     <span>{section.samples[0]}</span>
                   )}
                 </figure>
 
-                <div className="sample-stack">
-                  {casualSampleEntries.slice(0, 2).map((sample, idx) => (
-                    <figure className="sample-card sample-card--casual" key={`${section.title}-${sample.fileName}-${idx}`}>
+                {visibleCasualEntries.map((sample, idx) => (
+                  <figure
+                    className={`sample-card sample-card--casual sample-card--casual-${idx + 1}`}
+                    key={`${section.title}-${sample.fileName}-${idx}`}
+                  >
+                    <button
+                      type="button"
+                      className="sample-photo-button"
+                      onClick={() => openDressViewer(sectionGalleryImages, (formalEntry ? 1 : 0) + idx)}
+                      aria-label={`View ${section.title} casual sample ${idx + 1}`}
+                    >
                       <img
                         src={sample.src}
                         alt={`${section.title} casual sample ${idx + 1}`}
                         className="sample-photo"
                         loading="lazy"
                       />
-                    </figure>
-                  ))}
-                </div>
+                    </button>
+                  </figure>
+                ))}
               </div>
             </article>
           )
@@ -714,13 +796,19 @@ function App() {
       </section>
       </main>
 
-      {activeSaveDateEntry || isStoryViewerOpen ? (
+      {activeSaveDateEntry || isStoryViewerOpen || dressViewer ? (
         <div className="image-viewer-backdrop" role="presentation" onClick={closeSaveDateViewer}>
           <div
             className={`image-viewer${isStoryViewerOpen ? ' image-viewer--story' : ''}`}
             role="dialog"
             aria-modal="true"
-            aria-label={isStoryViewerOpen ? 'Our Story image viewer' : 'Save the date image viewer'}
+            aria-label={
+              isStoryViewerOpen
+                ? 'Our Story image viewer'
+                : dressViewer
+                  ? 'Dress code image viewer'
+                  : 'Save the date image viewer'
+            }
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -743,7 +831,9 @@ function App() {
                           ? current
                           : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
                       )
-                  : showPreviousSaveDateImage
+                  : dressViewer
+                    ? showPreviousDressImage
+                    : showPreviousSaveDateImage
               }
               aria-label="Previous image"
             >
@@ -752,14 +842,33 @@ function App() {
 
             <div className="image-viewer-frame">
               <img
-                src={isStoryViewerOpen ? activeStoryImage : activeSaveDateEntry?.src ?? ''}
-                alt={isStoryViewerOpen ? activeStoryChapter?.title ?? '' : activeSaveDateEntry?.fileName ?? ''}
+                src={
+                  isStoryViewerOpen
+                    ? activeStoryImage
+                    : dressViewer
+                      ? dressViewer.images[dressViewer.index]?.src ?? ''
+                      : activeSaveDateEntry?.src ?? ''
+                }
+                alt={
+                  isStoryViewerOpen
+                    ? activeStoryChapter?.title ?? ''
+                    : dressViewer
+                      ? dressViewer.images[dressViewer.index]?.alt ?? ''
+                      : activeSaveDateEntry?.fileName ?? ''
+                }
                 className="image-viewer-image"
               />
               {isStoryViewerOpen ? (
                 <div className="image-viewer-story-meta">
                   <h2>{activeStoryChapter?.title}</h2>
                   <p>{activeStoryChapter?.body}</p>
+                </div>
+              ) : dressViewer ? (
+                <div className="image-viewer-meta">
+                  <span>{dressViewer.images[dressViewer.index]?.alt}</span>
+                  <span>
+                    {dressViewer.index + 1} / {dressViewer.images.length}
+                  </span>
                 </div>
               ) : (
                 <div className="image-viewer-meta">
@@ -780,7 +889,9 @@ function App() {
                       setActiveStoryIndex((current) =>
                         current === null ? current : (current + 1) % siteData.story.chapters.length,
                       )
-                  : showNextSaveDateImage
+                  : dressViewer
+                    ? showNextDressImage
+                    : showNextSaveDateImage
               }
               aria-label="Next image"
             >
