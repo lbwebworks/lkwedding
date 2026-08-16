@@ -157,6 +157,7 @@ function App() {
   const [activeStoryIndex, setActiveStoryIndex] = useState<number | null>(null)
   const [activeSaveDateIndex, setActiveSaveDateIndex] = useState<number | null>(null)
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
+  const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
@@ -193,18 +194,72 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (activeSaveDateIndex === null) {
+    const section = storySectionRef.current
+
+    if (!section) {
+      return
+    }
+
+    const cards = Array.from(section.querySelectorAll<HTMLElement>('.story-card'))
+    let frameId = 0
+
+    const updateStoryVisibility = () => {
+      frameId = 0
+      const viewportCenter = window.innerHeight / 2
+      const fadeDistance = Math.max(window.innerHeight * 0.48, 220)
+
+      cards.forEach((card) => {
+        const bounds = card.getBoundingClientRect()
+        const cardCenter = bounds.top + bounds.height / 2
+        const distanceFromCenter = Math.abs(cardCenter - viewportCenter)
+        const visibility = Math.max(0.16, 1 - distanceFromCenter / fadeDistance)
+
+        card.style.setProperty('--story-opacity', visibility.toFixed(3))
+      })
+    }
+
+    const scheduleStoryVisibilityUpdate = () => {
+      if (frameId === 0) {
+        frameId = window.requestAnimationFrame(updateStoryVisibility)
+      }
+    }
+
+    updateStoryVisibility()
+    window.addEventListener('scroll', scheduleStoryVisibilityUpdate, { passive: true })
+    window.addEventListener('resize', scheduleStoryVisibilityUpdate)
+
+    return () => {
+      window.removeEventListener('scroll', scheduleStoryVisibilityUpdate)
+      window.removeEventListener('resize', scheduleStoryVisibilityUpdate)
+      window.cancelAnimationFrame(frameId)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (activeStoryIndex === null && activeSaveDateIndex === null) {
       return
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        setActiveStoryIndex(null)
         setActiveSaveDateIndex(null)
         return
       }
 
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
+        if (activeStoryIndex !== null) {
+          setActiveStoryIndex((current) => {
+            if (current === null) {
+              return current
+            }
+
+            return (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length
+          })
+          return
+        }
+
         setActiveSaveDateIndex((current) => {
           if (current === null || saveDateEntries.length === 0) {
             return current
@@ -216,6 +271,17 @@ function App() {
 
       if (event.key === 'ArrowRight') {
         event.preventDefault()
+        if (activeStoryIndex !== null) {
+          setActiveStoryIndex((current) => {
+            if (current === null) {
+              return current
+            }
+
+            return (current + 1) % siteData.story.chapters.length
+          })
+          return
+        }
+
         setActiveSaveDateIndex((current) => {
           if (current === null || saveDateEntries.length === 0) {
             return current
@@ -234,7 +300,7 @@ function App() {
       document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', handleKeyDown)
     }
-  }, [activeSaveDateIndex])
+  }, [activeSaveDateIndex, activeStoryIndex])
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
   const venueImages = weddingImageEntries.venue
@@ -260,7 +326,13 @@ function App() {
     setActiveSaveDateIndex(nextIndex >= 0 ? nextIndex : 0)
   }
 
+  const openStoryViewer = (index: number) => {
+    setActiveSaveDateIndex(null)
+    setActiveStoryIndex(index)
+  }
+
   const closeSaveDateViewer = () => {
+    setActiveStoryIndex(null)
     setActiveSaveDateIndex(null)
   }
 
@@ -333,6 +405,13 @@ function App() {
 
     return matched?.src ?? weddingImageEntries.story[index % weddingImageEntries.story.length].src
   }
+
+  const activeStoryChapter =
+    activeStoryIndex !== null ? siteData.story.chapters[activeStoryIndex % siteData.story.chapters.length] : null
+  const activeStoryImage = activeStoryChapter
+    ? pickStoryImage(activeStoryChapter.title, activeStoryIndex ?? 0)
+    : ''
+  const isStoryViewerOpen = activeStoryChapter !== null
 
   return (
     <>
@@ -408,30 +487,16 @@ function App() {
         </div>
       </section>
 
-      <section className="panel story" id="story">
+      <section className="panel story" id="story" ref={storySectionRef}>
         <h2>{siteData.story.title}</h2>
         <div className="story-grid">
           {siteData.story.chapters.map((chapter, index) => (
-            <article
+            <button
+              type="button"
               key={chapter.title}
-              className={`story-card${activeStoryIndex === index ? ' is-active' : ''}`}
-              tabIndex={0}
-              onPointerDown={(event) => {
-                if (event.pointerType === 'touch') {
-                  setActiveStoryIndex(index)
-                }
-              }}
-              onPointerUp={(event) => {
-                if (event.pointerType === 'touch') {
-                  setActiveStoryIndex(null)
-                }
-              }}
-              onPointerCancel={() => setActiveStoryIndex(null)}
-              onPointerLeave={(event) => {
-                if (event.pointerType === 'touch') {
-                  setActiveStoryIndex(null)
-                }
-              }}
+              className="story-card"
+              onClick={() => openStoryViewer(index)}
+              aria-label={`Open ${chapter.title} story image`}
             >
               <div className="story-media">
                 {weddingImageEntries.story.length > 0 ? (
@@ -449,7 +514,7 @@ function App() {
                   <p>{chapter.body}</p>
                 </div>
               </div>
-            </article>
+            </button>
           ))}
         </div>
       </section>
@@ -649,13 +714,13 @@ function App() {
       </section>
       </main>
 
-      {activeSaveDateEntry ? (
+      {activeSaveDateEntry || isStoryViewerOpen ? (
         <div className="image-viewer-backdrop" role="presentation" onClick={closeSaveDateViewer}>
           <div
-            className="image-viewer"
+            className={`image-viewer${isStoryViewerOpen ? ' image-viewer--story' : ''}`}
             role="dialog"
             aria-modal="true"
-            aria-label="Save the date image viewer"
+            aria-label={isStoryViewerOpen ? 'Our Story image viewer' : 'Save the date image viewer'}
             onClick={(event) => event.stopPropagation()}
           >
             <button
@@ -670,7 +735,16 @@ function App() {
             <button
               type="button"
               className="image-viewer-nav image-viewer-nav--prev"
-              onClick={showPreviousSaveDateImage}
+              onClick={
+                isStoryViewerOpen
+                  ? () =>
+                      setActiveStoryIndex((current) =>
+                        current === null
+                          ? current
+                          : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
+                      )
+                  : showPreviousSaveDateImage
+              }
               aria-label="Previous image"
             >
               &lt;
@@ -678,22 +752,36 @@ function App() {
 
             <div className="image-viewer-frame">
               <img
-                src={activeSaveDateEntry.src}
-                alt={activeSaveDateEntry.fileName}
+                src={isStoryViewerOpen ? activeStoryImage : activeSaveDateEntry?.src ?? ''}
+                alt={isStoryViewerOpen ? activeStoryChapter?.title ?? '' : activeSaveDateEntry?.fileName ?? ''}
                 className="image-viewer-image"
               />
-              <div className="image-viewer-meta">
-                <span>{activeSaveDateEntry.fileName}</span>
-                <span>
-                  {activeSaveDateViewerIndex + 1} / {saveDateEntries.length}
-                </span>
-              </div>
+              {isStoryViewerOpen ? (
+                <div className="image-viewer-story-meta">
+                  <h2>{activeStoryChapter?.title}</h2>
+                  <p>{activeStoryChapter?.body}</p>
+                </div>
+              ) : (
+                <div className="image-viewer-meta">
+                  <span>{activeSaveDateEntry?.fileName}</span>
+                  <span>
+                    {activeSaveDateViewerIndex + 1} / {saveDateEntries.length}
+                  </span>
+                </div>
+              )}
             </div>
 
             <button
               type="button"
               className="image-viewer-nav image-viewer-nav--next"
-              onClick={showNextSaveDateImage}
+              onClick={
+                isStoryViewerOpen
+                  ? () =>
+                      setActiveStoryIndex((current) =>
+                        current === null ? current : (current + 1) % siteData.story.chapters.length,
+                      )
+                  : showNextSaveDateImage
+              }
               aria-label="Next image"
             >
               &gt;
