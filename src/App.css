@@ -1565,17 +1565,11 @@ a {
   }
 
   .image-viewer {
-    width: 100%;
-    max-width: 100%;
-    max-height: 100svh;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
+    width: min(96vw, 920px);
+    max-height: 92svh;
   }
 
   .image-viewer-backdrop {
-    align-items: flex-end;
     padding: 0;
   }
 
