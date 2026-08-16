@@ -369,14 +369,6 @@ export const siteData: SiteData = {
           "After the RSVP deadline, we'll finalize our guest list, seating arrangements, and companion requests. If you've requested approval for a companion, we'll get in touch with you once we've completed our final arrangements.",
         ],
       },
-      {
-        icon: 'wi-gift',
-        question: 'Will there be a gift registry?',
-        answer: [
-          'Your presence is truly the greatest gift we could ask for.',
-          "If you'd still like to bless us with a gift, a monetary gift would be sincerely appreciated as we begin this new chapter together.",
-        ],
-      },
     ],
   },
   footer: {
