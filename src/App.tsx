@@ -800,35 +800,26 @@ function App() {
             }
             onClick={(event) => event.stopPropagation()}
           >
-            <button
-              type="button"
-              className="secondary image-viewer-close"
-              onClick={closeSaveDateViewer}
-              aria-label="Close image viewer"
-            >
-              Close
-            </button>
-
-            <button
-              type="button"
-              className="image-viewer-nav image-viewer-nav--prev"
-              onClick={
-                isStoryViewerOpen
-                  ? () =>
-                      setActiveStoryIndex((current) =>
-                        current === null
-                          ? current
-                          : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
-                      )
+            {/* Header */}
+            <div className="image-viewer-header">
+              <span className="image-viewer-counter">
+                {isStoryViewerOpen
+                  ? `${(activeStoryIndex ?? 0) + 1} / ${siteData.story.chapters.length}`
                   : dressViewer
-                    ? showPreviousDressImage
-                    : showPreviousSaveDateImage
-              }
-              aria-label="Previous image"
-            >
-              &lt;
-            </button>
+                    ? `${dressViewer.index + 1} / ${dressViewer.images.length}`
+                    : `${activeSaveDateViewerIndex + 1} / ${saveDateEntries.length}`}
+              </span>
+              <button
+                type="button"
+                className="image-viewer-close"
+                onClick={closeSaveDateViewer}
+                aria-label="Close image viewer"
+              >
+                ✕
+              </button>
+            </div>
 
+            {/* Image + meta */}
             <div className="image-viewer-frame">
               <img
                 src={
@@ -847,45 +838,66 @@ function App() {
                 }
                 className="image-viewer-image"
               />
-              {isStoryViewerOpen ? (
+              {isStoryViewerOpen && (
                 <div className="image-viewer-story-meta">
                   <h2>{activeStoryChapter?.title}</h2>
                   <p>{activeStoryChapter?.body}</p>
                 </div>
-              ) : dressViewer ? (
-                <div className="image-viewer-meta">
-                  <span>{dressViewer.images[dressViewer.index]?.alt}</span>
-                  <span>
-                    {dressViewer.index + 1} / {dressViewer.images.length}
-                  </span>
-                </div>
-              ) : (
-                <div className="image-viewer-meta">
-                  <span>{activeSaveDateEntry?.fileName}</span>
-                  <span>
-                    {activeSaveDateViewerIndex + 1} / {saveDateEntries.length}
-                  </span>
-                </div>
               )}
             </div>
 
-            <button
-              type="button"
-              className="image-viewer-nav image-viewer-nav--next"
-              onClick={
-                isStoryViewerOpen
-                  ? () =>
-                      setActiveStoryIndex((current) =>
-                        current === null ? current : (current + 1) % siteData.story.chapters.length,
-                      )
-                  : dressViewer
-                    ? showNextDressImage
-                    : showNextSaveDateImage
-              }
-              aria-label="Next image"
-            >
-              &gt;
-            </button>
+            {/* Footer toolbar */}
+            <div className="image-viewer-toolbar">
+              <button
+                type="button"
+                className="image-viewer-nav image-viewer-nav--prev"
+                onClick={
+                  isStoryViewerOpen
+                    ? () =>
+                        setActiveStoryIndex((current) =>
+                          current === null
+                            ? current
+                            : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
+                        )
+                    : dressViewer
+                      ? showPreviousDressImage
+                      : showPreviousSaveDateImage
+                }
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+
+              <div className="image-viewer-toolbar-meta">
+                {!isStoryViewerOpen && (
+                  <div className="image-viewer-meta">
+                    <span>
+                      {dressViewer
+                        ? dressViewer.images[dressViewer.index]?.alt
+                        : activeSaveDateEntry?.fileName}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                className="image-viewer-nav image-viewer-nav--next"
+                onClick={
+                  isStoryViewerOpen
+                    ? () =>
+                        setActiveStoryIndex((current) =>
+                          current === null ? current : (current + 1) % siteData.story.chapters.length,
+                        )
+                    : dressViewer
+                      ? showNextDressImage
+                      : showNextSaveDateImage
+                }
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </div>
           </div>
         </div>
       ) : null}
