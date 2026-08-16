@@ -5,6 +5,7 @@ export type ImageEntry = {
 
 export type SaveDateImageEntry = ImageEntry & {
   thumbnailSrc: string
+  viewerSrc: string
 }
 
 const asSortedEntries = (modules: Record<string, string>): ImageEntry[] =>
@@ -49,14 +50,19 @@ const pickFolderEntries = (folderPath: string) =>
 
 const saveDateFullEntries = sortEntriesByFileName(pickFolderEntries('save-the-date'))
 const saveDateThumbEntries = sortEntriesByFileName(pickFolderEntries('save-the-date-thumbs'))
+const saveDateViewerEntries = sortEntriesByFileName(pickFolderEntries('save-the-date-viewer'))
 const saveDateThumbMap = new Map(
   saveDateThumbEntries.map((entry) => [getFileStem(entry.fileName), entry.src]),
+)
+const saveDateViewerMap = new Map(
+  saveDateViewerEntries.map((entry) => [getFileStem(entry.fileName), entry.src]),
 )
 
 const toSaveDateEntries = (entries: ImageEntry[]): SaveDateImageEntry[] =>
   entries.map((entry) => ({
     ...entry,
     thumbnailSrc: saveDateThumbMap.get(getFileStem(entry.fileName)) ?? entry.src,
+    viewerSrc: saveDateViewerMap.get(getFileStem(entry.fileName)) ?? entry.src,
   }))
 
 export const weddingImages = {
