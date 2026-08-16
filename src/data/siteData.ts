@@ -172,17 +172,17 @@ export const siteData: SiteData = {
         note: 'Casa Agustin Resort',
       },
       {
-        time: 'To Be Announced',
+        time: 'TBD',
         title: 'Games and Programs',
         note: 'Family and friends program',
       },
       {
-        time: 'To Be Announced',
+        time: 'TBD',
         title: 'Dinner',
         note: 'Family and friends program',
       },
       {
-        time: 'To Be Announced',
+        time: 'TBD',
         title: 'Celebration',
         note: 'Dance and photo moments',
       },
