@@ -1174,10 +1174,9 @@ a {
   }
 
   .site-shell {
-    margin: 0 auto 14px;
+    margin: 0 auto;
     padding: 12px;
     gap: 0;
-    padding-bottom: 192px;
   }
 
   .panel {
@@ -1226,7 +1225,6 @@ a {
     margin: 0;
     padding: 0;
     gap: 0;
-    padding-bottom: 232px;
   }
 
   .panel {

@@ -39,25 +39,39 @@ function getInitialSaveDateIndex(length: number, seedIndex: number) {
   return (seedIndex + Math.floor(Math.random() * length)) % length
 }
 
-
-
-function getNextDistinctSaveDateIndex(items: string[], currentIndex: number) {
-  if (items.length <= 1) {
+function getNextSaveDateIndex(
+  totalCount: number,
+  currentIndex: number,
+  excludeIndices: ReadonlySet<number>,
+) {
+  if (totalCount <= 1) {
     return 0
   }
 
-  const currentItem = items[currentIndex % items.length] ?? ''
+  // Build list of candidate indices that are not excluded (except current self)
+  const candidates: number[] = []
 
-  for (let offset = 1; offset <= items.length; offset += 1) {
-    const nextIndex = (currentIndex + offset) % items.length
-    const nextItem = items[nextIndex] ?? ''
-
-    if (nextItem !== currentItem) {
-      return nextIndex
+  for (let i = 0; i < totalCount; i++) {
+    if (i !== currentIndex && !excludeIndices.has(i)) {
+      candidates.push(i)
     }
   }
 
-  return currentIndex
+  // If every index is excluded (unlikely but possible with few images), fall back
+  // to any index different from current
+  if (candidates.length === 0) {
+    for (let i = 0; i < totalCount; i++) {
+      if (i !== currentIndex) {
+        candidates.push(i)
+      }
+    }
+  }
+
+  if (candidates.length === 0) {
+    return currentIndex
+  }
+
+  return candidates[Math.floor(Math.random() * candidates.length)]!
 }
 
 type SaveDateTileProps = {
@@ -65,6 +79,8 @@ type SaveDateTileProps = {
   fullSizeImages: string[]
   showAsImage: boolean
   seedIndex: number
+  activeIndices: ReadonlySet<number>
+  onIndexChange: (slotIndex: number, newImageIndex: number) => void
   onOpenImage?: (imageSrc: string) => void
 }
 
@@ -73,12 +89,25 @@ function SaveDateTile({
   fullSizeImages,
   showAsImage,
   seedIndex,
+  activeIndices,
+  onIndexChange,
   onOpenImage,
 }: SaveDateTileProps) {
   const [currentIndex, setCurrentIndex] = useState(() =>
     getInitialSaveDateIndex(fullSizeImages.length, seedIndex),
   )
   const [isVisible, setIsVisible] = useState(true)
+  const activeIndicesRef = useRef(activeIndices)
+
+  useEffect(() => {
+    activeIndicesRef.current = activeIndices
+  }, [activeIndices])
+
+  // Register initial index on mount
+  useEffect(() => {
+    onIndexChange(seedIndex, currentIndex)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (fullSizeImages.length === 0) {
@@ -102,7 +131,14 @@ function SaveDateTile({
             return
           }
 
-          setCurrentIndex((current) => getNextDistinctSaveDateIndex(fullSizeImages, current))
+          setCurrentIndex((current) => {
+            // Exclude all indices currently shown by other tiles
+            const excludeWithoutSelf = new Set(activeIndicesRef.current)
+            excludeWithoutSelf.delete(current)
+            const next = getNextSaveDateIndex(fullSizeImages.length, current, excludeWithoutSelf)
+            onIndexChange(seedIndex, next)
+            return next
+          })
           setIsVisible(true)
           scheduleNextSwap()
         }, SAVE_DATE_FADE_DURATION_MS)
@@ -160,8 +196,18 @@ function App() {
     null,
   )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
+  // Tracks which image indices are currently displayed across all SaveDateTiles
+  const [saveDateActiveIndices, setSaveDateActiveIndices] = useState<ReadonlySet<number>>(new Set())
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
+
+  const handleSaveDateIndexChange = (_slotIndex: number, newImageIndex: number) => {
+    setSaveDateActiveIndices((prev) => {
+      const next = new Set(prev)
+      next.add(newImageIndex)
+      return next
+    })
+  }
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -727,6 +773,8 @@ function App() {
                 fullSizeImages={saveDateUsesImages ? saveDateFullImages : saveDateItems}
                 showAsImage={saveDateUsesImages}
                 seedIndex={idx}
+                activeIndices={saveDateActiveIndices}
+                onIndexChange={handleSaveDateIndexChange}
                 onOpenImage={saveDateUsesImages ? openSaveDateViewer : undefined}
               />
             ),
