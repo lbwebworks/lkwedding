@@ -75,13 +75,6 @@ export type SiteData = {
       names: string[]
     }>
   }
-  details: {
-    title: string
-    items: Array<{
-      title: string
-      description: string
-    }>
-  }
   contacts: {
     title: string
     items: Array<{
@@ -290,19 +283,6 @@ export const siteData: SiteData = {
       {
         title: 'Bridesmaids',
         names: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden', 'Claudine Faye Claveria', 'Charlene Mae Claveria', 'Camille Shane Claveria', 'Rosette De Mesa', 'Rosette Ramos', 'Anna Joy Gonzales', 'Coleen Keith Garcia', 'Erin Eliza Yamanaka'],
-      },
-    ],
-  },
-  details: {
-    title: 'Details',
-    items: [
-      {
-        title: 'Parking',
-        description: 'Please arrive early to secure parking and avoid delays.',
-      },
-      {
-        title: 'Gift Note',
-        description: 'Your presence and prayers are the greatest gift to us.',
       },
     ],
   },

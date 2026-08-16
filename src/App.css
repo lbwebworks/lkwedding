@@ -166,7 +166,6 @@ a {
 .save-date h2,
 .rsvp h2,
 .entourage h2,
-.details h2,
 .contacts h2,
 .faq h2,
 .closing h2 {
@@ -357,7 +356,6 @@ a {
 .dress h2,
 .venue h2,
 .save-date h2,
-.details h2,
 .faq h2 {
   font-family: var(--font-elegant);
   text-transform: uppercase;
@@ -418,12 +416,18 @@ a {
   left: 50%;
   top: 50%;
   z-index: 1;
-  width: min(100% - 24px, 560px);
-  padding: 18px 16px 16px;
+  width: min(100% - 8px, 680px);
+  padding: 32px 28px;
   transform: translate(-50%, -50%);
   text-align: center;
   color: #f7fbff;
-  background: rgba(4, 10, 18, 0.62);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(4, 10, 18, 0.82) 0%,
+    rgba(4, 10, 18, 0.62) 45%,
+    rgba(4, 10, 18, 0.28) 72%,
+    transparent 100%
+  );
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
   opacity: var(--story-opacity, 0.16);
@@ -455,7 +459,6 @@ a {
 .timeline h3,
 .dress-block h3,
 .entourage-grid h3,
-.info-grid h3,
 .venue h3 {
   margin: 0 0 6px;
   color: var(--heading);
@@ -515,8 +518,7 @@ a {
 }
 
 .dress,
-.venue,
-.details {
+.venue {
   font-family: var(--font-elegant);
 }
 
@@ -569,7 +571,6 @@ a {
 
 .story-card h3,
 .dress-block h3,
-.info-grid h3,
 .venue h3 {
   font-family: var(--font-elegant);
   letter-spacing: 0.04em;
@@ -984,8 +985,7 @@ a {
   font-weight: 700;
 }
 
-.entourage-grid,
-.info-grid {
+.entourage-grid {
   display: grid;
   gap: 10px;
 }
@@ -1007,17 +1007,6 @@ a {
   background: var(--line);
   opacity: 0.75;
   transform: translateX(-0.5px);
-}
-
-.info-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.info-grid article {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  background: var(--surface-2);
 }
 
 .entourage-grid article {
@@ -1090,10 +1079,6 @@ a {
   }
 
   .story-card {
-    grid-template-columns: 1fr;
-  }
-
-  .info-grid {
     grid-template-columns: 1fr;
   }
 
@@ -1304,8 +1289,8 @@ a {
   .story-caption {
     opacity: var(--story-opacity, 0.16);
     transform: translate(-50%, -50%);
-    width: min(calc(100% - 28px), 34rem);
-    padding: 12px 10px;
+    width: min(calc(100% - 8px), 38rem);
+    padding: 22px 16px;
   }
 
   .story-caption h3,
@@ -1336,7 +1321,6 @@ a {
   .save-date p,
   .rsvp p,
   .entourage p,
-  .details p,
   .contacts p,
   .faq p,
   .closing p {
@@ -1347,7 +1331,6 @@ a {
   .timeline h3,
   .dress-block h3,
   .entourage-grid h3,
-  .info-grid h3,
   .venue h3,
   .faq summary {
     color: var(--heading);
@@ -1394,7 +1377,6 @@ a {
   }
 
   .dress-block,
-  .info-grid article,
   .faq details {
     background: var(--surface-2);
     border-color: rgba(120, 147, 174, 0.45);
@@ -1497,11 +1479,6 @@ a {
     color: var(--heading);
   }
 
-  .info-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-
   .faq summary {
     font-size: 0.84rem;
   }
@@ -1541,7 +1518,6 @@ a {
 }
 
 @media (max-width: 380px) {
-  .info-grid,
   .count-grid {
     grid-template-columns: 1fr;
   }

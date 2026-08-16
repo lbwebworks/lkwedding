@@ -748,17 +748,6 @@ function App() {
         </div>
       </section>
 
-      <section className="panel details" id="details">
-        <h2>{siteData.details.title}</h2>
-        <div className="info-grid">
-          {siteData.details.items.map((item) => (
-            <article key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
 
       <section className="panel faq" id="faq">
         <h2>{siteData.faqs.title}</h2>
