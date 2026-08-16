@@ -31,56 +31,15 @@ function getRandomSaveDateDelay() {
   )
 }
 
-function getInitialSaveDateIndex(length: number, seedIndex: number) {
-  if (length <= 0) {
-    return 0
-  }
-
-  return (seedIndex + Math.floor(Math.random() * length)) % length
-}
-
-function getNextSaveDateIndex(
-  totalCount: number,
-  currentIndex: number,
-  excludeIndices: ReadonlySet<number>,
-) {
-  if (totalCount <= 1) {
-    return 0
-  }
-
-  // Build list of candidate indices that are not excluded (except current self)
-  const candidates: number[] = []
-
-  for (let i = 0; i < totalCount; i++) {
-    if (i !== currentIndex && !excludeIndices.has(i)) {
-      candidates.push(i)
-    }
-  }
-
-  // If every index is excluded (unlikely but possible with few images), fall back
-  // to any index different from current
-  if (candidates.length === 0) {
-    for (let i = 0; i < totalCount; i++) {
-      if (i !== currentIndex) {
-        candidates.push(i)
-      }
-    }
-  }
-
-  if (candidates.length === 0) {
-    return currentIndex
-  }
-
-  return candidates[Math.floor(Math.random() * candidates.length)]!
-}
+// Module-level counter shared across all tiles. Each tile claims the next
+// value when it swaps, guaranteeing no two tiles ever show the same image.
+let saveDateGlobalCounter = 0
 
 type SaveDateTileProps = {
   thumbnails: string[]
   fullSizeImages: string[]
   showAsImage: boolean
-  seedIndex: number
-  activeIndices: ReadonlySet<number>
-  onIndexChange: (slotIndex: number, newImageIndex: number) => void
+  slotIndex: number
   onOpenImage?: (imageSrc: string) => void
 }
 
@@ -88,26 +47,17 @@ function SaveDateTile({
   thumbnails,
   fullSizeImages,
   showAsImage,
-  seedIndex,
-  activeIndices,
-  onIndexChange,
+  slotIndex,
   onOpenImage,
 }: SaveDateTileProps) {
-  const [currentIndex, setCurrentIndex] = useState(() =>
-    getInitialSaveDateIndex(fullSizeImages.length, seedIndex),
-  )
+  // Each tile claims its own index from the global counter on mount,
+  // then increments the counter before taking the next one on each swap.
+  const [imageIndex, setImageIndex] = useState(() => {
+    const idx = saveDateGlobalCounter % Math.max(fullSizeImages.length, 1)
+    saveDateGlobalCounter += 1
+    return idx
+  })
   const [isVisible, setIsVisible] = useState(true)
-  const activeIndicesRef = useRef(activeIndices)
-
-  useEffect(() => {
-    activeIndicesRef.current = activeIndices
-  }, [activeIndices])
-
-  // Register initial index on mount
-  useEffect(() => {
-    onIndexChange(seedIndex, currentIndex)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(() => {
     if (fullSizeImages.length === 0) {
@@ -120,23 +70,14 @@ function SaveDateTile({
 
     const scheduleNextSwap = () => {
       hideTimerId = window.setTimeout(() => {
-        if (cancelled) {
-          return
-        }
-
+        if (cancelled) return
         setIsVisible(false)
 
         swapTimerId = window.setTimeout(() => {
-          if (cancelled) {
-            return
-          }
-
-          setCurrentIndex((current) => {
-            // Exclude all indices currently shown by other tiles
-            const excludeWithoutSelf = new Set(activeIndicesRef.current)
-            excludeWithoutSelf.delete(current)
-            const next = getNextSaveDateIndex(fullSizeImages.length, current, excludeWithoutSelf)
-            onIndexChange(seedIndex, next)
+          if (cancelled) return
+          setImageIndex(() => {
+            const next = saveDateGlobalCounter % fullSizeImages.length
+            saveDateGlobalCounter += 1
             return next
           })
           setIsVisible(true)
@@ -149,20 +90,13 @@ function SaveDateTile({
 
     return () => {
       cancelled = true
-
-      if (hideTimerId !== undefined) {
-        window.clearTimeout(hideTimerId)
-      }
-
-      if (swapTimerId !== undefined) {
-        window.clearTimeout(swapTimerId)
-      }
+      if (hideTimerId !== undefined) window.clearTimeout(hideTimerId)
+      if (swapTimerId !== undefined) window.clearTimeout(swapTimerId)
     }
   }, [fullSizeImages.length])
 
-  const currentFullSizeImage = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
-  const currentThumbnail = thumbnails[currentIndex % thumbnails.length] ?? currentFullSizeImage
-  const currentLabel = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
+  const currentFullSizeImage = fullSizeImages[imageIndex] ?? ''
+  const currentThumbnail = thumbnails[imageIndex] ?? currentFullSizeImage
 
   return (
     <button
@@ -170,17 +104,17 @@ function SaveDateTile({
       className={`save-date-card${isVisible ? '' : ' is-hidden'}`}
       onClick={() => onOpenImage?.(currentFullSizeImage)}
       disabled={!showAsImage || !onOpenImage}
-      aria-label={`Open save the date image ${seedIndex + 1}`}
+      aria-label={`Open save the date image ${slotIndex + 1}`}
     >
       {showAsImage ? (
         <img
           src={currentThumbnail}
-          alt={`Save the date ${seedIndex + 1}`}
+          alt={`Save the date ${slotIndex + 1}`}
           className="save-date-photo"
           loading="lazy"
         />
       ) : (
-        <div className="save-date-label">{currentLabel}</div>
+        <div className="save-date-label">{currentFullSizeImage}</div>
       )}
     </button>
   )
@@ -196,18 +130,8 @@ function App() {
     null,
   )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
-  // Tracks which image indices are currently displayed across all SaveDateTiles
-  const [saveDateActiveIndices, setSaveDateActiveIndices] = useState<ReadonlySet<number>>(new Set())
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
-
-  const handleSaveDateIndexChange = (_slotIndex: number, newImageIndex: number) => {
-    setSaveDateActiveIndices((prev) => {
-      const next = new Set(prev)
-      next.add(newImageIndex)
-      return next
-    })
-  }
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -631,7 +555,12 @@ function App() {
             <article key={`${item.time}-${item.title}`}>
               <p className="time">{item.time}</p>
               <div>
-                <h3>{item.title}</h3>
+                <h3>
+                  <svg className="timeline-icon" aria-hidden="true">
+                    <use href={`/icons.svg#${item.icon}`} />
+                  </svg>
+                  {item.title}
+                </h3>
                 <p>{item.note}</p>
               </div>
             </article>
@@ -772,9 +701,7 @@ function App() {
                 thumbnails={saveDateUsesImages ? saveDateThumbnailImages : saveDateItems}
                 fullSizeImages={saveDateUsesImages ? saveDateFullImages : saveDateItems}
                 showAsImage={saveDateUsesImages}
-                seedIndex={idx}
-                activeIndices={saveDateActiveIndices}
-                onIndexChange={handleSaveDateIndexChange}
+                slotIndex={idx}
                 onOpenImage={saveDateUsesImages ? openSaveDateViewer : undefined}
               />
             ),
@@ -801,7 +728,12 @@ function App() {
         <h2>{siteData.faqs.title}</h2>
         {siteData.faqs.items.map((item) => (
           <details key={item.question}>
-            <summary>{item.question}</summary>
+            <summary>
+              <svg className="faq-icon" aria-hidden="true">
+                <use href={`/icons.svg#${item.icon}`} />
+              </svg>
+              {item.question}
+            </summary>
             {item.answer.map((paragraph, index) => (
               <p key={`${item.question}-${index}`}>{paragraph}</p>
             ))}

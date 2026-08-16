@@ -28,6 +28,7 @@ export type SiteData = {
       time: string
       title: string
       note: string
+      icon: string
     }>
   }
   dressCode: {
@@ -86,6 +87,7 @@ export type SiteData = {
   faqs: {
     title: string
     items: Array<{
+      icon: string
       question: string
       answer: string[]
     }>
@@ -141,43 +143,51 @@ export const siteData: SiteData = {
     items: [
       {
         time: '1:30 PM',
-        title: 'Ceremony Guest Arrival',
-        note: 'Welcome and seat at the church',
+        icon: 'wi-arrival',
+        title: 'Guest Arrival',
+        note: 'Doors open at the church. Find your seats and enjoy the atmosphere as we prepare to begin.',
       },
       {
         time: '2:00 PM',
+        icon: 'wi-rings',
         title: 'Wedding Ceremony',
-        note: 'Iglesia Ni Cristo [Pampanga West] - Guagua',
+        note: 'Iglesia Ni Cristo [Pampanga West] — Betis, Guagua, Pampanga. The exchange of vows and rings.',
       },
       {
         time: '3:15 PM',
+        icon: 'wi-car',
         title: 'Travel to Reception',
-        note: '',
+        note: 'Casa Agustin Resort is a short drive away. Coordinators will be on hand to assist.',
       },
       {
         time: '3:30 PM',
-        title: 'Reception Guests Arrrival',
-        note: 'Welcome and seating at Casa Agustin Resort',
+        icon: 'wi-bloom',
+        title: 'Reception Guest Arrival',
+        note: 'Welcome to Casa Agustin Resort. Register at the entrance and be guided to your seat.',
       },
       {
         time: '4:00 PM',
-        title: 'Reception Begins',
-        note: 'Casa Agustin Resort',
+        icon: 'wi-toast',
+        title: 'Reception Program Begins',
+        note: 'The celebration officially starts — toasts, messages, and the first moments as a married couple.',
       },
       {
         time: 'TBD',
-        title: 'Games and Programs',
-        note: 'Family and friends program',
+        icon: 'wi-games',
+        title: 'Games & Intermission',
+        note: 'Fun activities and heartfelt messages from family and friends.',
       },
       {
         time: 'TBD',
+        icon: 'wi-dinner',
         title: 'Dinner',
-        note: 'Family and friends program',
+        note: 'Sit back and enjoy a shared meal together with your loved ones.',
       },
       {
         time: 'TBD',
-        title: 'Celebration',
-        note: 'Dance and photo moments',
+        icon: 'wi-celebrate',
+        title: 'Photo Moments',
+        note: 'Capture memories that will last a lifetime.',
       },
     ],
   },
@@ -305,32 +315,37 @@ export const siteData: SiteData = {
     title: 'Frequently Asked Questions',
     items: [
       {
-        question: '🚗 Is parking available at the venue?',
+        icon: 'wi-car',
+        question: 'Is parking available at the venue?',
         answer: [
           'Yes. Parking is available at the venue. Our coordinators will gladly assist you upon arrival.',
         ],
       },
       {
-        question: '⏰ What time should I arrive?',
+        icon: 'wi-clock',
+        question: 'What time should I arrive?',
         answer: [
           'We recommend arriving 30 minutes before the ceremony to allow enough time for parking, registration, and seating.',
         ],
       },
       {
-        question: '👗 Is there a dress code?',
+        icon: 'wi-hanger',
+        question: 'Is there a dress code?',
         answer: [
           'Yes. We kindly invite our guests to wear semi-formal attire in shades of Dusty Blue, in keeping with our wedding motif.',
         ],
       },
       {
-        question: '📸 Can I take photos or videos during the ceremony?',
+        icon: 'wi-camera',
+        question: 'Can I take photos or videos during the ceremony?',
         answer: [
           'We kindly ask everyone to refrain from taking photos or videos during the ceremony and allow our official photographers to capture these special moments.',
           "You're welcome to take photos before and after the ceremony.",
         ],
       },
       {
-        question: '🪑 Can I sit anywhere during the reception?',
+        icon: 'wi-seat',
+        question: 'Can I sit anywhere during the reception?',
         answer: [
           "To help everyone have the best experience, we've carefully arranged the seating plan with family groups, friendships, and everyone's comfort in mind.",
           'Upon arrival, our coordinators will gladly assist you in finding your designated table and seat after registration.',
@@ -338,14 +353,16 @@ export const siteData: SiteData = {
         ],
       },
       {
-        question: '👤 May I bring a companion?',
+        icon: 'wi-person-plus',
+        question: 'May I bring a companion?',
         answer: [
           "You're welcome to ask! If you'd like to bring a companion who isn't included on our guest list, please contact us before the wedding or submit a companion request through the RSVP form.",
           "We'll do our best to accommodate approved companions based on our final reception arrangements. While approved companions are welcome to enjoy the resort, reception seating, meals, and refreshments are reserved for our confirmed guests.",
         ],
       },
       {
-        question: '📝 How do I RSVP?',
+        icon: 'wi-envelope',
+        question: 'How do I RSVP?',
         answer: [
           'Please submit one RSVP per invitation using the RSVP form on this website.',
           'If your invitation includes multiple guests, kindly confirm everyone included in your invitation using the same form.',
@@ -353,7 +370,8 @@ export const siteData: SiteData = {
         ],
       },
       {
-        question: '🎁 Will there be a gift registry?',
+        icon: 'wi-gift',
+        question: 'Will there be a gift registry?',
         answer: [
           'Your presence is truly the greatest gift we could ask for.',
           "If you'd still like to bless us with a gift, a monetary gift would be sincerely appreciated as we begin this new chapter together.",
