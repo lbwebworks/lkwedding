@@ -557,7 +557,7 @@ function App() {
               <div>
                 <h3>
                   <svg className="timeline-icon" aria-hidden="true">
-                    <use href={`/icons.svg#${item.icon}`} />
+                    <use href={`${import.meta.env.BASE_URL}icons.svg#${item.icon}`} />
                   </svg>
                   {item.title}
                 </h3>
@@ -730,7 +730,7 @@ function App() {
           <details key={item.question}>
             <summary>
               <svg className="faq-icon" aria-hidden="true">
-                <use href={`/icons.svg#${item.icon}`} />
+                <use href={`${import.meta.env.BASE_URL}icons.svg#${item.icon}`} />
               </svg>
               {item.question}
             </summary>
