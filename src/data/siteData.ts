@@ -271,11 +271,11 @@ export const siteData: SiteData = {
         names: ['Reynaldo Lacza', 'Julieta Lacza'],
       },
       {
-        title: 'Principal Sponsors',
+        title: 'Principal Sponsors (Male)',
         names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
-        title: 'Principal Sponsors',
+        title: 'Principal Sponsors (Female)',
         names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
       {

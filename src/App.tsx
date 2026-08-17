@@ -31,40 +31,15 @@ function getRandomSaveDateDelay() {
   )
 }
 
-function getInitialSaveDateIndex(length: number, seedIndex: number) {
-  if (length <= 0) {
-    return 0
-  }
-
-  return (seedIndex + Math.floor(Math.random() * length)) % length
-}
-
-
-
-function getNextDistinctSaveDateIndex(items: string[], currentIndex: number) {
-  if (items.length <= 1) {
-    return 0
-  }
-
-  const currentItem = items[currentIndex % items.length] ?? ''
-
-  for (let offset = 1; offset <= items.length; offset += 1) {
-    const nextIndex = (currentIndex + offset) % items.length
-    const nextItem = items[nextIndex] ?? ''
-
-    if (nextItem !== currentItem) {
-      return nextIndex
-    }
-  }
-
-  return currentIndex
-}
+// Module-level counter shared across all tiles. Each tile claims the next
+// value when it swaps, guaranteeing no two tiles ever show the same image.
+let saveDateGlobalCounter = 0
 
 type SaveDateTileProps = {
   thumbnails: string[]
   fullSizeImages: string[]
   showAsImage: boolean
-  seedIndex: number
+  slotIndex: number
   onOpenImage?: (imageSrc: string) => void
 }
 
@@ -72,12 +47,14 @@ function SaveDateTile({
   thumbnails,
   fullSizeImages,
   showAsImage,
-  seedIndex,
+  slotIndex,
   onOpenImage,
 }: SaveDateTileProps) {
-  const [currentIndex, setCurrentIndex] = useState(() =>
-    getInitialSaveDateIndex(fullSizeImages.length, seedIndex),
-  )
+  const [imageIndex, setImageIndex] = useState(() => {
+    const idx = saveDateGlobalCounter % Math.max(fullSizeImages.length, 1)
+    saveDateGlobalCounter += 1
+    return idx
+  })
   const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
@@ -91,18 +68,16 @@ function SaveDateTile({
 
     const scheduleNextSwap = () => {
       hideTimerId = window.setTimeout(() => {
-        if (cancelled) {
-          return
-        }
-
+        if (cancelled) return
         setIsVisible(false)
 
         swapTimerId = window.setTimeout(() => {
-          if (cancelled) {
-            return
-          }
-
-          setCurrentIndex((current) => getNextDistinctSaveDateIndex(fullSizeImages, current))
+          if (cancelled) return
+          setImageIndex(() => {
+            const next = saveDateGlobalCounter % fullSizeImages.length
+            saveDateGlobalCounter += 1
+            return next
+          })
           setIsVisible(true)
           scheduleNextSwap()
         }, SAVE_DATE_FADE_DURATION_MS)
@@ -113,20 +88,13 @@ function SaveDateTile({
 
     return () => {
       cancelled = true
-
-      if (hideTimerId !== undefined) {
-        window.clearTimeout(hideTimerId)
-      }
-
-      if (swapTimerId !== undefined) {
-        window.clearTimeout(swapTimerId)
-      }
+      if (hideTimerId !== undefined) window.clearTimeout(hideTimerId)
+      if (swapTimerId !== undefined) window.clearTimeout(swapTimerId)
     }
   }, [fullSizeImages.length])
 
-  const currentFullSizeImage = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
-  const currentThumbnail = thumbnails[currentIndex % thumbnails.length] ?? currentFullSizeImage
-  const currentLabel = fullSizeImages[currentIndex % fullSizeImages.length] ?? ''
+  const currentFullSizeImage = fullSizeImages[imageIndex] ?? ''
+  const currentThumbnail = thumbnails[imageIndex] ?? currentFullSizeImage
 
   return (
     <button
@@ -134,17 +102,17 @@ function SaveDateTile({
       className={`save-date-card${isVisible ? '' : ' is-hidden'}`}
       onClick={() => onOpenImage?.(currentFullSizeImage)}
       disabled={!showAsImage || !onOpenImage}
-      aria-label={`Open save the date image ${seedIndex + 1}`}
+      aria-label={`Open save the date image ${slotIndex + 1}`}
     >
       {showAsImage ? (
         <img
           src={currentThumbnail}
-          alt={`Save the date ${seedIndex + 1}`}
+          alt={`Save the date ${slotIndex + 1}`}
           className="save-date-photo"
           loading="lazy"
         />
       ) : (
-        <div className="save-date-label">{currentLabel}</div>
+        <div className="save-date-label">{currentFullSizeImage}</div>
       )}
     </button>
   )
@@ -585,7 +553,12 @@ function App() {
             <article key={`${item.time}-${item.title}`}>
               <p className="time">{item.time}</p>
               <div>
-                <h3>{item.title}</h3>
+                <h3>
+                  <svg className="timeline-icon" aria-hidden="true">
+                    <use href={`/icons.svg#${item.icon}`} />
+                  </svg>
+                  {item.title}
+                </h3>
                 <p>{item.note}</p>
               </div>
             </article>
@@ -726,7 +699,7 @@ function App() {
                 thumbnails={saveDateUsesImages ? saveDateThumbnailImages : saveDateItems}
                 fullSizeImages={saveDateUsesImages ? saveDateFullImages : saveDateItems}
                 showAsImage={saveDateUsesImages}
-                seedIndex={idx}
+                slotIndex={idx}
                 onOpenImage={saveDateUsesImages ? openSaveDateViewer : undefined}
               />
             ),
@@ -737,8 +710,8 @@ function App() {
       <section className="panel entourage" id="entourage">
         <h2>{siteData.entourage.title}</h2>
         <div className="entourage-grid">
-          {siteData.entourage.groups.map((group) => (
-            <article key={group.title}>
+          {siteData.entourage.groups.map((group, groupIdx) => (
+            <article key={groupIdx}>
               <h3>{group.title}</h3>
               {group.names.map((name) => (
                 <p key={name}>{name}</p>
@@ -753,7 +726,12 @@ function App() {
         <h2>{siteData.faqs.title}</h2>
         {siteData.faqs.items.map((item) => (
           <details key={item.question}>
-            <summary>{item.question}</summary>
+            <summary>
+              <svg className="faq-icon" aria-hidden="true">
+                <use href={`/icons.svg#${item.icon}`} />
+              </svg>
+              {item.question}
+            </summary>
             {item.answer.map((paragraph, index) => (
               <p key={`${item.question}-${index}`}>{paragraph}</p>
             ))}
@@ -800,35 +778,26 @@ function App() {
             }
             onClick={(event) => event.stopPropagation()}
           >
-            <button
-              type="button"
-              className="secondary image-viewer-close"
-              onClick={closeSaveDateViewer}
-              aria-label="Close image viewer"
-            >
-              Close
-            </button>
-
-            <button
-              type="button"
-              className="image-viewer-nav image-viewer-nav--prev"
-              onClick={
-                isStoryViewerOpen
-                  ? () =>
-                      setActiveStoryIndex((current) =>
-                        current === null
-                          ? current
-                          : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
-                      )
+            {/* Header */}
+            <div className="image-viewer-header">
+              <span className="image-viewer-counter">
+                {isStoryViewerOpen
+                  ? `${(activeStoryIndex ?? 0) + 1} / ${siteData.story.chapters.length}`
                   : dressViewer
-                    ? showPreviousDressImage
-                    : showPreviousSaveDateImage
-              }
-              aria-label="Previous image"
-            >
-              &lt;
-            </button>
+                    ? `${dressViewer.index + 1} / ${dressViewer.images.length}`
+                    : `${activeSaveDateViewerIndex + 1} / ${saveDateEntries.length}`}
+              </span>
+              <button
+                type="button"
+                className="image-viewer-close"
+                onClick={closeSaveDateViewer}
+                aria-label="Close image viewer"
+              >
+                ✕
+              </button>
+            </div>
 
+            {/* Image + meta */}
             <div className="image-viewer-frame">
               <img
                 src={
@@ -836,7 +805,7 @@ function App() {
                     ? activeStoryImage
                     : dressViewer
                       ? dressViewer.images[dressViewer.index]?.src ?? ''
-                      : activeSaveDateEntry?.src ?? ''
+                      : activeSaveDateEntry?.viewerSrc ?? ''
                 }
                 alt={
                   isStoryViewerOpen
@@ -847,45 +816,66 @@ function App() {
                 }
                 className="image-viewer-image"
               />
-              {isStoryViewerOpen ? (
+              {isStoryViewerOpen && (
                 <div className="image-viewer-story-meta">
                   <h2>{activeStoryChapter?.title}</h2>
                   <p>{activeStoryChapter?.body}</p>
                 </div>
-              ) : dressViewer ? (
-                <div className="image-viewer-meta">
-                  <span>{dressViewer.images[dressViewer.index]?.alt}</span>
-                  <span>
-                    {dressViewer.index + 1} / {dressViewer.images.length}
-                  </span>
-                </div>
-              ) : (
-                <div className="image-viewer-meta">
-                  <span>{activeSaveDateEntry?.fileName}</span>
-                  <span>
-                    {activeSaveDateViewerIndex + 1} / {saveDateEntries.length}
-                  </span>
-                </div>
               )}
             </div>
 
-            <button
-              type="button"
-              className="image-viewer-nav image-viewer-nav--next"
-              onClick={
-                isStoryViewerOpen
-                  ? () =>
-                      setActiveStoryIndex((current) =>
-                        current === null ? current : (current + 1) % siteData.story.chapters.length,
-                      )
-                  : dressViewer
-                    ? showNextDressImage
-                    : showNextSaveDateImage
-              }
-              aria-label="Next image"
-            >
-              &gt;
-            </button>
+            {/* Footer toolbar */}
+            <div className="image-viewer-toolbar">
+              <button
+                type="button"
+                className="image-viewer-nav image-viewer-nav--prev"
+                onClick={
+                  isStoryViewerOpen
+                    ? () =>
+                        setActiveStoryIndex((current) =>
+                          current === null
+                            ? current
+                            : (current - 1 + siteData.story.chapters.length) % siteData.story.chapters.length,
+                        )
+                    : dressViewer
+                      ? showPreviousDressImage
+                      : showPreviousSaveDateImage
+                }
+                aria-label="Previous image"
+              >
+                ‹
+              </button>
+
+              <div className="image-viewer-toolbar-meta">
+                {!isStoryViewerOpen && (
+                  <div className="image-viewer-meta">
+                    <span>
+                      {dressViewer
+                        ? dressViewer.images[dressViewer.index]?.alt
+                        : activeSaveDateEntry?.fileName}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <button
+                type="button"
+                className="image-viewer-nav image-viewer-nav--next"
+                onClick={
+                  isStoryViewerOpen
+                    ? () =>
+                        setActiveStoryIndex((current) =>
+                          current === null ? current : (current + 1) % siteData.story.chapters.length,
+                        )
+                    : dressViewer
+                      ? showNextDressImage
+                      : showNextSaveDateImage
+                }
+                aria-label="Next image"
+              >
+                ›
+              </button>
+            </div>
           </div>
         </div>
       ) : null}
