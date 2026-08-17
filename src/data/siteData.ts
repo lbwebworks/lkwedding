@@ -272,11 +272,11 @@ export const siteData: SiteData = {
       },
       {
         title: 'Principal Sponsors (Male)',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', 'Dionisio Domingo', 'Melchor Dawey', '...', '...', '...', '...'],
       },
       {
         title: 'Principal Sponsors (Female)',
-        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
+        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Cerila Budaden', 'Elnora Luistro Reus', 'Amelia Mapalo', 'Cristeta Dawey', 'Josephine Escovidal', 'Daisy Cortez', 'Elizabeth Budaden', 'Rebecca Balang'],
       },
       {
         title: 'Best Man',
@@ -288,7 +288,7 @@ export const siteData: SiteData = {
       },
       {
         title: 'Groomsmen',
-        names: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden', 'Gerald Lucero', 'Rhenish Rhey Sabado', 'John Reynold Villamar', 'Ervin Garcia', 'Jose Rafael Soriaga', 'Jeffrey Lumapag', 'Christian Era Jaime', 'Eagle Mark Jaime'],
+        names: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden', 'Gerald Lucero', 'Rhenish Rhey Sabado', 'John Reynold Villamar', 'Ervin Garcia', 'Jose Rafael Soriaga', '...', 'Christian Era Jaime', 'Eagle Mark Jaime'],
       },
       {
         title: 'Bridesmaids',
