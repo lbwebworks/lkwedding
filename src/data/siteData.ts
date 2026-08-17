@@ -272,12 +272,12 @@ export const siteData: SiteData = {
         names: ['Reynaldo Lacza', 'Julieta Lacza'],
       },
       {
-        title: 'Principal Sponsors (Male)',
+        title: 'Principal Sponsors',
         names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', 'Abel Dawey', 'Remeo Jr. Duazon', 'Juanito Galangco', 'Melchor Dawey', 'Rene Balang', 'Dionisio Domingo'],
         church: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
-        title: 'Principal Sponsors (Female)',
+        title: 'Principal Sponsors',
         names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Cerila Budaden', 'Elnora Luistro Reus', 'Cynthia Rojo', 'Daisy Cortez', 'Nena Budaden', 'Francisca Dawey', 'Elizabeth Budaden', 'Amelia Mapalo', 'Cristeta Dawey', 'Rebecca Balang'],
         church: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
@@ -347,8 +347,8 @@ export const siteData: SiteData = {
         icon: 'wi-hanger',
         question: 'Is there a dress code?',
         answer: [
-          'Yes. We kindly invite our guests to wear semi-formal attire in shades of Dusty Blue, in keeping with our wedding motif.',
-          'For the church ceremony, we also kindly ask guests to avoid sleeveless, backless, or off-shoulder attire out of respect for the church. These styles are welcome at the reception.',
+          'Yes. We kindly invite our guests to wear semi-formal attire in shades of Dusty Blue. Please avoid wearing white.',
+          'For the church ceremony, please refrain from wearing sleeveless, backless, or off-shoulder attire; these styles are welcome at the reception.',
         ],
       },
       {
