@@ -74,6 +74,7 @@ export type SiteData = {
     groups: Array<{
       title: string
       names: string[]
+      church?: string[]
     }>
   }
   contacts: {
@@ -272,11 +273,13 @@ export const siteData: SiteData = {
       },
       {
         title: 'Principal Sponsors (Male)',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', 'Dionisio Domingo', 'Melchor Dawey', '...', '...', '...', '...'],
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', 'Abel Dawey', 'Remeo Jr. Duazon', 'Juanito Galangco', 'Melchor Dawey', 'Rene Balang', 'Dionisio Domingo'],
+        church: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
         title: 'Principal Sponsors (Female)',
-        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Cerila Budaden', 'Elnora Luistro Reus', 'Amelia Mapalo', 'Cristeta Dawey', 'Josephine Escovidal', 'Daisy Cortez', 'Elizabeth Budaden', 'Rebecca Balang'],
+        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Cerila Budaden', 'Elnora Luistro Reus', 'Cynthia Rojo', 'Daisy Cortez', 'Nena Budaden', 'Francisca Dawey', 'Elizabeth Budaden', 'Amelia Mapalo', 'Cristeta Dawey', 'Rebecca Balang'],
+        church: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
       {
         title: 'Best Man',
@@ -289,10 +292,22 @@ export const siteData: SiteData = {
       {
         title: 'Groomsmen',
         names: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden', 'Gerald Lucero', 'Rhenish Rhey Sabado', 'John Reynold Villamar', 'Ervin Garcia', 'Jose Rafael Soriaga', '...', 'Christian Era Jaime', 'Eagle Mark Jaime'],
+        church: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden'],
       },
       {
         title: 'Bridesmaids',
         names: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden', 'Claudine Faye Claveria', 'Charlene Mae Claveria', 'Camille Shane Claveria', 'Rosette De Mesa', 'Rosette Ramos', 'Anna Joy Gonzales', 'Coleen Keith Garcia', 'Erin Eliza Yamanaka'],
+        church: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden'],
+      },
+      {
+        title: 'Ring Bearers',
+        names: ['Lex Jander Wacnang', 'John Gaveriel Sibulo', 'Nathaniel Budaden', 'Calvin Wise Recio'],
+        church: ['Lex Jander Wacnang']
+      },
+      {
+        title: 'Flower Girls',
+        names: ['Kristell Yvonne Tropicales', 'Chloelie Mutya Budaden', 'Juris Jamie Budaden', 'Linzyne Dhane Sibulo', 'Nalla Budaden'],
+        church: ['Kristell Yvonne Tropicales']
       },
     ],
   },

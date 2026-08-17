@@ -170,7 +170,40 @@ a {
 .faq h2,
 .closing h2 {
   margin-top: 0;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 1.2rem;
+  color: var(--heading);
+}
+
+.countdown h2::before,
+.countdown h2::after,
+.calendar h2::before,
+.calendar h2::after,
+.story h2::before,
+.story h2::after,
+.program h2::before,
+.program h2::after,
+.dress h2::before,
+.dress h2::after,
+.venue h2::before,
+.venue h2::after,
+.save-date h2::before,
+.save-date h2::after,
+.rsvp h2::before,
+.rsvp h2::after,
+.entourage h2::before,
+.entourage h2::after,
+.contacts h2::before,
+.contacts h2::after,
+.faq h2::before,
+.faq h2::after,
+.closing h2::before,
+.closing h2::after {
+  content: ' - ';
+  color: rgba(167, 191, 216, 0.65);
 }
 
 .count-grid {
@@ -211,9 +244,6 @@ a {
 .calendar h2,
 .rsvp h2 {
   font-family: var(--font-modern);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 1.1rem;
 }
 
 .calendar-grid {
@@ -358,9 +388,6 @@ a {
 .save-date h2,
 .faq h2 {
   font-family: var(--font-elegant);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 1.35rem;
 }
 
 .story-card {
@@ -568,8 +595,6 @@ a {
 .entourage h2,
 .entourage h3 {
   font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .story-card h3,
@@ -601,8 +626,6 @@ a {
 .closing h2 {
   font-family: var(--font-script);
   font-weight: 400;
-  letter-spacing: 0.02em;
-  font-size: clamp(2rem, 5vw, 3.2rem);
 }
 
 .dress-block {
@@ -1024,6 +1047,23 @@ a {
 
 .entourage-grid article:nth-child(even) {
   text-align: left;
+}
+
+.entourage-name {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.entourage-grid article:nth-child(odd) .entourage-name {
+  justify-content: flex-end;
+}
+
+.church-icon {
+  flex: 0 0 auto;
+  width: 0.9rem;
+  height: 0.9rem;
+  color: var(--action-strong);
 }
 
 .faq details {

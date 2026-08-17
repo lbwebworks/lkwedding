@@ -713,9 +713,22 @@ function App() {
           {siteData.entourage.groups.map((group, groupIdx) => (
             <article key={groupIdx}>
               <h3>{group.title}</h3>
-              {group.names.map((name) => (
-                <p key={name}>{name}</p>
-              ))}
+              {group.names.map((name) => {
+                const marchesInChurch = !group.church?.length || group.church.includes(name)
+                const churchIcon = (
+                  <svg className="church-icon" aria-hidden="true">
+                    <use href={`${import.meta.env.BASE_URL}icons.svg#wi-church`} />
+                  </svg>
+                )
+
+                return (
+                  <p key={name} className="entourage-name">
+                    {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
+                    {name}
+                    {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
+                  </p>
+                )
+              })}
             </article>
           ))}
         </div>
