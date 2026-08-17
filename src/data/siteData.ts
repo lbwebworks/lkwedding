@@ -333,6 +333,7 @@ export const siteData: SiteData = {
         question: 'Is there a dress code?',
         answer: [
           'Yes. We kindly invite our guests to wear semi-formal attire in shades of Dusty Blue, in keeping with our wedding motif.',
+          'For the church ceremony, we also kindly ask guests to avoid sleeveless, backless, or off-shoulder attire out of respect for the church. These styles are welcome at the reception.',
         ],
       },
       {
