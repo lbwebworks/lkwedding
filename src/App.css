@@ -1105,7 +1105,6 @@ a {
     margin: 0 auto 14px;
     padding: 12px;
     gap: 0;
-    padding-bottom: 192px;
   }
 
   .panel {
@@ -1154,7 +1153,6 @@ a {
     margin: 0;
     padding: 0;
     gap: 0;
-    padding-bottom: 232px;
   }
 
   .panel {
@@ -1401,7 +1399,7 @@ a {
   }
 
   .timeline article {
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: 88px minmax(0, 1fr);
     gap: 10px;
     border-left: 0;
     border-top: 1px dashed rgba(182, 202, 224, 0.45);
@@ -1416,6 +1414,7 @@ a {
   .timeline .time {
     text-align: right;
     padding-top: 1px;
+    white-space: nowrap;
     color: var(--action-strong);
   }
 
@@ -1499,8 +1498,10 @@ a {
   }
 
   .image-viewer {
-    width: min(96vw, 920px);
-    padding: 18px 56px 16px;
+    box-sizing: border-box;
+    width: calc(100vw - 24px);
+    max-width: 920px;
+    padding: 16px;
   }
 
   .image-viewer-image {
