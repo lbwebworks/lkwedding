@@ -8,7 +8,17 @@ import './App.css'
 const SAVE_DATE_VISIBLE_COUNT = 6
 const SAVE_DATE_MIN_SWAP_DELAY_MS = 5000
 const SAVE_DATE_MAX_SWAP_DELAY_MS = 10000
-const SAVE_DATE_FADE_DURATION_MS = 3000
+const SAVE_DATE_TRANSITION_DURATION_MS = 5000
+const SAVE_DATE_MAIN_EFFECTS = ['pixel', 'slide', 'zoom', 'split'] as const
+type SaveDateMainEffect = (typeof SAVE_DATE_MAIN_EFFECTS)[number]
+const SAVE_DATE_PIXEL_EFFECTS = ['classic', 'squares'] as const
+type SaveDatePixelEffect = (typeof SAVE_DATE_PIXEL_EFFECTS)[number]
+const SAVE_DATE_SLIDE_EFFECTS = ['left', 'right', 'up', 'down'] as const
+type SaveDateSlideEffect = (typeof SAVE_DATE_SLIDE_EFFECTS)[number]
+const SAVE_DATE_ZOOM_EFFECTS = ['in-fade', 'out-fade'] as const
+type SaveDateZoomEffect = (typeof SAVE_DATE_ZOOM_EFFECTS)[number]
+const SAVE_DATE_SPLIT_EFFECTS = ['vertical', 'horizontal'] as const
+type SaveDateSplitEffect = (typeof SAVE_DATE_SPLIT_EFFECTS)[number]
 
 function getCountdownParts(targetDateISO: string) {
   const now = new Date().getTime()
@@ -29,6 +39,21 @@ function getRandomSaveDateDelay() {
     SAVE_DATE_MIN_SWAP_DELAY_MS +
     Math.floor(Math.random() * (SAVE_DATE_MAX_SWAP_DELAY_MS - SAVE_DATE_MIN_SWAP_DELAY_MS + 1))
   )
+}
+
+function getShuffledSquareOrder() {
+  const order = Array.from({ length: 16 }, (_, index) => index)
+
+  for (let index = order.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1))
+    ;[order[index], order[swapIndex]] = [order[swapIndex], order[index]]
+  }
+
+  return order
+}
+
+function getRandomItem<T>(items: readonly T[]) {
+  return items[Math.floor(Math.random() * items.length)]
 }
 
 // Module-level counter shared across all tiles. Each tile claims the next
@@ -55,7 +80,10 @@ function SaveDateTile({
     saveDateGlobalCounter += 1
     return idx
   })
-  const [isVisible, setIsVisible] = useState(true)
+  const [incomingImageIndex, setIncomingImageIndex] = useState<number | null>(null)
+  const [mainEffect, setMainEffect] = useState<SaveDateMainEffect>('pixel')
+  const [subEffect, setSubEffect] = useState<SaveDatePixelEffect | SaveDateSlideEffect | SaveDateZoomEffect | SaveDateSplitEffect>('classic')
+  const [squareOrder, setSquareOrder] = useState(() => getShuffledSquareOrder())
 
   useEffect(() => {
     if (fullSizeImages.length === 0) {
@@ -69,18 +97,28 @@ function SaveDateTile({
     const scheduleNextSwap = () => {
       hideTimerId = window.setTimeout(() => {
         if (cancelled) return
-        setIsVisible(false)
+        const nextIndex = saveDateGlobalCounter % fullSizeImages.length
+        saveDateGlobalCounter += 1
+        setIncomingImageIndex(nextIndex)
+        const nextMainEffect = getRandomItem(SAVE_DATE_MAIN_EFFECTS)
+        const nextSubEffect =
+          nextMainEffect === 'pixel'
+            ? getRandomItem(SAVE_DATE_PIXEL_EFFECTS)
+            : nextMainEffect === 'slide'
+              ? getRandomItem(SAVE_DATE_SLIDE_EFFECTS)
+              : nextMainEffect === 'zoom'
+                ? getRandomItem(SAVE_DATE_ZOOM_EFFECTS)
+                : getRandomItem(SAVE_DATE_SPLIT_EFFECTS)
+        setSquareOrder(getShuffledSquareOrder())
+        setMainEffect(nextMainEffect)
+        setSubEffect(nextSubEffect)
 
         swapTimerId = window.setTimeout(() => {
           if (cancelled) return
-          setImageIndex(() => {
-            const next = saveDateGlobalCounter % fullSizeImages.length
-            saveDateGlobalCounter += 1
-            return next
-          })
-          setIsVisible(true)
+          setImageIndex(nextIndex)
+          setIncomingImageIndex(null)
           scheduleNextSwap()
-        }, SAVE_DATE_FADE_DURATION_MS)
+        }, SAVE_DATE_TRANSITION_DURATION_MS)
       }, getRandomSaveDateDelay())
     }
 
@@ -95,22 +133,67 @@ function SaveDateTile({
 
   const currentFullSizeImage = fullSizeImages[imageIndex] ?? ''
   const currentThumbnail = thumbnails[imageIndex] ?? currentFullSizeImage
+  const incomingFullSizeImage = incomingImageIndex === null ? '' : fullSizeImages[incomingImageIndex] ?? ''
+  const incomingThumbnail = incomingImageIndex === null ? '' : thumbnails[incomingImageIndex] ?? incomingFullSizeImage
+  const isSquaresTransition = mainEffect === 'pixel' && subEffect === 'squares' && incomingImageIndex !== null
+  const isSplitTransition = mainEffect === 'split' && incomingImageIndex !== null
 
   return (
     <button
       type="button"
-      className={`save-date-card${isVisible ? '' : ' is-hidden'}`}
+      className={`save-date-card transition-${mainEffect} sub-${subEffect}${incomingImageIndex === null ? '' : ' is-crossfading'}`}
       onClick={() => onOpenImage?.(currentFullSizeImage)}
       disabled={!showAsImage || !onOpenImage}
       aria-label={`Open save the date image ${slotIndex + 1}`}
     >
       {showAsImage ? (
-        <img
-          src={currentThumbnail}
-          alt={`Save the date ${slotIndex + 1}`}
-          className="save-date-photo"
-          loading="lazy"
-        />
+        <>
+          <img
+            key={`save-date-current-${imageIndex}`}
+            src={currentThumbnail}
+            alt={`Save the date ${slotIndex + 1}`}
+            className="save-date-photo save-date-photo--current"
+            loading="lazy"
+          />
+          {incomingImageIndex !== null && (
+            <img
+              key={`save-date-incoming-${incomingImageIndex}`}
+              src={incomingThumbnail}
+              alt=""
+              className="save-date-photo save-date-photo--incoming"
+            />
+          )}
+          {isSquaresTransition &&
+            Array.from({ length: 16 }, (_, squareIndex) => {
+              const row = Math.floor(squareIndex / 4)
+              const column = squareIndex % 4
+              const fadeOrderIndex = squareOrder.indexOf(squareIndex)
+
+              return (
+                <span
+                  key={squareIndex}
+                  className="save-date-square"
+                  style={{
+                    backgroundImage: `url(${currentThumbnail})`,
+                    backgroundPosition: `${column * 33.3333}% ${row * 33.3333}%`,
+                    animationDelay: `${fadeOrderIndex * 260}ms`,
+                  }}
+                />
+              )
+            })}
+          {isSplitTransition && (
+            <>
+              <span
+                className="save-date-split save-date-split--first"
+                style={{ backgroundImage: `url(${currentThumbnail})` }}
+              />
+              <span
+                className="save-date-split save-date-split--second"
+                style={{ backgroundImage: `url(${currentThumbnail})` }}
+              />
+            </>
+          )}
+        </>
       ) : (
         <div className="save-date-label">{currentFullSizeImage}</div>
       )}
