@@ -273,12 +273,12 @@ export const siteData: SiteData = {
       },
       {
         title: 'Principal Sponsors',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', 'Abel Dawey', 'Remeo Jr. Duazon', 'Juanito Galangco', 'Melchor Dawey', 'Rene Balang', 'Dionisio Domingo'],
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', '...', 'Abel Dawey', 'Remeo Jr. Duazon', 'Juanito Galangco', 'Melchor Dawey', 'Mark Budaden', 'Dionisio Domingo', '...', '...'],
         church: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
         title: 'Principal Sponsors',
-        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Cerila Budaden', 'Elnora Luistro Reus', 'Cynthia Rojo', 'Daisy Cortez', 'Nena Budaden', 'Francisca Dawey', 'Elizabeth Budaden', 'Amelia Mapalo', 'Cristeta Dawey', 'Rebecca Balang'],
+        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus', 'Josephine Escovidal', 'Cynthia Rojo', 'Daisy Cortez', 'Nena Budaden', 'Francisca Dawey', 'Elizabeth Budaden', 'Cristeta Dawey', 'Cerila Budaden', 'Rebecca Balang'],
         church: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
       },
       {

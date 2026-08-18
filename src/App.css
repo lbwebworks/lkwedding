@@ -1063,7 +1063,11 @@ a {
   flex: 0 0 auto;
   width: 0.9rem;
   height: 0.9rem;
+  background-color: var(--action-strong);
   color: var(--action-strong);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
 }
 
 .faq details {

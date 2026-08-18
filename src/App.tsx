@@ -716,9 +716,11 @@ function App() {
               {group.names.map((name) => {
                 const marchesInChurch = !group.church?.length || group.church.includes(name)
                 const churchIcon = (
-                  <svg className="church-icon" aria-hidden="true">
-                    <use href={`${import.meta.env.BASE_URL}icons.svg#wi-church`} />
-                  </svg>
+                  <span
+                    className="church-icon"
+                    aria-hidden="true"
+                    style={{ maskImage: `url(${import.meta.env.BASE_URL}star.svg)` }}
+                  />
                 )
 
                 return (
