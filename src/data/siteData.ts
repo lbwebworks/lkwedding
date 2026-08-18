@@ -273,7 +273,7 @@ export const siteData: SiteData = {
       },
       {
         title: 'Principal Sponsors',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', '...', 'Abel Dawey', 'Remeo Jr. Duazon', 'Juanito Galangco', 'Melchor Dawey', 'Mark Budaden', 'Dionisio Domingo', '...', '...'],
+        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', '...', 'Abel Dawey', 'Remeo Jr. Dauzon', 'Juanito Galangco', 'Melchor Dawey', 'Mark Budaden', 'Dionisio Domingo', '...', '...'],
         church: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
       },
       {
