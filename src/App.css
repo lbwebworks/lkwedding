@@ -166,6 +166,7 @@ a {
 .save-date h2,
 .rsvp h2,
 .entourage h2,
+.guest-list h2,
 .contacts h2,
 .faq h2,
 .closing h2 {
@@ -196,6 +197,8 @@ a {
 .rsvp h2::after,
 .entourage h2::before,
 .entourage h2::after,
+.guest-list h2::before,
+.guest-list h2::after,
 .contacts h2::before,
 .contacts h2::after,
 .faq h2::before,
@@ -1286,6 +1289,38 @@ a {
   mask-position: center;
   mask-repeat: no-repeat;
   mask-size: contain;
+}
+
+.guest-list h2 {
+  font-family: var(--font-modern);
+}
+
+.guest-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.guest-list-name {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 0.96rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .guest-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .guest-list-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .faq details {

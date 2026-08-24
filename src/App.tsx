@@ -771,10 +771,10 @@ function App() {
         </div>
       </section>
 
-      <section className="panel save-date" id="save-the-date">
+      <section className="panel save-date" id="gallery">
         <h2>{siteData.saveTheDate.title}</h2>
         <p>{siteData.saveTheDate.subtitle}</p>
-        <div className="save-date-grid" aria-label="Save the date gallery">
+        <div className="save-date-grid" aria-label="Wedding gallery">
           {Array.from({ length: Math.min(SAVE_DATE_VISIBLE_COUNT, saveDateItems.length) }).map(
             (_, idx) => (
               <SaveDateTile
@@ -819,6 +819,27 @@ function App() {
         </div>
       </section>
 
+      <section className="panel guest-list" id="family-and-relatives">
+        <h2>{siteData.familyAndRelatives.title}</h2>
+        <div className="guest-list-grid">
+          {siteData.familyAndRelatives.names.map((name) => (
+            <p key={name} className="guest-list-name">
+              {name}
+            </p>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel guest-list" id="peers">
+        <h2>{siteData.peers.title}</h2>
+        <div className="guest-list-grid">
+          {siteData.peers.names.map((name) => (
+            <p key={name} className="guest-list-name">
+              {name}
+            </p>
+          ))}
+        </div>
+      </section>
 
       <section className="panel faq" id="faq">
         <h2>{siteData.faqs.title}</h2>

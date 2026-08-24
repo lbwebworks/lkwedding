@@ -77,6 +77,14 @@ export type SiteData = {
       church?: string[]
     }>
   }
+  familyAndRelatives: {
+    title: string
+    names: string[]
+  }
+  peers: {
+    title: string
+    names: string[]
+  }
   contacts: {
     title: string
     items: Array<{
@@ -237,17 +245,17 @@ export const siteData: SiteData = {
     photoLabel: 'Venue Photo Placeholder',
   },
   saveTheDate: {
-    title: 'Save The Date',
-    subtitle: 'We cannot wait to celebrate with you',
+    title: 'Gallery',
+    subtitle: 'A glimpse of our story and celebration',
     photos: [
-      'Save Date 01',
-      'Save Date 02',
-      'Save Date 03',
-      'Save Date 04',
-      'Save Date 05',
-      'Save Date 06',
-      'Save Date 07',
-      'Save Date 08',
+      'Gallery 01',
+      'Gallery 02',
+      'Gallery 03',
+      'Gallery 04',
+      'Gallery 05',
+      'Gallery 06',
+      'Gallery 07',
+      'Gallery 08',
     ],
   },
   rsvp: {
@@ -265,21 +273,69 @@ export const siteData: SiteData = {
     groups: [
       {
         title: "Groom's Parents",
-        names: ['Alfredo Budaden', 'Angelina Budaden'],
+        names: [
+          'Alfredo Budaden',
+          'Angelina Budaden',
+        ],
       },
       {
         title: "Bride's Parents",
-        names: ['Reynaldo Lacza', 'Julieta Lacza'],
+        names: [
+          'Reynaldo Lacza',
+          'Julieta Lacza',
+        ],
       },
       {
         title: 'Principal Sponsors',
-        names: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara', '...', 'Abel Dawey', 'Remeo Jr. Dauzon', 'Juanito Galangco', 'Melchor Dawey', 'Mark Budaden', 'Dionisio Domingo', '...', '...'],
-        church: ['Ermie Jaime', 'Ronald Agbaya', 'Bayani Marucot', 'Morris Budaden', 'Tristan Alcantara'],
+        names: [
+          'Ermie Jaime',
+          'Ronald Agbaya',
+          'Bayani Marucot',
+          'Morris Budaden',
+          'Tristan Alcantara',
+          '...',
+          'Abel Dawey',
+          'Remeo Jr. Dauzon',
+          'Juanito Galangco',
+          'Melchor Dawey',
+          'Mark Budaden',
+          'Dionisio Domingo',
+          '...',
+          '...',
+        ],
+        church: [
+          'Ermie Jaime',
+          'Ronald Agbaya',
+          'Bayani Marucot',
+          'Morris Budaden',
+          'Tristan Alcantara',
+        ],
       },
       {
         title: 'Principal Sponsors',
-        names: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus', 'Josephine Escovidal', 'Cynthia Rojo', 'Daisy Cortez', 'Nena Budaden', 'Francisca Dawey', 'Elizabeth Budaden', 'Cristeta Dawey', 'Cerila Budaden', 'Rebecca Balang'],
-        church: ['Arlene Red', 'Yolanda Dimla', 'Anastasia Marucot', 'Amelia Mapalo', 'Elnora Luistro Reus'],
+        names: [
+          'Arlene Red',
+          'Yolanda Dimla',
+          'Anastasia Marucot',
+          'Amelia Mapalo',
+          'Elnora Luistro Reus',
+          'Josephine Escovidal',
+          'Cynthia Rojo',
+          'Daisy Cortez',
+          'Nena Budaden',
+          'Francisca Dawey',
+          'Elizabeth Budaden',
+          'Cristeta Dawey',
+          'Cerila Budaden',
+          'Rebecca Balang',
+        ],
+        church: [
+          'Arlene Red',
+          'Yolanda Dimla',
+          'Anastasia Marucot',
+          'Amelia Mapalo',
+          'Elnora Luistro Reus',
+        ],
       },
       {
         title: 'Best Man',
@@ -291,24 +347,107 @@ export const siteData: SiteData = {
       },
       {
         title: 'Groomsmen',
-        names: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden', 'Gerald Lucero', 'Rhenish Rhey Sabado', 'John Reynold Villamar', 'Ervin Garcia', 'Jose Rafael Soriaga', '...', 'Christian Era Jaime', 'Eagle Mark Jaime'],
-        church: ['Allan Budaden', 'Frewell Budaden', 'Eliezer Budaden', 'Jonathan Budaden'],
+        names: [
+          'Allan Budaden',
+          'Frewell Budaden',
+          'Eliezer Budaden',
+          'Jonathan Budaden',
+          'Gerald Lucero',
+          'Rhenish Rhey Sabado',
+          'John Reynold Villamar',
+          'Ervin Garcia',
+          'Jose Rafael Soriaga',
+          'Christian Era Jaime',
+          'Eagle Mark Jaime',
+        ],
+        church: [
+          'Allan Budaden',
+          'Frewell Budaden',
+          'Eliezer Budaden',
+          'Jonathan Budaden',
+        ],
       },
       {
         title: 'Bridesmaids',
-        names: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden', 'Claudine Faye Claveria', 'Charlene Mae Claveria', 'Camille Shane Claveria', 'Rosette De Mesa', 'Rosette Ramos', 'Anna Joy Gonzales', 'Coleen Keith Garcia', 'Erin Eliza Yamanaka'],
-        church: ['Kristine Ayra Tropicales', 'Angel Wisdom Tropicales', 'Beta Joy Budaden', 'Junemae Budaden'],
+        names: [
+          'Kristine Ayra Tropicales',
+          'Angel Wisdom Tropicales',
+          'Beta Joy Budaden',
+          'Junemae Budaden',
+          'Anna Joy Gonzales',
+          'Coleen Keith Garcia',
+          'Erin Eliza Yamanaka',
+          'Rosette De Mesa',
+          'Rosette Ramos',
+          'Camille Shane Claveria',
+          'Charlene Mae Claveria',
+        ],
+        church: [
+          'Kristine Ayra Tropicales',
+          'Angel Wisdom Tropicales',
+          'Beta Joy Budaden',
+          'Junemae Budaden',
+        ],
       },
       {
         title: 'Ring Bearers',
-        names: ['Lex Jander Wacnang', 'John Gaveriel Sibulo', 'Nathaniel Budaden', 'Calvin Wise Recio'],
-        church: ['Lex Jander Wacnang']
+        names: [
+          'Lex Jander Wacnang',
+          'Nathaniel Budaden',
+          'Calvin Wise Recio',
+        ],
+        church: ['Lex Jander Wacnang'],
       },
       {
         title: 'Flower Girls',
-        names: ['Kristell Yvonne Tropicales', 'Chloelie Mutya Budaden', 'Juris Jamie Budaden', 'Linzyne Dhane Sibulo', 'Nalla Budaden'],
-        church: ['Kristell Yvonne Tropicales']
+        names: [
+          'Kristell Yvonne Tropicales',
+          'Chloelie Mutya Budaden',
+          'Juris Jamie Budaden',
+          'Nalla Budaden',
+        ],
+        church: ['Kristell Yvonne Tropicales'],
       },
+    ],
+  },
+  familyAndRelatives: {
+    title: 'Family and Relatives',
+    names: [
+      'Athea Budaden',
+      'Jahaziel Budaden',
+      'Ralph Budaden',
+      'Charmaine Claveria',
+      'Ronald Claveria',
+      'Grace Claveria-Maniaga',
+      'Josie Delos Reyes',
+      'Natasha Dimara',
+      'Shania Dimara',
+      'Bong Dimla',
+      'Norberta Jaime',
+      'Charizel Razon',
+      'Denis Razon',
+      'Althea Vito',
+      'Melanie Vito',
+    ],
+  },
+  peers: {
+    title: 'Peers',
+    names: [
+      'Rosalie Agbaya',
+      'Rhamie Jade Alburo',
+      'Rosette Alburo',
+      'Venet Andal',
+      'Bea Arenas',
+      'Angelyn Condez',
+      'Althea Delos Santos',
+      'Eunice Endonela',
+      'Darryl Gatmaitan',
+      'Mark Gimenez',
+      'Anna Joy Jusay',
+      'Jackyloyd Macalisang',
+      'Alvin Manzanares',
+      'Rosette Ramos',
+      'Lavern Red',
     ],
   },
   contacts: {
