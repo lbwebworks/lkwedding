@@ -347,6 +347,61 @@ a {
     0 0 24px rgba(127, 160, 190, 0.5);
 }
 
+.calendar-grid.days span.calendar-past-day {
+  opacity: 0.65 !important;
+  background: var(--surface-2) !important;
+  border-color: rgba(90, 120, 150, 0.35) !important;
+  color: var(--muted) !important;
+  cursor: default;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.calendar-grid.days span.calendar-past-day::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 18%;
+  right: 18%;
+  height: 1.5px;
+  background: rgba(180, 205, 230, 0.55);
+  transform: rotate(-25deg);
+  pointer-events: none;
+}
+
+.calendar-grid.days span.calendar-past-day:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.calendar-grid.days span.calendar-today {
+  background: linear-gradient(135deg, rgba(135, 168, 203, 0.4), rgba(45, 75, 110, 0.75)) !important;
+  border: 2px solid var(--action-strong) !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.25) inset,
+    0 0 18px rgba(135, 168, 203, 0.6),
+    0 6px 16px rgba(10, 25, 45, 0.5) !important;
+  transform: translateY(-2px) scale(1.05) !important;
+  z-index: 2;
+}
+
+.calendar-grid.days span.calendar-today::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #a8cdfc;
+  box-shadow: 0 0 8px #a8cdfc;
+  pointer-events: none;
+}
+
 .calendar-grid .calendar-empty {
   visibility: hidden;
   pointer-events: none;
@@ -1548,6 +1603,12 @@ a {
 
   .calendar-grid.headings span {
     color: var(--muted);
+  }
+
+  .calendar-grid.days .calendar-today::before {
+    bottom: 2px;
+    width: 3px;
+    height: 3px;
   }
 
   .calendar-grid .calendar-highlight {

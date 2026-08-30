@@ -85,6 +85,7 @@ export type SiteData = {
     title: string
     names: string[]
   }
+  separateFood: string[]
   contacts: {
     title: string
     items: Array<{
@@ -456,6 +457,12 @@ export const siteData: SiteData = {
       'Red, Lavern',
     ],
   },
+  separateFood: [
+    'Chloelie Mutya Budaden',
+    'Calvin Wise Recio',
+    'Juris Jamie B. Wacnang',
+    'Nalla Budaden',
+  ],
   contacts: {
     title: 'Contacts',
     items: [

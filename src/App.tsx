@@ -34,6 +34,44 @@ function getCountdownParts(targetDateISO: string) {
   return { days, hours, minutes, seconds }
 }
 
+function getCalendarDayState(day: number | null, highlightDay: number) {
+  if (day === null) {
+    return { isPast: false, isToday: false, isWeddingDay: false }
+  }
+
+  const now = new Date()
+
+  const currentYear = now.getFullYear()
+  const currentMonth = now.getMonth()
+  const currentDay = now.getDate()
+
+  // Calendar is displayed for September 2026 (Month 8)
+  const calYear = 2026
+  const calMonth = 8
+
+  const isPastMonth =
+    currentYear > calYear || (currentYear === calYear && currentMonth > calMonth)
+  const isFutureMonth =
+    currentYear < calYear || (currentYear === calYear && currentMonth < calMonth)
+
+  let isPast = false
+  let isToday = false
+
+  if (isPastMonth) {
+    isPast = true
+  } else if (!isFutureMonth) {
+    if (day < currentDay) {
+      isPast = true
+    } else if (day === currentDay) {
+      isToday = true
+    }
+  }
+
+  const isWeddingDay = day === highlightDay
+
+  return { isPast, isToday, isWeddingDay }
+}
+
 function getRandomSaveDateDelay() {
   return (
     SAVE_DATE_MIN_SWAP_DELAY_MS +
@@ -577,23 +615,42 @@ function App() {
           ))}
         </div>
         <div className="calendar-grid days">
-          {siteData.calendar.dayCells.map((day, idx) => (
-            <span
-              key={`cell-${idx}-${day ?? 'empty'}`}
-              aria-label={day === siteData.calendar.highlightDay ? `Wedding day ${day}` : day ? `Day ${day}` : undefined}
-              className={[
-                day === null ? 'calendar-empty' : '',
-                idx % 7 === 0 ? 'calendar-weekend calendar-sunday' : '',
-                idx % 7 === 6 ? 'calendar-weekend calendar-saturday' : '',
-                day === siteData.calendar.highlightDay ? 'calendar-wedding-day' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              style={day === siteData.calendar.highlightDay ? { backgroundImage: `url(${calendarDayImage})` } : undefined}
-            >
-              {day === siteData.calendar.highlightDay ? '' : day ?? ''}
-            </span>
-          ))}
+          {siteData.calendar.dayCells.map((day, idx) => {
+            const { isPast, isToday, isWeddingDay } = getCalendarDayState(
+              day,
+              siteData.calendar.highlightDay,
+            )
+
+            const dayAriaLabel = isWeddingDay
+              ? `Wedding day ${day}`
+              : isToday
+                ? `Today, Day ${day}`
+                : isPast
+                  ? `Past day ${day}`
+                  : day
+                    ? `Day ${day}`
+                    : undefined
+
+            return (
+              <span
+                key={`cell-${idx}-${day ?? 'empty'}`}
+                aria-label={dayAriaLabel}
+                className={[
+                  day === null ? 'calendar-empty' : '',
+                  idx % 7 === 0 ? 'calendar-weekend calendar-sunday' : '',
+                  idx % 7 === 6 ? 'calendar-weekend calendar-saturday' : '',
+                  isPast && !isWeddingDay ? 'calendar-past-day' : '',
+                  isToday ? 'calendar-today' : '',
+                  isWeddingDay ? 'calendar-wedding-day' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+                style={isWeddingDay ? { backgroundImage: `url(${calendarDayImage})` } : undefined}
+              >
+                {isWeddingDay ? '' : day ?? ''}
+              </span>
+            )
+          })}
         </div>
       </section>
 
