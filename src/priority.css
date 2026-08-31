@@ -52,7 +52,7 @@
 
 .priority-capacity {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   margin-bottom: 42px;
@@ -119,11 +119,15 @@
 
 .priority-row {
   display: grid;
-  grid-template-columns: 44px 54px minmax(0, 1fr) auto;
+  grid-template-columns: 44px 54px minmax(0, 1fr) minmax(120px, 220px) auto auto;
   align-items: center;
   min-height: 70px;
   border-bottom: 1px solid var(--line);
   background: rgba(19, 38, 59, 0.32);
+}
+
+.priority-row.has-special-food {
+  background: rgba(19, 38, 59, 0.50);
 }
 
 .priority-row.is-dragging {
@@ -170,9 +174,10 @@
   font-weight: 700;
 }
 
-.priority-guest span {
+.priority-group {
   color: var(--muted);
-  font-size: 0.73rem;
+  font-size: 0.76rem;
+  padding-right: 12px;
 }
 
 .priority-allocation {
@@ -184,6 +189,10 @@
 
 .priority-allocation.is-food {
   color: #b7d7a4;
+}
+
+.priority-allocation.is-special-food {
+  color: #f0c97a;
 }
 
 @media (max-width: 640px) {
@@ -226,8 +235,12 @@
   }
 
   .priority-row {
-    grid-template-columns: 40px 40px minmax(0, 1fr);
+    grid-template-columns: 40px 40px minmax(0, 1fr) auto;
     min-height: 76px;
+  }
+
+  .priority-group {
+    display: none;
   }
 
   .priority-guest {
@@ -237,5 +250,110 @@
   .priority-allocation {
     grid-column: 3;
     margin: -12px 12px 10px;
+  }
+}
+
+/* ── Special food actions column ── */
+
+.priority-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 12px;
+}
+
+.priority-special-food-badge,
+.priority-badge {
+  font-size: 1rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.priority-menu-wrap {
+  position: relative;
+}
+
+.priority-menu-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.priority-menu-trigger:hover,
+.priority-menu-trigger:focus-visible,
+.priority-menu-trigger.is-open {
+  border-color: var(--line);
+  color: var(--heading);
+}
+
+.priority-menu-trigger:focus-visible {
+  outline: 2px solid var(--action-strong);
+  outline-offset: -3px;
+}
+
+.priority-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 10;
+  min-width: 200px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface, #0f1e2e);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+}
+
+.priority-menu-item {
+  display: block;
+  width: 100%;
+  padding: 11px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.priority-menu-item + .priority-menu-item {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.priority-menu-item:hover,
+.priority-menu-item:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.priority-menu-item.is-add {
+  color: #b7d7a4;
+}
+
+.priority-menu-item.is-remove {
+  color: #f4a89a;
+}
+
+@media (max-width: 640px) {
+  .priority-row {
+    grid-template-columns: 40px 40px minmax(0, 1fr) auto;
+  }
+
+  .priority-actions {
+    grid-row: 1 / span 2;
+    grid-column: 4;
+    align-self: center;
+    padding-right: 8px;
   }
 }

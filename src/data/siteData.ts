@@ -85,6 +85,18 @@ export type SiteData = {
     title: string
     names: string[]
   }
+  entouragePlus?: Array<{
+    inviter: string
+    invitees: string[]
+  }>
+  familyPlus?: Array<{
+    inviter: string
+    invitees: string[]
+  }>
+  peersPlus?: Array<{
+    inviter: string
+    invitees: string[]
+  }>
   specialFood: string[]
   priorityGuests: {
     title: string
@@ -382,7 +394,7 @@ export const siteData: SiteData = {
           'Angel Wisdom Tropicales',
           'Beta Joy Budaden',
           'Junemae Budaden',
-          'Anna Joy Gonzales',
+          'Anna Joy Jusay',
           'Coleen Keith Garcia',
           'Erin Eliza Yamanaka',
           'Rosette De Mesa',
@@ -444,14 +456,11 @@ export const siteData: SiteData = {
   peers: {
     title: 'Peers',
     names: [
-      'Agbaya, Rosalie',
-      'Alburo, Rhamie Jade',
       'Alburo, Rosette',
       'Andal, Venet',
       'Arenas, Bea',
       'Buenafe, Joseph',
       'Condez, Angelyn',
-      'Delos Santos, Althea',
       'Endonela, Eunice',
       'Gatmaitan, Darryl',
       'Gimenez, Mark',
@@ -464,6 +473,133 @@ export const siteData: SiteData = {
       'Red, Lavern',
     ],
   },
+  entouragePlus: [
+    {
+      inviter: 'Agbaya, Ronald',
+      invitees: [
+        'Agbaya, Rosalie',
+      ],
+    },
+    {
+      inviter: 'Budaden, Beta Joy',
+      invitees: [
+        'Arde, Apolinario',
+      ],
+    },
+    {
+      inviter: 'Claveria-Maniaga, Grace',
+      invitees: [
+        'Maniaga, Bobby',
+      ],
+    },
+    {
+      inviter: 'Escovidal, Josephine',
+      invitees: [
+        'Escovidal, Joy Arces',
+      ],
+    },
+    {
+      inviter: 'Jaime, Christian Era',
+      invitees: [
+        'Alburo, Rhamie Jade',
+      ],
+    },
+    {
+      inviter: 'Jaime, Eagle Mark',
+      invitees: [
+        'Delos Santos, Althea',
+      ],
+    },
+    {
+      inviter: 'Jusay, Anna Joy',
+      invitees: [
+        'Jusay, Justine',
+        'Jusay, Zane Theodore',
+      ],
+    },
+    {
+      inviter: 'Lucero, Gerald',
+      invitees: [
+        'Lucero, Elaine',
+      ],
+    },
+    {
+      inviter: 'Red, Arlene',
+      invitees: [
+        'Red, John Charl',
+        'Red, Lavern Paula',
+      ],
+    },
+    {
+      inviter: 'Reus, Elnora Luistro',
+      invitees: [
+        'Reus, Andrei',
+      ],
+    },
+    {
+      inviter: 'Tropicales, Angel Wisdom',
+      invitees: [
+        'Ongoco, Arlo Lyxander',
+      ],
+    },
+    {
+      inviter: 'Yamanaka, Erin Eliza',
+      invitees: [
+        'Arre, James',
+        'Arre, Kziv',
+      ],
+    },
+    {
+      inviter: '(unassigned)',
+      invitees: [
+        'Acuavera, Alice',
+      ],
+    },
+  ],
+  familyPlus: [],
+  peersPlus: [
+    {
+      inviter: 'Andal, Venet',
+      invitees: [
+        'Pelaez, Alex',
+      ],
+    },
+    {
+      inviter: 'Alburo, Rosette De Mesa',
+      invitees: [
+        'Alburo, Jeff Adrian',
+        'Alburo, Samantha Irish',
+      ],
+    },
+    {
+      inviter: 'Gatmaitan, Darryl',
+      invitees: [
+        'Gatmaitan, Lukas Dominique',
+        'Gatmaitan, Marie Laurinne',
+      ],
+    },
+    {
+      inviter: 'Gimenez, Mark',
+      invitees: [
+        'Balagot, Janine',
+        'Costales, Daniela May',
+        'Gimenez, Naomi Belle',
+        'Gimenez, Neriah Nyx',
+      ],
+    },
+    {
+      inviter: 'Macalisang, Jackyloyd',
+      invitees: [
+        'Macalisang, Xander',
+      ],
+    },
+    {
+      inviter: 'Ramos, Rosette',
+      invitees: [
+        'Tolentino, France',
+      ],
+    },
+  ],
   specialFood: [
     'Chloelie Mutya Budaden',
     'Calvin Wise Recio',
