@@ -1,0 +1,241 @@
+.priority-page {
+  width: min(1060px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 72px;
+  font-family: var(--font-modern);
+}
+
+.priority-header {
+  max-width: 700px;
+  margin-bottom: 28px;
+}
+
+.priority-back-link {
+  display: inline-block;
+  margin-bottom: 34px;
+  color: var(--muted);
+  font-size: 0.83rem;
+  text-decoration: none;
+}
+
+.priority-back-link:hover,
+.priority-back-link:focus-visible {
+  color: var(--heading);
+}
+
+.priority-eyebrow {
+  margin: 0;
+  color: var(--action-strong);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.priority-header h1,
+.priority-list-heading h2 {
+  margin: 6px 0 10px;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.priority-header h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.priority-description {
+  max-width: 620px;
+  color: var(--text);
+}
+
+.priority-capacity {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 42px;
+}
+
+.priority-capacity div {
+  display: grid;
+  gap: 3px;
+  padding: 20px 24px;
+}
+
+.priority-capacity div + div {
+  border-left: 1px solid var(--line);
+}
+
+.priority-capacity span,
+.priority-capacity small {
+  color: var(--muted);
+  font-size: 0.76rem;
+}
+
+.priority-capacity strong {
+  color: var(--heading);
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.priority-list-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.priority-list-heading h2 {
+  margin-bottom: 0;
+  font-size: 1.3rem;
+}
+
+.priority-reset {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 8px 11px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.priority-reset:hover,
+.priority-reset:focus-visible {
+  border-color: var(--action-strong);
+  color: var(--heading);
+}
+
+.priority-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.priority-row {
+  display: grid;
+  grid-template-columns: 44px 54px minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 70px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(19, 38, 59, 0.32);
+}
+
+.priority-row.is-dragging {
+  opacity: 0.45;
+}
+
+.priority-drag-handle {
+  align-self: stretch;
+  border: 0;
+  border-right: 1px solid var(--line);
+  background: transparent;
+  color: var(--action-strong);
+  cursor: grab;
+  font: 700 1.25rem/0.7 var(--font-modern);
+  letter-spacing: 0.08em;
+  touch-action: none;
+}
+
+.priority-drag-handle:active {
+  cursor: grabbing;
+}
+
+.priority-drag-handle:focus-visible {
+  outline: 2px solid var(--action-strong);
+  outline-offset: -3px;
+}
+
+.priority-rank {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.priority-guest {
+  display: grid;
+  gap: 2px;
+  padding: 12px 18px;
+}
+
+.priority-guest strong {
+  color: var(--heading);
+  font-family: var(--font-reading);
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.priority-guest span {
+  color: var(--muted);
+  font-size: 0.73rem;
+}
+
+.priority-allocation {
+  margin-right: 18px;
+  color: var(--muted);
+  font-size: 0.73rem;
+  white-space: nowrap;
+}
+
+.priority-allocation.is-food {
+  color: #b7d7a4;
+}
+
+@media (max-width: 640px) {
+  .priority-page {
+    width: min(100% - 24px, 1060px);
+    padding-top: 24px;
+  }
+
+  .priority-back-link {
+    margin-bottom: 24px;
+  }
+
+  .priority-capacity {
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+  }
+
+  .priority-capacity div {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    padding: 14px 0;
+  }
+
+  .priority-capacity div + div {
+    border-top: 1px solid var(--line);
+    border-left: 0;
+  }
+
+  .priority-capacity small {
+    grid-column: 1;
+  }
+
+  .priority-capacity strong {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+  }
+
+  .priority-list-heading {
+    align-items: center;
+  }
+
+  .priority-row {
+    grid-template-columns: 40px 40px minmax(0, 1fr);
+    min-height: 76px;
+  }
+
+  .priority-guest {
+    padding: 10px 12px;
+  }
+
+  .priority-allocation {
+    grid-column: 3;
+    margin: -12px 12px 10px;
+  }
+}

@@ -85,7 +85,14 @@ export type SiteData = {
     title: string
     names: string[]
   }
-  separateFood: string[]
+  specialFood: string[]
+  priorityGuests: {
+    title: string
+    foodCapacity: number
+    hallCapacity: number
+    couple: string[]
+    secondarySponsorRoles: string[]
+  }
   contacts: {
     title: string
     items: Array<{
@@ -457,12 +464,29 @@ export const siteData: SiteData = {
       'Red, Lavern',
     ],
   },
-  separateFood: [
+  specialFood: [
     'Chloelie Mutya Budaden',
     'Calvin Wise Recio',
     'Juris Jamie B. Wacnang',
     'Nalla Budaden',
   ],
+  priorityGuests: {
+    title: 'Guest Priority',
+    foodCapacity: 100,
+    hallCapacity: 150,
+    couple: [
+      'Lee Budaden',
+      'Kish Lacza',
+    ],
+    secondarySponsorRoles: [
+      'Best Man',
+      'Maid Of Honor',
+      'Groomsmen',
+      'Bridesmaids',
+      'Ring Bearers',
+      'Flower Girls',
+    ],
+  },
   contacts: {
     title: 'Contacts',
     items: [
