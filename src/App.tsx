@@ -252,7 +252,6 @@ const HERO_NAV_LINKS = [
   { label: 'FAQ', href: '#faq' },
   { label: 'RSVP', href: '#rsvp' },
 ] as const
-const HERO_NAV_MENU_WIDTH = 48
 
 function App() {
   const [countdown, setCountdown] = useState(() =>
@@ -264,13 +263,12 @@ function App() {
     null,
   )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
-  const [isHeroNavOverflowing, setIsHeroNavOverflowing] = useState(false)
-  const [visibleHeroNavLinkCount, setVisibleHeroNavLinkCount] = useState<number>(HERO_NAV_LINKS.length)
+  const [visibleNavCount, setVisibleNavCount] = useState<number>(HERO_NAV_LINKS.length)
   const [isHeroNavMenuOpen, setIsHeroNavMenuOpen] = useState(false)
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
   const heroNavRef = useRef<HTMLElement | null>(null)
-  const heroNavMeasureRef = useRef<HTMLDivElement | null>(null)
+  const heroNavRowRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -305,53 +303,39 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
+  // Measure which pills fit in the nav bar after render and on resize/font-load.
+  // We render all pills, then post-render check how many fit before the burger
+  // button (48px) would be clipped. The row uses overflow:hidden so pills
+  // beyond the available width are hidden by CSS already.
   useEffect(() => {
-    const container = heroNavRef.current
-    const measure = heroNavMeasureRef.current
+    const row = heroNavRowRef.current
+    if (!row) return
 
-    if (!container || !measure) {
-      return
+    const BURGER_W = 48
+
+    const measure = () => {
+      const available = row.clientWidth - BURGER_W
+      const children = Array.from(row.children) as HTMLElement[]
+      let count = 0
+      let accW = 0
+      for (const child of children) {
+        // offsetWidth is reliable post-render with actual fonts
+        const w = child.offsetWidth
+        if (accW + w > available) break
+        accW += w
+        count++
+      }
+      // If all fit with room to spare (no burger needed), show all
+      const allFit = children.reduce((s, c) => s + (c as HTMLElement).offsetWidth, 0) <= row.clientWidth
+      setVisibleNavCount(allFit ? HERO_NAV_LINKS.length : Math.max(count, 1))
     }
 
-    const checkOverflow = () => {
-      const naturalWidth = measure.getBoundingClientRect().width
-      const isOverflowing = naturalWidth > container.clientWidth
+    measure()
+    document.fonts.ready.then(measure)
 
-      if (!isOverflowing) {
-        setIsHeroNavOverflowing(false)
-        setVisibleHeroNavLinkCount(HERO_NAV_LINKS.length)
-        return
-      }
-
-      let visibleWidth = 0
-      let visibleCount = 0
-
-      for (const child of Array.from(measure.children)) {
-        const linkWidth = child.getBoundingClientRect().width
-
-        if (visibleWidth + linkWidth + HERO_NAV_MENU_WIDTH > container.clientWidth) {
-          break
-        }
-
-        visibleWidth += linkWidth
-        visibleCount += 1
-      }
-
-      setIsHeroNavOverflowing(true)
-      setVisibleHeroNavLinkCount(Math.max(visibleCount, 1))
-    }
-
-    checkOverflow()
-
-    // Re-check once fonts are ready — web fonts change pill widths and the
-    // initial measurement before fonts load can be too narrow, causing the
-    // overflow mode to never activate on mobile.
-    document.fonts.ready.then(checkOverflow)
-
-    const observer = new ResizeObserver(checkOverflow)
-    observer.observe(container)
-
-    return () => observer.disconnect()
+    const ro = new ResizeObserver(measure)
+    ro.observe(row)
+    return () => ro.disconnect()
   }, [])
 
   useEffect(() => {
@@ -676,24 +660,18 @@ function App() {
 
       <div className="hero-nav-sticky">
         <nav className="hero-nav" ref={heroNavRef} aria-label="Jump to section">
-        <div className="hero-nav-measure" ref={heroNavMeasureRef} aria-hidden="true">
-          {HERO_NAV_LINKS.map((link) => (
-            <span key={link.href} className="hero-nav-pill">
-              {link.label}
-            </span>
-          ))}
-        </div>
 
-        {isHeroNavOverflowing ? (
-          <div className="hero-nav-overflow-row">
-            <div className="hero-nav-row">
-              {HERO_NAV_LINKS.slice(0, visibleHeroNavLinkCount).map((link) => (
-                <a key={link.href} className="hero-nav-pill" href={link.href}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
+          {/* Pill row — always rendered; pills beyond visibleNavCount are hidden by CSS overflow */}
+          <div className="hero-nav-row" ref={heroNavRowRef}>
+            {HERO_NAV_LINKS.slice(0, visibleNavCount).map((link) => (
+              <a key={link.href} className="hero-nav-pill" href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </div>
 
+          {/* Burger — only shown when some links don't fit */}
+          {visibleNavCount < HERO_NAV_LINKS.length ? (
             <div className="hero-nav-menu">
               <button
                 type="button"
@@ -701,17 +679,14 @@ function App() {
                 onClick={() => setIsHeroNavMenuOpen((open) => !open)}
                 aria-expanded={isHeroNavMenuOpen}
                 aria-haspopup="true"
-                aria-label="Show more navigation options"
+                aria-label="Open navigation menu"
               >
-                <span className="hero-nav-menu-icon" aria-hidden="true">
-                  ☰
-                </span>
-                <span className="hero-nav-menu-label">Menu</span>
+                <span className="hero-nav-menu-icon" aria-hidden="true">☰</span>
               </button>
 
               {isHeroNavMenuOpen ? (
                 <div className="hero-nav-dropdown">
-                  {HERO_NAV_LINKS.map((link) => (
+                  {HERO_NAV_LINKS.slice(visibleNavCount).map((link) => (
                     <a
                       key={link.href}
                       className="hero-nav-dropdown-link"
@@ -724,16 +699,8 @@ function App() {
                 </div>
               ) : null}
             </div>
-          </div>
-        ) : (
-          <div className="hero-nav-row">
-            {HERO_NAV_LINKS.map((link) => (
-              <a key={link.href} className="hero-nav-pill" href={link.href}>
-                {link.label}
-              </a>
-            ))}
-          </div>
-        )}
+          ) : null}
+
         </nav>
       </div>
 
@@ -1014,7 +981,7 @@ function App() {
           {siteData.entourage.groups.map((group, groupIdx) => (
             <article key={groupIdx}>
               <h3>{group.title}</h3>
-              {group.names.map((name) => {
+              {group.names.map((name, nameIdx) => {
                 const marchesInChurch = !group.church?.length || group.church.includes(name)
                 const churchIcon = (
                   <span
@@ -1025,7 +992,7 @@ function App() {
                 )
 
                 return (
-                  <p key={name} className="entourage-name">
+                  <p key={`${name}-${nameIdx}`} className="entourage-name">
                     {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
                     {name}
                     {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
