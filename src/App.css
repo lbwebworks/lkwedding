@@ -56,7 +56,7 @@
 
 .hero {
   text-align: center;
-  padding: 54px 24px 0;
+  padding: 54px 24px 32px;
   background-image: linear-gradient(180deg, rgba(135, 168, 203, 0.2), transparent 70%);
   font-family: var(--font-elegant);
 }
@@ -131,12 +131,18 @@ a {
   transform: translateY(-1px);
 }
 
+.hero-nav-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--line);
+}
+
 .hero-nav {
-  position: relative;
-  margin: 28px -24px 0;
-  width: calc(100% + 48px);
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
 .hero-nav-measure {
@@ -149,6 +155,7 @@ a {
   pointer-events: none;
   display: flex;
   flex-wrap: nowrap;
+  gap: 0;
   width: max-content;
 }
 
@@ -156,6 +163,25 @@ a {
   display: flex;
   flex-wrap: nowrap;
   width: 100%;
+}
+
+.hero-nav-overflow-row {
+  display: flex;
+  width: 100%;
+}
+
+.hero-nav-overflow-row .hero-nav-row {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-nav-overflow-row .hero-nav-pill {
+  flex: 1 1 auto;
+  min-width: max-content;
+}
+
+.hero-nav-overflow-row .hero-nav-menu {
+  flex: 0 0 auto;
 }
 
 .hero-nav-pill {
@@ -169,13 +195,17 @@ a {
   border-radius: 0;
   border: 1px solid var(--line);
   padding: 12px 8px;
-  background: var(--surface-3);
+  background: #08111c;
   color: var(--heading);
   font-family: var(--font-modern);
   font-size: 0.82rem;
   letter-spacing: 0.03em;
   text-align: center;
   transition: background 0.2s ease;
+}
+
+.hero-nav-measure .hero-nav-pill {
+  flex: none;
 }
 
 .hero-nav-pill + .hero-nav-pill {
@@ -189,25 +219,34 @@ a.hero-nav-pill:hover {
 
 .hero-nav-menu {
   position: relative;
-  width: 100%;
   display: flex;
 }
 
 .hero-nav-toggle {
   display: flex;
-  width: 100%;
+  box-sizing: border-box;
+  width: 48px;
   align-items: center;
   justify-content: center;
   gap: 6px;
   border-radius: 0;
   border: 1px solid var(--line);
   padding: 12px 18px;
-  background: var(--action);
-  color: #f4f8ff;
+  background: #08111c;
+  color: var(--heading);
   font-family: var(--font-modern);
   font-size: 0.82rem;
   letter-spacing: 0.03em;
   cursor: pointer;
+}
+
+.hero-nav-menu-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.hero-nav-menu-label {
+  display: none;
 }
 
 .hero-nav-dropdown {
@@ -220,7 +259,7 @@ a.hero-nav-pill:hover {
   max-width: min(240px, calc(100vw - 48px));
   padding: 0;
   border-radius: 0;
-  background: var(--surface-2);
+  background: #08111c;
   border: 1px solid var(--line);
   box-shadow: 0 12px 30px rgba(6, 12, 20, 0.4);
   z-index: 5;

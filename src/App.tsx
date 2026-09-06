@@ -251,6 +251,7 @@ const HERO_NAV_LINKS = [
   { label: 'FAQ', href: '#faq' },
   { label: 'RSVP', href: '#rsvp' },
 ] as const
+const HERO_NAV_MENU_WIDTH = 48
 
 function App() {
   const [countdown, setCountdown] = useState(() =>
@@ -263,6 +264,7 @@ function App() {
   )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
   const [isHeroNavOverflowing, setIsHeroNavOverflowing] = useState(false)
+  const [visibleHeroNavLinkCount, setVisibleHeroNavLinkCount] = useState<number>(HERO_NAV_LINKS.length)
   const [isHeroNavMenuOpen, setIsHeroNavMenuOpen] = useState(false)
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
@@ -311,7 +313,31 @@ function App() {
     }
 
     const checkOverflow = () => {
-      setIsHeroNavOverflowing(measure.scrollWidth > container.clientWidth)
+      const naturalWidth = measure.getBoundingClientRect().width
+      const isOverflowing = naturalWidth > container.clientWidth
+
+      if (!isOverflowing) {
+        setIsHeroNavOverflowing(false)
+        setVisibleHeroNavLinkCount(HERO_NAV_LINKS.length)
+        return
+      }
+
+      let visibleWidth = 0
+      let visibleCount = 0
+
+      for (const child of Array.from(measure.children)) {
+        const linkWidth = child.getBoundingClientRect().width
+
+        if (visibleWidth + linkWidth + HERO_NAV_MENU_WIDTH > container.clientWidth) {
+          break
+        }
+
+        visibleWidth += linkWidth
+        visibleCount += 1
+      }
+
+      setIsHeroNavOverflowing(true)
+      setVisibleHeroNavLinkCount(Math.max(visibleCount, 1))
     }
 
     checkOverflow()
@@ -637,17 +663,28 @@ function App() {
         <p className="hero-subtitle">{siteData.hero.subtitle}</p>
         <p className="date">{siteData.hero.date}</p>
         <p className="hero-copy">{siteData.hero.intro}</p>
+      </section>
 
+      <div className="hero-nav-sticky">
         <nav className="hero-nav" ref={heroNavRef} aria-label="Jump to section">
-          <div className="hero-nav-measure" ref={heroNavMeasureRef} aria-hidden="true">
-            {HERO_NAV_LINKS.map((link) => (
-              <span key={link.href} className="hero-nav-pill">
-                {link.label}
-              </span>
-            ))}
-          </div>
+        <div className="hero-nav-measure" ref={heroNavMeasureRef} aria-hidden="true">
+          {HERO_NAV_LINKS.map((link) => (
+            <span key={link.href} className="hero-nav-pill">
+              {link.label}
+            </span>
+          ))}
+        </div>
 
-          {isHeroNavOverflowing ? (
+        {isHeroNavOverflowing ? (
+          <div className="hero-nav-overflow-row">
+            <div className="hero-nav-row">
+              {HERO_NAV_LINKS.slice(0, visibleHeroNavLinkCount).map((link) => (
+                <a key={link.href} className="hero-nav-pill" href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+
             <div className="hero-nav-menu">
               <button
                 type="button"
@@ -655,8 +692,12 @@ function App() {
                 onClick={() => setIsHeroNavMenuOpen((open) => !open)}
                 aria-expanded={isHeroNavMenuOpen}
                 aria-haspopup="true"
+                aria-label="Show more navigation options"
               >
-                Menu <span aria-hidden="true">▾</span>
+                <span className="hero-nav-menu-icon" aria-hidden="true">
+                  ☰
+                </span>
+                <span className="hero-nav-menu-label">Menu</span>
               </button>
 
               {isHeroNavMenuOpen ? (
@@ -674,17 +715,18 @@ function App() {
                 </div>
               ) : null}
             </div>
-          ) : (
-            <div className="hero-nav-row">
-              {HERO_NAV_LINKS.map((link) => (
-                <a key={link.href} className="hero-nav-pill" href={link.href}>
-                  {link.label}
-                </a>
-              ))}
-            </div>
-          )}
+          </div>
+        ) : (
+          <div className="hero-nav-row">
+            {HERO_NAV_LINKS.map((link) => (
+              <a key={link.href} className="hero-nav-pill" href={link.href}>
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
         </nav>
-      </section>
+      </div>
 
       <section className="panel photo-band" aria-label="Prenup photo preview">
         <div className="photo-band-overlay" aria-hidden="true" />
