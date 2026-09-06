@@ -245,11 +245,11 @@ const HERO_NAV_LINKS = [
   { label: 'Our Story', href: '#story' },
   { label: 'Program', href: '#program' },
   { label: 'Dress Code', href: '#dress-code' },
+  { label: 'Entourage', href: '#entourage' },
+  { label: 'Guests', href: '#guests' },
   { label: 'Venue', href: '#venue' },
   { label: 'Directions', href: '#directions' },
   { label: 'Gallery', href: '#gallery' },
-  { label: 'Entourage', href: '#entourage' },
-  { label: 'Guests', href: '#guests' },
   { label: 'FAQ', href: '#faq' },
   { label: 'RSVP', href: '#rsvp' },
 ] as const
