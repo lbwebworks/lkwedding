@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import fallbackHeroImg from './assets/hero.png'
 import calendarDayImage from './assets/wedding/calendar/sept_20.png'
@@ -342,6 +343,11 @@ function App() {
 
     checkOverflow()
 
+    // Re-check once fonts are ready — web fonts change pill widths and the
+    // initial measurement before fonts load can be too narrow, causing the
+    // overflow mode to never activate on mobile.
+    document.fonts.ready.then(checkOverflow)
+
     const observer = new ResizeObserver(checkOverflow)
     observer.observe(container)
 
@@ -652,9 +658,12 @@ function App() {
 
   return (
     <>
-      <div className="photo-band-fixed-layer" aria-hidden="true">
-        <img src={heroImage} alt="" className="photo-band-fixed-image" />
-      </div>
+      {createPortal(
+        <div className="photo-band-fixed-layer" aria-hidden="true">
+          <img src={heroImage} alt="" className="photo-band-fixed-image" />
+        </div>,
+        document.body,
+      )}
 
       <main className="site-shell">
       <section className="panel hero" id="home">
@@ -1210,17 +1219,20 @@ function App() {
         </div>
       ) : null}
 
-      {showStickyRsvpButton ? (
-        <a
-          className="secondary rsvp-sticky-button"
-          href={siteData.rsvp.buttonUrl}
-          aria-disabled={siteData.rsvp.buttonDisabled}
-          target={siteData.rsvp.buttonDisabled ? undefined : '_blank'}
-          rel={siteData.rsvp.buttonDisabled ? undefined : 'noreferrer'}
-        >
-          {siteData.rsvp.buttonLabel}
-        </a>
-      ) : null}
+      {showStickyRsvpButton
+        ? createPortal(
+            <a
+              className="secondary rsvp-sticky-button"
+              href={siteData.rsvp.buttonUrl}
+              aria-disabled={siteData.rsvp.buttonDisabled}
+              target={siteData.rsvp.buttonDisabled ? undefined : '_blank'}
+              rel={siteData.rsvp.buttonDisabled ? undefined : 'noreferrer'}
+            >
+              {siteData.rsvp.buttonLabel}
+            </a>,
+            document.body,
+          )
+        : null}
     </>
   )
 }
