@@ -499,6 +499,7 @@ function App() {
 
   const heroImage = weddingImages.hero[0] ?? fallbackHeroImg
   const venueImages = weddingImageEntries.venue
+  const directionsImageEntries = weddingImageEntries.directions
   const dressImageEntries = {
     Ladies: weddingImageEntries.dressLadies,
     Gentlemen: weddingImageEntries.dressGentlemen,
@@ -911,6 +912,59 @@ function App() {
         })}
       </section>
 
+      <section className="panel entourage" id="entourage">
+        <h2>{siteData.entourage.title}</h2>
+        <div className="entourage-grid">
+          {siteData.entourage.groups.map((group, groupIdx) => (
+            <article key={groupIdx}>
+              <h3>{group.title}</h3>
+              {group.names.map((name, nameIdx) => {
+                const marchesInChurch = !group.church?.length || group.church.includes(name)
+                const churchIcon = (
+                  <span
+                    className="church-icon"
+                    aria-hidden="true"
+                    style={{ maskImage: `url(${import.meta.env.BASE_URL}star.svg)` }}
+                  />
+                )
+
+                return (
+                  <p key={`${name}-${nameIdx}`} className="entourage-name">
+                    {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
+                    {name}
+                    {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
+                  </p>
+                )
+              })}
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="panel guest-list" id="guests">
+        <div className="guest-list-group">
+          <h2>{siteData.familyAndRelatives.title}</h2>
+          <div className="guest-list-grid">
+            {siteData.familyAndRelatives.names.map((name) => (
+              <p key={name} className="guest-list-name">
+                {name}
+              </p>
+            ))}
+          </div>
+        </div>
+
+        <div className="guest-list-group">
+          <h2>{siteData.peers.title}</h2>
+          <div className="guest-list-grid">
+            {siteData.peers.names.map((name) => (
+              <p key={name} className="guest-list-name">
+                {name}
+              </p>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="panel venue" id="venue">
         <h2>{siteData.venue.title}</h2>
         <div className="venue-location-list" aria-label="Wedding venue maps">
@@ -963,21 +1017,38 @@ function App() {
           {siteData.directions.groups.map((group) => (
             <div key={group.title} className="directions-group">
               <h3 className="directions-group-title">{group.title}</h3>
-              <ol className="directions-route-list">
-                {group.routes.map((route) => (
-                  <li key={route.url} className="directions-route">
-                    <span className="directions-route-label">{route.label}</span>
-                    <a
-                      className="directions-route-link"
-                      href={route.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Open in Maps
-                    </a>
-                  </li>
-                ))}
-              </ol>
+              <div className="directions-route-list">
+                {group.routes.map((route) => {
+                  const imageEntry = directionsImageEntries.find(
+                    (entry) => entry.fileName.toLowerCase() === route.image.toLowerCase(),
+                  )
+                  const imgSrc = imageEntry?.src
+
+                  return (
+                    <div key={route.url} className="directions-route">
+                      <div className="directions-route-header">
+                        <span className="directions-route-label">{route.label}</span>
+                        <a
+                          className="directions-route-link"
+                          href={route.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open in Maps
+                        </a>
+                      </div>
+                      {imgSrc ? (
+                        <img
+                          className="directions-map-image"
+                          src={imgSrc}
+                          alt={route.mapImageAlt}
+                          loading="lazy"
+                        />
+                      ) : null}
+                    </div>
+                  )
+                })}
+              </div>
             </div>
           ))}
         </div>
@@ -999,59 +1070,6 @@ function App() {
               />
             ),
           )}
-        </div>
-      </section>
-
-      <section className="panel entourage" id="entourage">
-        <h2>{siteData.entourage.title}</h2>
-        <div className="entourage-grid">
-          {siteData.entourage.groups.map((group, groupIdx) => (
-            <article key={groupIdx}>
-              <h3>{group.title}</h3>
-              {group.names.map((name, nameIdx) => {
-                const marchesInChurch = !group.church?.length || group.church.includes(name)
-                const churchIcon = (
-                  <span
-                    className="church-icon"
-                    aria-hidden="true"
-                    style={{ maskImage: `url(${import.meta.env.BASE_URL}star.svg)` }}
-                  />
-                )
-
-                return (
-                  <p key={`${name}-${nameIdx}`} className="entourage-name">
-                    {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
-                    {name}
-                    {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
-                  </p>
-                )
-              })}
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="panel guest-list" id="guests">
-        <div className="guest-list-group">
-          <h2>{siteData.familyAndRelatives.title}</h2>
-          <div className="guest-list-grid">
-            {siteData.familyAndRelatives.names.map((name) => (
-              <p key={name} className="guest-list-name">
-                {name}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        <div className="guest-list-group">
-          <h2>{siteData.peers.title}</h2>
-          <div className="guest-list-grid">
-            {siteData.peers.names.map((name) => (
-              <p key={name} className="guest-list-name">
-                {name}
-              </p>
-            ))}
-          </div>
         </div>
       </section>
 

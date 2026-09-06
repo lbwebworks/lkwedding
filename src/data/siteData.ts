@@ -64,6 +64,8 @@ export type SiteData = {
       routes: Array<{
         label: string
         url: string
+        mapImageAlt: string
+        image: string
       }>
     }>
   }
@@ -283,25 +285,33 @@ export const siteData: SiteData = {
         title: 'From South to Guagua',
         routes: [
           {
-            label: 'NLEX → San Fernando Exit → Guagua',
-            url: 'https://maps.app.goo.gl/kke3a2v9TeQYvQo87',
+            label: 'NLEX Balintawak → San Fernando Exit → Casa Agustin Resort',
+            url: 'https://maps.app.goo.gl/bHuGZcZV9Ayppgs3A',
+            mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via San Fernando Exit',
+            image: 'south_to_guagua1.PNG'
           },
           {
-            label: 'NLEX → Pulilan Exit → Baliwag → Mexico → Guagua (Alternative Route)',
-            url: 'https://maps.app.goo.gl/wkQoJSVeRajiEAV7A',
+            label: 'NLEX Balintawak → Pulilan Exit → Baliwag → Mexico → Casa Agustin Resort (Alternative Route)',
+            url: 'https://maps.app.goo.gl/ptCxkKh4h8qorkrx8',
+            mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via Pulilan and Mexico (alternative route)',
+            image: 'south_to_guagua2.PNG'
           },
         ],
       },
       {
-        title: 'From North to Guagua',
+        title: 'From North to San Agustin Resort',
         routes: [
           {
-            label: 'SCTEX → NLEX → San Fernando Exit → Guagua',
-            url: 'https://maps.app.goo.gl/mCiX8GyRhJ1Cdjjh9',
+            label: 'SCTEX CLLEX → NLEX → San Fernando Exit → Guagua',
+            url: 'https://maps.app.goo.gl/CNWJkZv58zoM9itTA',
+            mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via NLEX San Fernando Exit',
+            image: 'north_to_guagua1.PNG'
           },
           {
-            label: 'SCTEX → Porac Exit → Guagua',
-            url: 'https://maps.app.goo.gl/JqbL3fW9gK4j6CeE7',
+            label: 'SCTEX CLLEX → Porac Exit → San Agustin Resort',
+            url: 'https://maps.app.goo.gl/BiZPHh2kihxgyTam8',
+            mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via Porac Exit',
+            image: 'north_to_guagua2.PNG'
           },
         ],
       },

@@ -71,6 +71,7 @@ export const weddingImages = {
   dressLadies: toUrls(pickFolderEntries('dress/ladies')),
   dressGentlemen: toUrls(pickFolderEntries('dress/gentlemen')),
   venue: toUrls(pickFolderEntries('venue')),
+  directions: toUrls(pickFolderEntries('directions')),
   saveTheDate: toUrls(saveDateFullEntries),
 }
 
@@ -79,5 +80,6 @@ export const weddingImageEntries = {
   dressLadies: pickFolderEntries('dress/ladies'),
   dressGentlemen: pickFolderEntries('dress/gentlemen'),
   venue: pickFolderEntries('venue'),
+  directions: pickFolderEntries('directions'),
   saveTheDate: toSaveDateEntries(saveDateFullEntries),
 }
