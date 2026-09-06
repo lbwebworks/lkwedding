@@ -239,6 +239,19 @@ function SaveDateTile({
   )
 }
 
+const HERO_NAV_LINKS = [
+  { label: 'Calendar', href: '#calendar' },
+  { label: 'Our Story', href: '#story' },
+  { label: 'Program', href: '#program' },
+  { label: 'Dress Code', href: '#dress-code' },
+  { label: 'Venue', href: '#venue' },
+  { label: 'Gallery', href: '#gallery' },
+  { label: 'Entourage', href: '#entourage' },
+  { label: 'Guests', href: '#guests' },
+  { label: 'FAQ', href: '#faq' },
+  { label: 'RSVP', href: '#rsvp' },
+] as const
+
 function App() {
   const [countdown, setCountdown] = useState(() =>
     getCountdownParts(siteData.hero.weddingDateISO),
@@ -249,8 +262,12 @@ function App() {
     null,
   )
   const [showStickyRsvpButton, setShowStickyRsvpButton] = useState(true)
+  const [isHeroNavOverflowing, setIsHeroNavOverflowing] = useState(false)
+  const [isHeroNavMenuOpen, setIsHeroNavMenuOpen] = useState(false)
   const storySectionRef = useRef<HTMLElement | null>(null)
   const rsvpSectionRef = useRef<HTMLElement | null>(null)
+  const heroNavRef = useRef<HTMLElement | null>(null)
+  const heroNavMeasureRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     document.title = siteData.hero.title
@@ -284,6 +301,52 @@ function App() {
 
     return () => observer.disconnect()
   }, [])
+
+  useEffect(() => {
+    const container = heroNavRef.current
+    const measure = heroNavMeasureRef.current
+
+    if (!container || !measure) {
+      return
+    }
+
+    const checkOverflow = () => {
+      setIsHeroNavOverflowing(measure.scrollWidth > container.clientWidth)
+    }
+
+    checkOverflow()
+
+    const observer = new ResizeObserver(checkOverflow)
+    observer.observe(container)
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (!isHeroNavMenuOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (heroNavRef.current && !heroNavRef.current.contains(event.target as Node)) {
+        setIsHeroNavMenuOpen(false)
+      }
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsHeroNavMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isHeroNavMenuOpen])
 
   useEffect(() => {
     const section = storySectionRef.current
@@ -574,6 +637,53 @@ function App() {
         <p className="hero-subtitle">{siteData.hero.subtitle}</p>
         <p className="date">{siteData.hero.date}</p>
         <p className="hero-copy">{siteData.hero.intro}</p>
+
+        <nav className="hero-nav" ref={heroNavRef} aria-label="Jump to section">
+          <div className="hero-nav-measure" ref={heroNavMeasureRef} aria-hidden="true">
+            {HERO_NAV_LINKS.map((link) => (
+              <span key={link.href} className="hero-nav-pill">
+                {link.label}
+              </span>
+            ))}
+          </div>
+
+          {isHeroNavOverflowing ? (
+            <div className="hero-nav-menu">
+              <button
+                type="button"
+                className="hero-nav-toggle"
+                onClick={() => setIsHeroNavMenuOpen((open) => !open)}
+                aria-expanded={isHeroNavMenuOpen}
+                aria-haspopup="true"
+              >
+                Menu <span aria-hidden="true">▾</span>
+              </button>
+
+              {isHeroNavMenuOpen ? (
+                <div className="hero-nav-dropdown">
+                  {HERO_NAV_LINKS.map((link) => (
+                    <a
+                      key={link.href}
+                      className="hero-nav-dropdown-link"
+                      href={link.href}
+                      onClick={() => setIsHeroNavMenuOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : (
+            <div className="hero-nav-row">
+              {HERO_NAV_LINKS.map((link) => (
+                <a key={link.href} className="hero-nav-pill" href={link.href}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </nav>
       </section>
 
       <section className="panel photo-band" aria-label="Prenup photo preview">
@@ -876,25 +986,27 @@ function App() {
         </div>
       </section>
 
-      <section className="panel guest-list" id="family-and-relatives">
-        <h2>{siteData.familyAndRelatives.title}</h2>
-        <div className="guest-list-grid">
-          {siteData.familyAndRelatives.names.map((name) => (
-            <p key={name} className="guest-list-name">
-              {name}
-            </p>
-          ))}
+      <section className="panel guest-list" id="guests">
+        <div className="guest-list-group">
+          <h2>{siteData.familyAndRelatives.title}</h2>
+          <div className="guest-list-grid">
+            {siteData.familyAndRelatives.names.map((name) => (
+              <p key={name} className="guest-list-name">
+                {name}
+              </p>
+            ))}
+          </div>
         </div>
-      </section>
 
-      <section className="panel guest-list" id="peers">
-        <h2>{siteData.peers.title}</h2>
-        <div className="guest-list-grid">
-          {siteData.peers.names.map((name) => (
-            <p key={name} className="guest-list-name">
-              {name}
-            </p>
-          ))}
+        <div className="guest-list-group">
+          <h2>{siteData.peers.title}</h2>
+          <div className="guest-list-grid">
+            {siteData.peers.names.map((name) => (
+              <p key={name} className="guest-list-name">
+                {name}
+              </p>
+            ))}
+          </div>
         </div>
       </section>
 

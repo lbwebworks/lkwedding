@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Great+Vibes&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
+  scroll-behavior: smooth;
   --text: #c8d7e6;
   --heading: #e4effb;
   --bg: #0b1522;
