@@ -475,6 +475,7 @@ export const siteData: SiteData = {
       'Montera, Jennica',
       'Masiglat, Alex Czar',
       'Red, Lavern',
+      'Viloria, Rogelio',
     ],
   },
   entouragePlus: [
@@ -519,6 +520,12 @@ export const siteData: SiteData = {
       invitees: [
         'Jusay, Justine',
         'Jusay, Zane Theodore',
+      ],
+    },
+    {
+      inviter: 'Garcia, Ervin',
+      invitees: [
+        'Garcia, Miffie',
       ],
     },
     {
@@ -601,6 +608,12 @@ export const siteData: SiteData = {
       inviter: 'Ramos, Rosette',
       invitees: [
         'Tolentino, France',
+      ],
+    },
+    {
+      inviter: 'Viloria, Rogelio',
+      invitees: [
+        'Esquillo, Aidan',
       ],
     },
   ],
