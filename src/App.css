@@ -138,7 +138,7 @@ a {
   z-index: 6;
   background: var(--surface-2);
   border-bottom: 1px solid var(--line);
-  overflow-x: clip;
+  overflow: visible;
 }
 
 .hero-nav {
@@ -233,7 +233,7 @@ a.hero-nav-pill:hover {
   background: #08111c;
   border: 1px solid var(--line);
   box-shadow: 0 12px 30px rgba(6, 12, 20, 0.4);
-  z-index: 5;
+  z-index: 20;
 }
 
 .hero-nav-dropdown-link {
