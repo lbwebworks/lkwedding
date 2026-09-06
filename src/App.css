@@ -282,6 +282,7 @@ a.hero-nav-pill:hover {
 .program h2,
 .dress h2,
 .venue h2,
+.directions h2,
 .save-date h2,
 .rsvp h2,
 .entourage h2,
@@ -562,6 +563,7 @@ a.hero-nav-pill:hover {
 .program h2,
 .dress h2,
 .venue h2,
+.directions h2,
 .save-date h2,
 .faq h2 {
   font-family: var(--font-elegant);
@@ -989,6 +991,64 @@ a.hero-nav-pill:hover {
 .venue-location-row--meta > a {
   justify-self: start;
   align-self: start;
+}
+
+/* ── Directions ─────────────────────────────────────────────── */
+
+.directions {
+  font-family: var(--font-reading);
+}
+
+.directions-groups {
+  display: grid;
+  gap: 28px;
+  margin-top: 8px;
+}
+
+.directions-group-title {
+  margin: 0 0 12px;
+  font-family: var(--font-elegant);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: var(--heading);
+}
+
+.directions-route-list {
+  margin: 0;
+  padding: 0 0 0 1.2em;
+  display: grid;
+  gap: 10px;
+  list-style: decimal;
+}
+
+.directions-route {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 12px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.directions-route-label {
+  flex: 1 1 auto;
+}
+
+.directions-route-link {
+  flex: 0 0 auto;
+  font-family: var(--font-modern);
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: var(--action-strong);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(135, 168, 203, 0.35);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.directions-route-link:hover {
+  color: var(--heading);
+  border-color: var(--heading);
 }
 
 .save-date .save-date-grid {

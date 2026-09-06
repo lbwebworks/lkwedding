@@ -56,6 +56,17 @@ export type SiteData = {
     mapLabel: string
     photoLabel: string
   }
+  directions: {
+    title: string
+    sectionTitle: string
+    groups: Array<{
+      title: string
+      routes: Array<{
+        label: string
+        url: string
+      }>
+    }>
+  }
   saveTheDate: {
     title: string
     subtitle: string
@@ -263,6 +274,38 @@ export const siteData: SiteData = {
     ],
     mapLabel: 'View On Map',
     photoLabel: 'Venue Photo Placeholder',
+  },
+  directions: {
+    title: 'Directions',
+    sectionTitle: 'Getting There',
+    groups: [
+      {
+        title: 'From South to Guagua',
+        routes: [
+          {
+            label: 'NLEX → San Fernando Exit → Guagua',
+            url: 'https://maps.app.goo.gl/kke3a2v9TeQYvQo87',
+          },
+          {
+            label: 'NLEX → Pulilan Exit → Baliwag → Mexico → Guagua (Alternative Route)',
+            url: 'https://maps.app.goo.gl/wkQoJSVeRajiEAV7A',
+          },
+        ],
+      },
+      {
+        title: 'From North to Guagua',
+        routes: [
+          {
+            label: 'SCTEX → NLEX → San Fernando Exit → Guagua',
+            url: 'https://maps.app.goo.gl/mCiX8GyRhJ1Cdjjh9',
+          },
+          {
+            label: 'SCTEX → Porac Exit → Guagua',
+            url: 'https://maps.app.goo.gl/JqbL3fW9gK4j6CeE7',
+          },
+        ],
+      },
+    ],
   },
   saveTheDate: {
     title: 'Gallery',

@@ -246,6 +246,7 @@ const HERO_NAV_LINKS = [
   { label: 'Program', href: '#program' },
   { label: 'Dress Code', href: '#dress-code' },
   { label: 'Venue', href: '#venue' },
+  { label: 'Directions', href: '#directions' },
   { label: 'Gallery', href: '#gallery' },
   { label: 'Entourage', href: '#entourage' },
   { label: 'Guests', href: '#guests' },
@@ -953,6 +954,32 @@ function App() {
               </article>
             )
           })}
+        </div>
+      </section>
+
+      <section className="panel directions" id="directions">
+        <h2>{siteData.directions.sectionTitle}</h2>
+        <div className="directions-groups">
+          {siteData.directions.groups.map((group) => (
+            <div key={group.title} className="directions-group">
+              <h3 className="directions-group-title">{group.title}</h3>
+              <ol className="directions-route-list">
+                {group.routes.map((route) => (
+                  <li key={route.url} className="directions-route">
+                    <span className="directions-route-label">{route.label}</span>
+                    <a
+                      className="directions-route-link"
+                      href={route.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open in Maps
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ))}
         </div>
       </section>
 
