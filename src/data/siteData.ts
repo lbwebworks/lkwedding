@@ -117,6 +117,10 @@ export type SiteData = {
   }
   attendees: Attendee[]
   priorityOrder: PriorityOrder[]
+  priorityFood: {
+    Groom: number
+    Bride: number
+  }
   contacts: {
     title: string
     items: Array<{
@@ -342,6 +346,10 @@ export const siteData: SiteData = {
   },
   attendees: [],
   priorityOrder: [],
+  priorityFood: {
+    Groom: 50,
+    Bride: 50,
+  },
   contacts: {
     title: 'Contacts',
     items: [
