@@ -1,3 +1,36 @@
+﻿export type AttendeeTitle =
+  | 'Groom'
+  | 'Bride'
+  | 'Best Man'
+  | 'Maid Of Honor'
+  | 'Parent'
+  | 'Ninong'
+  | 'Ninang'
+  | 'Groomsmen'
+  | 'Bridesmaid'
+  | 'Ring Bearer'
+  | 'Flower Girl'
+  | 'Relative'
+  | 'Coworker'
+  | 'Friend'
+  | 'Companion'
+
+export type Attendee = {
+  Id: string
+  LastName: string
+  FirstName: string
+  Title: AttendeeTitle
+  Side: 'Groom' | 'Bride' | ''
+  IsChurchPriority: boolean
+  IsFoodSpecial: boolean
+  CompanionOf: string | null
+}
+
+export type PriorityOrder = {
+  attendeeId: string
+  priority: number
+}
+
 export type SiteData = {
   hero: {
     eyebrow: string
@@ -82,42 +115,8 @@ export type SiteData = {
     buttonUrl: string
     buttonDisabled: boolean
   }
-  entourage: {
-    title: string
-    groups: Array<{
-      title: string
-      names: string[]
-      church?: string[]
-    }>
-  }
-  familyAndRelatives: {
-    title: string
-    names: string[]
-  }
-  peers: {
-    title: string
-    names: string[]
-  }
-  entouragePlus?: Array<{
-    inviter: string
-    invitees: string[]
-  }>
-  familyPlus?: Array<{
-    inviter: string
-    invitees: string[]
-  }>
-  peersPlus?: Array<{
-    inviter: string
-    invitees: string[]
-  }>
-  specialFood: string[]
-  priorityGuests: {
-    title: string
-    foodCapacity: number
-    hallCapacity: number
-    couple: string[]
-    secondarySponsorRoles: string[]
-  }
+  attendees: Attendee[]
+  priorityOrder: PriorityOrder[]
   contacts: {
     title: string
     items: Array<{
@@ -193,7 +192,7 @@ export const siteData: SiteData = {
         time: '2:00 PM',
         icon: 'wi-rings',
         title: 'Wedding Ceremony',
-        note: 'Iglesia Ni Cristo [Pampanga West] — Betis, Guagua, Pampanga. The exchange of vows and rings.',
+        note: 'Iglesia Ni Cristo [Pampanga West] â€” Betis, Guagua, Pampanga. The exchange of vows and rings.',
       },
       {
         time: '3:15 PM',
@@ -211,7 +210,7 @@ export const siteData: SiteData = {
         time: '4:00 PM',
         icon: 'wi-toast',
         title: 'Reception Program Begins',
-        note: 'The celebration officially starts — toasts, messages, and the first moments as a married couple.',
+        note: 'The celebration officially starts â€” toasts, messages, and the first moments as a married couple.',
       },
       {
         time: 'TBD',
@@ -285,13 +284,13 @@ export const siteData: SiteData = {
         title: 'From South to Guagua',
         routes: [
           {
-            label: 'NLEX Balintawak → San Fernando Exit → Casa Agustin Resort',
+            label: 'NLEX Balintawak â†’ San Fernando Exit â†’ Casa Agustin Resort',
             url: 'https://maps.app.goo.gl/bHuGZcZV9Ayppgs3A',
             mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via San Fernando Exit',
             image: 'south_to_guagua1.PNG'
           },
           {
-            label: 'NLEX Balintawak → Pulilan Exit → Baliwag → Mexico → Casa Agustin Resort (Alternative Route)',
+            label: 'NLEX Balintawak â†’ Pulilan Exit â†’ Baliwag â†’ Mexico â†’ Casa Agustin Resort (Alternative Route)',
             url: 'https://maps.app.goo.gl/ptCxkKh4h8qorkrx8',
             mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via Pulilan and Mexico (alternative route)',
             image: 'south_to_guagua2.PNG'
@@ -302,13 +301,13 @@ export const siteData: SiteData = {
         title: 'From North to San Agustin Resort',
         routes: [
           {
-            label: 'SCTEX CLLEX → NLEX → San Fernando Exit → Guagua',
+            label: 'SCTEX CLLEX â†’ NLEX â†’ San Fernando Exit â†’ Guagua',
             url: 'https://maps.app.goo.gl/CNWJkZv58zoM9itTA',
             mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via NLEX San Fernando Exit',
             image: 'north_to_guagua1.PNG'
           },
           {
-            label: 'SCTEX CLLEX → Porac Exit → San Agustin Resort',
+            label: 'SCTEX CLLEX â†’ Porac Exit â†’ San Agustin Resort',
             url: 'https://maps.app.goo.gl/BiZPHh2kihxgyTam8',
             mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via Porac Exit',
             image: 'north_to_guagua2.PNG'
@@ -341,358 +340,8 @@ export const siteData: SiteData = {
       'https://docs.google.com/forms/d/e/1FAIpQLSfauH9uhHz90QOeYDGblW21KUGaS-rM7_Mrw0s3ryMA8HT3cA/viewform?usp=publish-editor',
     buttonDisabled: false,
   },
-  entourage: {
-    title: 'Entourage',
-    groups: [
-      {
-        title: "Groom's Parents",
-        names: [
-          'Alfredo Budaden',
-          'Angelina Budaden',
-        ],
-      },
-      {
-        title: "Bride's Parents",
-        names: [
-          'Reynaldo Lacza',
-          'Julieta Lacza',
-        ],
-      },
-      {
-        title: 'Principal Sponsors',
-        names: [
-          'Ermie Jaime',
-          'Ronald Agbaya',
-          'Bayani Marucot',
-          'Morris Budaden',
-          'Tristan Alcantara',
-          '...',
-          'Abel Dawey',
-          'Remeo Jr. Dauzon',
-          'Juanito Galangco',
-          'Melchor Dawey',
-          'Mark Budaden',
-          'Dionisio Domingo',
-          '...',
-          '...',
-        ],
-        church: [
-          'Ermie Jaime',
-          'Ronald Agbaya',
-          'Bayani Marucot',
-          'Morris Budaden',
-          'Tristan Alcantara',
-        ],
-      },
-      {
-        title: 'Principal Sponsors',
-        names: [
-          'Arlene Red',
-          'Yolanda Dimla',
-          'Anastasia Marucot',
-          'Amelia Mapalo',
-          'Elnora Luistro Reus',
-          'Josephine Escovidal',
-          'Cynthia Rojo',
-          'Daisy Cortez',
-          'Nena Budaden',
-          'Francisca Dawey',
-          'Elizabeth Budaden',
-          'Cristeta Dawey',
-          'Cerila Budaden',
-          'Rebecca Balang',
-        ],
-        church: [
-          'Arlene Red',
-          'Yolanda Dimla',
-          'Anastasia Marucot',
-          'Amelia Mapalo',
-          'Elnora Luistro Reus',
-        ],
-      },
-      {
-        title: 'Best Man',
-        names: ['Alfred II Budaden'],
-      },
-      {
-        title: 'Maid Of Honor',
-        names: ['Krizel Jane Lockhart'],
-      },
-      {
-        title: 'Groomsmen',
-        names: [
-          'Allan Budaden',
-          'Frewell Budaden',
-          'Eliezer Budaden',
-          'Jonathan Budaden',
-          'Gerald Lucero',
-          'Rhenish Rhey Sabado',
-          'John Reynold Villamar',
-          'Ervin Garcia',
-          'Jose Rafael Soriaga',
-          'Christian Era Jaime',
-          'Eagle Mark Jaime',
-        ],
-        church: [
-          'Allan Budaden',
-          'Frewell Budaden',
-          'Eliezer Budaden',
-          'Jonathan Budaden',
-        ],
-      },
-      {
-        title: 'Bridesmaids',
-        names: [
-          'Kristine Ayra Tropicales',
-          'Angel Wisdom Tropicales',
-          'Beta Joy Budaden',
-          'Junemae Budaden',
-          'Anna Joy Jusay',
-          'Coleen Keith Garcia',
-          'Erin Eliza Yamanaka',
-          'Rosette De Mesa',
-          'Rosette Ramos',
-          'Camille Shane Claveria',
-          'Charlene Mae Claveria',
-        ],
-        church: [
-          'Kristine Ayra Tropicales',
-          'Angel Wisdom Tropicales',
-          'Beta Joy Budaden',
-          'Junemae Budaden',
-        ],
-      },
-      {
-        title: 'Ring Bearers',
-        names: [
-          'Lex Jander Wacnang',
-          'Nathaniel Budaden',
-          'Calvin Wise Recio',
-        ],
-        church: ['Lex Jander Wacnang'],
-      },
-      {
-        title: 'Flower Girls',
-        names: [
-          'Kristell Yvonne Tropicales',
-          'Chloelie Mutya Budaden',
-          'Juris Jamie B. Wacnang',
-          'Nalla Budaden',
-        ],
-        church: ['Kristell Yvonne Tropicales'],
-      },
-    ],
-  },
-  familyAndRelatives: {
-    title: 'Family and Relatives',
-    names: [
-      'Budaden, Athea',
-      'Budaden, Grail',
-      'Budaden, Jahaziel',
-      'Budaden, Jasmin',
-      'Budaden, Jayvee',
-      'Budaden, Morris Jr.',
-      'Budaden, Ralph',
-      'Claveria, Charmaine',
-      'Claveria, Ronald',
-      'Claveria-Maniaga, Grace',
-      'Delos Reyes, Josie',
-      'Dimara, Natasha',
-      'Dimara, Shania',
-      'Dimla, Bong',
-      'Galangco, Veronica',
-      'Jaime, Norberta',
-      'Lacza, Lourdes',
-      'Razon, Charizel',
-      'Razon, Denis',
-      'Tropicales, Darell',
-      'Vito, Althea',
-      'Vito, Melanie',
-    ],
-  },
-  peers: {
-    title: 'Peers',
-    names: [
-      'Alburo, Rosette',
-      'Andal, Venet',
-      'Arenas, Bea',
-      'Buenafe, Joseph',
-      'Condez, Angelyn',
-      'Endonela, Eunice',
-      'Gatmaitan, Darryl',
-      'Gimenez, Mark',
-      'Jusay, Anna Joy',
-      'Macalisang, Jackyloyd',
-      'Mancenido, Vincent',
-      'Manzanares, Alvin',
-      'Montera, Jennica',
-      'Masiglat, Alex Czar',
-      'Red, Lavern',
-      'Viloria, Rogelio',
-    ],
-  },
-  entouragePlus: [
-    {
-      inviter: 'Agbaya, Ronald',
-      invitees: [
-        'Agbaya, Rosalie',
-      ],
-    },
-    {
-      inviter: 'Budaden, Beta Joy',
-      invitees: [
-        'Arde, Apolinario',
-      ],
-    },
-    {
-      inviter: 'Claveria-Maniaga, Grace',
-      invitees: [
-        'Maniaga, Bobby',
-      ],
-    },
-    {
-      inviter: 'Escovidal, Josephine',
-      invitees: [
-        'Escovidal, Joy Arces',
-      ],
-    },
-    {
-      inviter: 'Jaime, Christian Era',
-      invitees: [
-        'Alburo, Rhamie Jade',
-      ],
-    },
-    {
-      inviter: 'Jaime, Eagle Mark',
-      invitees: [
-        'Delos Santos, Althea',
-      ],
-    },
-    {
-      inviter: 'Jusay, Anna Joy',
-      invitees: [
-        'Jusay, Justine',
-        'Jusay, Zane Theodore',
-      ],
-    },
-    {
-      inviter: 'Garcia, Ervin',
-      invitees: [
-        'Garcia, Miffie',
-      ],
-    },
-    {
-      inviter: 'Lucero, Gerald',
-      invitees: [
-        'Lucero, Elaine',
-      ],
-    },
-    {
-      inviter: 'Red, Arlene',
-      invitees: [
-        'Red, John Charl',
-        'Red, Lavern Paula',
-      ],
-    },
-    {
-      inviter: 'Reus, Elnora Luistro',
-      invitees: [
-        'Reus, Andrei',
-      ],
-    },
-    {
-      inviter: 'Tropicales, Angel Wisdom',
-      invitees: [
-        'Ongoco, Arlo Lyxander',
-      ],
-    },
-    {
-      inviter: 'Yamanaka, Erin Eliza',
-      invitees: [
-        'Arre, James',
-        'Arre, Kziv',
-      ],
-    },
-    {
-      inviter: '(unassigned)',
-      invitees: [
-        'Acuavera, Alice',
-      ],
-    },
-  ],
-  familyPlus: [],
-  peersPlus: [
-    {
-      inviter: 'Andal, Venet',
-      invitees: [
-        'Pelaez, Alex',
-      ],
-    },
-    {
-      inviter: 'Alburo, Rosette De Mesa',
-      invitees: [
-        'Alburo, Jeff Adrian',
-        'Alburo, Samantha Irish',
-      ],
-    },
-    {
-      inviter: 'Gatmaitan, Darryl',
-      invitees: [
-        'Gatmaitan, Lukas Dominique',
-        'Gatmaitan, Marie Laurinne',
-      ],
-    },
-    {
-      inviter: 'Gimenez, Mark',
-      invitees: [
-        'Balagot, Janine',
-        'Costales, Daniela May',
-        'Gimenez, Naomi Belle',
-        'Gimenez, Neriah Nyx',
-      ],
-    },
-    {
-      inviter: 'Macalisang, Jackyloyd',
-      invitees: [
-        'Macalisang, Xander',
-      ],
-    },
-    {
-      inviter: 'Ramos, Rosette',
-      invitees: [
-        'Tolentino, France',
-      ],
-    },
-    {
-      inviter: 'Viloria, Rogelio',
-      invitees: [
-        'Esquillo, Aidan',
-      ],
-    },
-  ],
-  specialFood: [
-    'Chloelie Mutya Budaden',
-    'Calvin Wise Recio',
-    'Juris Jamie B. Wacnang',
-    'Nalla Budaden',
-  ],
-  priorityGuests: {
-    title: 'Guest Priority',
-    foodCapacity: 100,
-    hallCapacity: 150,
-    couple: [
-      'Lee Budaden',
-      'Kish Lacza',
-    ],
-    secondarySponsorRoles: [
-      'Best Man',
-      'Maid Of Honor',
-      'Groomsmen',
-      'Bridesmaids',
-      'Ring Bearers',
-      'Flower Girls',
-    ],
-  },
+  attendees: [],
+  priorityOrder: [],
   contacts: {
     title: 'Contacts',
     items: [
@@ -774,3 +423,147 @@ export const siteData: SiteData = {
     names: 'Lee & Kish',
   },
 }
+
+const attendeeRows: Array<[string, string, string, AttendeeTitle, 'Groom' | 'Bride' | '', boolean, boolean, string | null]> = [
+  ["001"  , "Budaden"       , "Lee"                 , "Groom"        , "Groom" , false, false, null],
+  ["002"  , "Lacza"         , "Kish"                , "Bride"        , "Bride" , false, false, null],
+  ["003"  , "Budaden"       , "Alfredo"             , "Parent"       , "Groom" , false, false, null],
+  ["004"  , "Budaden"       , "Angelina"            , "Parent"       , "Groom" , false, false, null],
+  ["005"  , "Lacza"         , "Reynaldo"            , "Parent"       , "Bride" , false, false, null],
+  ["006"  , "Lacza"         , "Julieta"             , "Parent"       , "Bride" , false, false, null],
+  ["007"  , "Budaden"       , "Alfred II"           , "Best Man"     , "Groom" , false, false, null],
+  ["008"  , "Lockhart"      , "Krizel Jane"         , "Maid Of Honor", "Bride" , false, false, null],
+  ["009"  , "Jaime"         , "Ermie"               , "Ninong"       , "Bride" , true, false, null],
+  ["010"  , "Agbaya"        , "Ronald"              , "Ninong"       , "Bride" , true, false, null],
+  ["011"  , "Marucot"       , "Bayani"              , "Ninong"       , "Bride" , true, false, null],
+  ["012"  , "Budaden"       , "Morris"              , "Ninong"       , "Groom" , true, false, null],
+  ["013"  , "Alcantara"     , "Tristan"             , "Ninong"       , "Bride" , true, false, null],
+  ["014"  , "Dawey"         , "Abel"                , "Ninong"       , "Groom" , false, false, null],
+  ["015"  , "Dauzon"        , "Remeo Jr."           , "Ninong"       , "Groom" , false, false, null],
+  ["016"  , "Galangco"      , "Juanito"             , "Ninong"       , "Groom" , false, false, null],
+  ["017"  , "Dawey"         , "Melchor"             , "Ninong"       , "Groom" , false, false, null],
+  ["018"  , "Budaden"       , "Mark"                , "Ninong"       , "Groom" , false, false, null],
+  ["019"  , "Domingo"       , "Dionisio"            , "Ninong"       , "Groom" , false, false, null],
+  ["020"  , "Red"           , "Arlene"              , "Ninang"       , "Bride" , true, false, null],
+  ["021"  , "Dimla"         , "Yolanda"             , "Ninang"       , "Bride" , true, false, null],
+  ["022"  , "Marucot"       , "Anastasia"           , "Ninang"       , "Bride" , true, false, null],
+  ["023"  , "Mapalo"        , "Amelia"              , "Ninang"       , "Bride" , true, false, null],
+  ["024"  , "Reus"          , "Elnora Luistro"      , "Ninang"       , "Bride" , true, false, null],
+  ["025"  , "Escovidal"     , "Josephine"           , "Ninang"       , "Bride" , false, false, null],
+  ["026"  , "Rojo"          , "Cynthia"             , "Ninang"       , "Bride" , false, false, null],
+  ["027"  , "Cortez"        , "Daisy"               , "Ninang"       , "Groom" , false, false, null],
+  ["028"  , "Budaden"       , "Nena"                , "Ninang"       , "Groom" , false, false, null],
+  ["029"  , "Dawey"         , "Francisca"           , "Ninang"       , "Groom" , false, false, null],
+  ["030"  , "Budaden"       , "Elizabeth"           , "Ninang"       , "Groom" , false, false, null],
+  ["031"  , "Dawey"         , "Cristeta"            , "Ninang"       , "Groom" , false, false, null],
+  ["032"  , "Budaden"       , "Cerila"              , "Ninang"       , "Groom" , false, false, null],
+  ["033"  , "Balang"        , "Rebecca"             , "Ninang"       , "Groom" , false, false, null],
+  ["034"  , "Budaden"       , "Allan"               , "Groomsmen"    , "Groom" , true, false, null],
+  ["035"  , "Budaden"       , "Frewell"             , "Groomsmen"    , "Groom" , true, false, null],
+  ["036"  , "Budaden"       , "Eliezer"             , "Groomsmen"    , "Groom" , true, false, null],
+  ["037"  , "Budaden"       , "Jonathan"            , "Groomsmen"    , "Groom" , true, false, null],
+  ["038"  , "Lucero"        , "Gerald"              , "Groomsmen"    , "Groom" , false, false, null],
+  ["039"  , "Sabado"        , "Rhenish Rhey"        , "Groomsmen"    , "Groom" , false, false, null],
+  ["040"  , "Villamar"      , "John Reynold"        , "Groomsmen"    , "Groom" , false, false, null],
+  ["041"  , "Garcia"        , "Ervin"               , "Groomsmen"    , "Groom" , false, false, null],
+  ["042"  , "Soriaga"       , "Jose Rafael"         , "Groomsmen"    , "Groom" , false, false, null],
+  ["043"  , "Jaime"         , "Christian Era"       , "Groomsmen"    , "Bride" , false, false, null],
+  ["044"  , "Jaime"         , "Eagle Mark"          , "Groomsmen"    , "Bride" , false, false, null],
+  ["045"  , "Tropicales"    , "Kristine Ayra"       , "Bridesmaid"   , "Bride" , true, false, null],
+  ["046"  , "Tropicales"    , "Angel Wisdom"        , "Bridesmaid"   , "Bride" , true, false, null],
+  ["047"  , "Budaden"       , "Beta Joy"            , "Bridesmaid"   , "Groom" , true, false, null],
+  ["048"  , "Budaden"       , "Junemae"             , "Bridesmaid"   , "Groom" , true, false, null],
+  ["049"  , "Jusay"         , "Anna Joy"            , "Bridesmaid"   , "Bride" , false, false, null],
+  ["050"  , "Garcia"        , "Coleen Keith"        , "Bridesmaid"   , "Groom" , false, false, null],
+  ["051"  , "Yamanaka"      , "Erin Eliza"          , "Bridesmaid"   , "Groom" , false, false, null],
+  ["052"  , "Mesa"          , "Rosette De"          , "Bridesmaid"   , "Bride" , false, false, null],
+  ["053"  , "Ramos"         , "Rosette"             , "Bridesmaid"   , "Bride" , false, false, null],
+  ["054"  , "Claveria"      , "Camille Shane"       , "Bridesmaid"   , "Bride" , false, false, null],
+  ["055"  , "Claveria"      , "Charlene Mae"        , "Bridesmaid"   , "Bride" , false, false, null],
+  ["056"  , "Wacnang"       , "Lex Jander"          , "Ring Bearer"  , "Groom" , true, false, null],
+  ["057"  , "Budaden"       , "Nathaniel"           , "Ring Bearer"  , "Groom" , false, false, null],
+  ["058"  , "Recio"         , "Calvin Wise"         , "Ring Bearer"  , "Bride" , false, true, null],
+  ["059"  , "Tropicales"    , "Kristell Yvonne"     , "Flower Girl"  , "Bride" , true, false, null],
+  ["060"  , "Budaden"       , "Chloelie Mutya"      , "Flower Girl"  , "Groom" , false, true, null],
+  ["061"  , "Wacnang"       , "Juris Jamie B."      , "Flower Girl"  , "Groom" , false, true, null],
+  ["062"  , "Budaden"       , "Nalla"               , "Flower Girl"  , "Groom" , false, true, null],
+  ["063"  , "Budaden"       , "Athea"               , "Relative"     , "Groom" , false, false, null],
+  ["064"  , "Budaden"       , "Grail"               , "Relative"     , "Groom" , false, false, null],
+  ["065"  , "Budaden"       , "Jahaziel"            , "Relative"     , "Groom" , false, false, null],
+  ["066"  , "Budaden"       , "Jasmin"              , "Relative"     , "Groom" , false, false, null],
+  ["067"  , "Budaden"       , "Jayvee"              , "Relative"     , "Groom" , false, false, null],
+  ["068"  , "Budaden"       , "Morris Jr."          , "Relative"     , "Groom" , false, false, null],
+  ["069"  , "Budaden"       , "Ralph"               , "Relative"     , "Groom" , false, false, null],
+  ["070"  , "Claveria"      , "Charmaine"           , "Relative"     , "Bride" , false, false, null],
+  ["071"  , "Claveria"      , "Ronald"              , "Relative"     , "Bride" , false, false, null],
+  ["072"  , "Claveria-Maniaga", "Grace"               , "Relative"     , "Bride" , false, false, null],
+  ["073"  , "Delos Reyes"   , "Josie"               , "Relative"     , "Bride" , false, false, null],
+  ["074"  , "Dimara"        , "Natasha"             , "Relative"     , "Groom" , false, false, null],
+  ["075"  , "Dimara"        , "Shania"              , "Relative"     , "Groom" , false, false, null],
+  ["076"  , "Dimla"         , "Bong"                , "Relative"     , "Bride" , false, false, null],
+  ["077"  , "Galangco"      , "Veronica"            , "Relative"     , "Groom" , false, false, null],
+  ["078"  , "Jaime"         , "Norberta"            , "Relative"     , "Bride" , false, false, null],
+  ["079"  , "Lacza"         , "Lourdes"             , "Relative"     , "Bride" , false, false, null],
+  ["080"  , "Razon"         , "Charizel"            , "Relative"     , "Bride" , false, false, null],
+  ["081"  , "Razon"         , "Denis"               , "Relative"     , "Bride" , false, false, null],
+  ["082"  , "Tropicales"    , "Darell"              , "Relative"     , "Bride" , false, false, null],
+  ["083"  , "Alburo"        , "Rosette"             , "Friend"       , "Bride" , false, false, null],
+  ["084"  , "Andal"         , "Venet"               , "Friend"       , "Bride" , false, false, null],
+  ["085"  , "Arenas"        , "Bea"                 , "Friend"       , "Bride" , false, false, null],
+  ["086"  , "Buenafe"       , "Joseph"              , "Coworker"     , "Groom" , false, false, null],
+  ["087"  , "Condeza"       , "Angelyn"             , "Friend"       , "Bride" , false, false, null],
+  ["088"  , "Endonela"      , "Eunice"              , "Friend"       , "Bride" , false, false, null],
+  ["089"  , "Gatmaitan"     , "Darryl"              , "Coworker"     , "Groom" , false, false, null],
+  ["090"  , "Gimenez"       , "Mark"                , "Friend"       , "Groom" , false, false, null],
+  ["091"  , "Macalisang"    , "Jackyloyd"           , "Coworker"     , "Groom" , false, false, null],
+  ["092"  , "Mancenido"     , "Vincent"             , "Friend"       , "Bride" , false, false, null],
+  ["093"  , "Manzanares"    , "Alvin"               , "Coworker"     , "Groom" , false, false, null],
+  ["094"  , "Montera"       , "Jennica"             , "Friend"       , "Bride" , false, false, null],
+  ["095"  , "Masiglat"      , "Alex Czar"           , "Friend"       , "Bride" , false, false, null],
+  ["096"  , "Red"           , "Lavern"              , "Friend"       , "Bride" , false, false, null],
+  ["097"  , "Viloria"       , "Rogelio"             , "Friend"       , "Groom" , false, false, null],
+  ["098"  , "Agbaya"        , "Rosalie"             , "Companion"    , "Bride" , false, false, "010"],
+  ["099"  , "Arde"          , "Apolinario"          , "Companion"    , "Groom" , false, false, "047"],
+  ["100"  , "Maniaga"       , "Bobby"               , "Companion"    , "Bride" , false, false, "072"],
+  ["101"  , "Escovidal"     , "Joy Arces"           , "Companion"    , "Bride" , false, false, "025"],
+  ["102"  , "Alburo"        , "Rhamie Jade"         , "Companion"    , "Bride" , false, false, "043"],
+  ["103"  , "Delos Santos"  , "Althea"              , "Companion"    , "Bride" , false, false, "044"],
+  ["104"  , "Jusay"         , "Justine"             , "Companion"    , "Bride" , false, false, "049"],
+  ["105"  , "Jusay"         , "Zane Theodore"       , "Companion"    , "Bride" , false, false, "049"],
+  ["106"  , "Garcia"        , "Miffie"              , "Companion"    , "Groom" , false, false, "041"],
+  ["107"  , "Lucero"        , "Elaine"              , "Companion"    , "Groom" , false, false, "038"],
+  ["108"  , "Red"           , "John Charl"          , "Companion"    , "Bride" , false, false, "020"],
+  ["109"  , "Red"           , "Lavern Paula"        , "Companion"    , "Bride" , false, false, "020"],
+  ["110"  , "Reus"          , "Andrei"              , "Companion"    , "Bride" , false, false, "024"],
+  ["111"  , "Ongoco"        , "Arlo Lyxander"       , "Companion"    , "Bride" , false, false, "046"],
+  ["112"  , "Arre"          , "James"               , "Companion"    , "Groom" , false, false, "051"],
+  ["113"  , "Arre"          , "Kziv"                , "Companion"    , "Groom" , false, false, "051"],
+  ["114"  , "Acuavera"      , "Alice"               , "Companion"    , "Bride" , false, false, null],
+  ["115"  , "Pelaez"        , "Alex"                , "Companion"    , "Bride" , false, false, "084"],
+  ["116"  , "Alburo"        , "Jeff Adrian"         , "Companion"    , "Bride" , false, false, null],
+  ["117"  , "Alburo"        , "Samantha Irish"      , "Companion"    , "Bride" , false, false, null],
+  ["118"  , "Gatmaitan"     , "Lukas Dominique"     , "Companion"    , "Groom" , false, false, "089"],
+  ["119"  , "Gatmaitan"     , "Marie Laurinne"      , "Companion"    , "Groom" , false, false, "089"],
+  ["120"  , "Balagot"       , "Janine"              , "Companion"    , "Bride" , false, false, "090"],
+  ["121"  , "Costales"      , "Daniela May"         , "Companion"    , "Bride" , false, false, "090"],
+  ["122"  , "Gimenez"       , "Naomi Belle"         , "Companion"    , "Groom" , false, false, "090"],
+  ["123"  , "Gimenez"       , "Neriah Nyx"          , "Companion"    , "Groom" , false, false, "090"],
+  ["124"  , "Macalisang"    , "Xander"              , "Companion"    , "Groom" , false, false, "091"],
+  ["125"  , "Tolentino"     , "France"              , "Companion"    , "Bride" , false, false, "053"],
+  ["126"  , "Esquillo"      , "Aidan"               , "Companion"    , "Groom" , false, false, "097"],
+]
+
+siteData.attendees = attendeeRows.map(([Id, LastName, FirstName, Title, Side, IsChurchPriority, IsFoodSpecial, CompanionOf]) => ({
+  Id,
+  LastName,
+  FirstName,
+  Title,
+  Side,
+  IsChurchPriority,
+  IsFoodSpecial,
+  CompanionOf,
+}))
+siteData.priorityOrder = siteData.attendees.map((attendee, index) => ({
+  attendeeId: attendee.Id,
+  priority: index + 1,
+}))

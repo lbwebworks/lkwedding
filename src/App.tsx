@@ -641,6 +641,17 @@ function App() {
     ? pickStoryImage(activeStoryChapter.title, activeStoryIndex ?? 0)
     : ''
   const isStoryViewerOpen = activeStoryChapter !== null
+  const attendeeName = (attendee: (typeof siteData.attendees)[number]) =>
+    `${attendee.FirstName} ${attendee.LastName}`.trim()
+  const entourageGroups = [
+    { title: 'Parents', titles: ['Parent'] },
+    { title: 'Best Man', titles: ['Best Man'] },
+    { title: 'Principal Sponsors', titles: ['Ninong', 'Ninang'] },
+    { title: 'Groomsmen', titles: ['Groomsmen'] },
+    { title: 'Bridesmaids', titles: ['Bridesmaid'] },
+    { title: 'Ring Bearers', titles: ['Ring Bearer'] },
+    { title: 'Flower Girls', titles: ['Flower Girl'] },
+  ]
 
   return (
     <>
@@ -913,13 +924,15 @@ function App() {
       </section>
 
       <section className="panel entourage" id="entourage">
-        <h2>{siteData.entourage.title}</h2>
+        <h2>Entourage</h2>
         <div className="entourage-grid">
-          {siteData.entourage.groups.map((group, groupIdx) => (
+          {entourageGroups.map((group, groupIdx) => (
             <article key={groupIdx}>
               <h3>{group.title}</h3>
-              {group.names.map((name, nameIdx) => {
-                const marchesInChurch = !group.church?.length || group.church.includes(name)
+              {siteData.attendees
+                .filter((attendee) => group.titles.includes(attendee.Title))
+                .map((attendee) => {
+                const marchesInChurch = attendee.IsChurchPriority
                 const churchIcon = (
                   <span
                     className="church-icon"
@@ -929,9 +942,9 @@ function App() {
                 )
 
                 return (
-                  <p key={`${name}-${nameIdx}`} className="entourage-name">
+                  <p key={attendee.Id} className="entourage-name">
                     {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
-                    {name}
+                    {attendeeName(attendee)}
                     {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
                   </p>
                 )
@@ -943,22 +956,24 @@ function App() {
 
       <section className="panel guest-list" id="guests">
         <div className="guest-list-group">
-          <h2>{siteData.familyAndRelatives.title}</h2>
+          <h2>Family and Relatives</h2>
           <div className="guest-list-grid">
-            {siteData.familyAndRelatives.names.map((name) => (
-              <p key={name} className="guest-list-name">
-                {name}
+            {siteData.attendees.filter((attendee) => attendee.Title === 'Relative').map((attendee) => (
+              <p key={attendee.Id} className="guest-list-name">
+                {attendeeName(attendee)}
               </p>
             ))}
           </div>
         </div>
 
         <div className="guest-list-group">
-          <h2>{siteData.peers.title}</h2>
+          <h2>Coworkers and Friends</h2>
           <div className="guest-list-grid">
-            {siteData.peers.names.map((name) => (
-              <p key={name} className="guest-list-name">
-                {name}
+            {siteData.attendees
+              .filter((attendee) => attendee.Title === 'Coworker' || attendee.Title === 'Friend')
+              .map((attendee) => (
+              <p key={attendee.Id} className="guest-list-name">
+                {attendeeName(attendee)}
               </p>
             ))}
           </div>
