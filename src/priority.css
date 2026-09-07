@@ -1,5 +1,6 @@
 .priority-page {
-  width: min(1060px, calc(100% - 32px));
+  width: 80vw;
+  max-width: none;
   margin: 0 auto;
   padding: 40px 0 72px;
   font-family: var(--font-modern);
@@ -93,46 +94,43 @@
   font-size: 1.3rem;
 }
 
-.priority-sides {
+.priority-quota-pair,
+.priority-table-pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px;
 }
 
-.priority-side {
-  min-width: 0;
+.priority-quota-pair {
+  margin-bottom: 34px;
 }
 
-.priority-side + .priority-side {
+.priority-quota-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: end;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+}
+
+.priority-quota-column + .priority-quota-column,
+.priority-table-column + .priority-table-column {
   border-left: 1px solid var(--line);
   padding-left: 28px;
 }
 
-.priority-side-heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--line);
-}
-
-.priority-side-heading h2,
-.priority-table-section h3 {
+.priority-quota-column h2 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-display);
+  font-size: 1.45rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.priority-side-heading h2 {
-  font-size: 1.45rem;
-}
-
-.priority-side-heading label {
+.priority-quota-column label {
   display: grid;
   gap: 5px;
   color: var(--muted);
@@ -142,8 +140,8 @@
   letter-spacing: 0.08em;
 }
 
-.priority-side-heading input {
-  width: 72px;
+.priority-quota-column input {
+  width: 68px;
   border: 1px solid var(--line);
   border-radius: 5px;
   padding: 7px 8px;
@@ -154,25 +152,54 @@
   text-align: right;
 }
 
-.priority-side-heading input:focus-visible {
+.priority-sections {
+  display: grid;
+  gap: 34px;
+}
+
+.priority-table-column {
+  min-width: 0;
+}
+
+.priority-table-section h3 {
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priority-quota-column input:focus-visible {
   outline: 2px solid var(--action-strong);
   outline-offset: 2px;
 }
 
 .priority-table-section {
-  margin-bottom: 28px;
+  margin-bottom: 0;
 }
 
 .priority-table-section h3 {
   margin-bottom: 9px;
-  color: var(--action-strong);
-  font-family: var(--font-modern);
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.priority-table-section h3::before,
+.priority-table-section h3::after {
+  content: ' - ';
+  color: rgba(167, 191, 216, 0.65);
 }
 
 .priority-table-section .priority-list {
   overflow: visible;
+}
+
+.priority-table-side-title {
+  display: none;
 }
 
 .priority-reset {
@@ -184,6 +211,22 @@
   font: inherit;
   font-size: 0.8rem;
   cursor: pointer;
+}
+
+.priority-save {
+  border: 1px solid var(--action-strong);
+  border-radius: 5px;
+  padding: 8px 11px;
+  background: var(--action-strong);
+  color: var(--surface, #0f1e2e);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.priority-save:hover,
+.priority-save:focus-visible {
+  filter: brightness(1.08);
 }
 
 .priority-reset:hover,
@@ -272,7 +315,7 @@
 
 @media (max-width: 640px) {
   .priority-page {
-    width: min(100% - 24px, 1060px);
+    width: calc(100% - 24px);
     padding-top: 24px;
   }
 
@@ -309,16 +352,31 @@
     align-items: center;
   }
 
-  .priority-sides {
+  .priority-quota-pair,
+  .priority-table-pair {
     grid-template-columns: 1fr;
     gap: 34px;
   }
 
-  .priority-side + .priority-side {
+  .priority-quota-column + .priority-quota-column,
+  .priority-table-column + .priority-table-column {
     border-top: 1px solid var(--line);
     border-left: 0;
     padding-top: 30px;
     padding-left: 0;
+  }
+
+  .priority-quota-column {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .priority-table-side-title {
+    display: block;
+    margin: 12px 0 8px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
   }
 
   .priority-row {

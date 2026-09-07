@@ -642,7 +642,7 @@ function App() {
     : ''
   const isStoryViewerOpen = activeStoryChapter !== null
   const attendeeName = (attendee: (typeof siteData.attendees)[number]) =>
-    `${attendee.FirstName} ${attendee.LastName}`.trim()
+    `${attendee.LastName}, ${attendee.FirstName}`.trim()
   const entourageGroups = [
     { leftTitle: "Groom's Parents", leftTitles: ['Parent'], leftSide: 'Groom', rightTitle: "Bride's Parents", rightTitles: ['Parent'], rightSide: 'Bride' },
     { leftTitle: 'Principal Sponsors', leftTitles: ['Ninong'], rightTitle: 'Principal Sponsors', rightTitles: ['Ninang'] },
