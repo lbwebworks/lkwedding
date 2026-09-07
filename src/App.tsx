@@ -644,13 +644,11 @@ function App() {
   const attendeeName = (attendee: (typeof siteData.attendees)[number]) =>
     `${attendee.FirstName} ${attendee.LastName}`.trim()
   const entourageGroups = [
-    { title: 'Parents', titles: ['Parent'] },
-    { title: 'Best Man', titles: ['Best Man'] },
-    { title: 'Principal Sponsors', titles: ['Ninong', 'Ninang'] },
-    { title: 'Groomsmen', titles: ['Groomsmen'] },
-    { title: 'Bridesmaids', titles: ['Bridesmaid'] },
-    { title: 'Ring Bearers', titles: ['Ring Bearer'] },
-    { title: 'Flower Girls', titles: ['Flower Girl'] },
+    { leftTitle: "Groom's Parents", leftTitles: ['Parent'], leftSide: 'Groom', rightTitle: "Bride's Parents", rightTitles: ['Parent'], rightSide: 'Bride' },
+    { leftTitle: 'Principal Sponsors', leftTitles: ['Ninong'], rightTitle: 'Principal Sponsors', rightTitles: ['Ninang'] },
+    { leftTitle: 'Best Man', leftTitles: ['Best Man'], rightTitle: 'Maid Of Honor', rightTitles: ['Maid Of Honor'] },
+    { leftTitle: 'Groomsmen', leftTitles: ['Groomsmen'], rightTitle: 'Bridesmaids', rightTitles: ['Bridesmaid'] },
+    { leftTitle: 'Ring Bearers', leftTitles: ['Ring Bearer'], rightTitle: 'Flower Girls', rightTitles: ['Flower Girl'] },
   ]
 
   return (
@@ -926,31 +924,65 @@ function App() {
       <section className="panel entourage" id="entourage">
         <h2>Entourage</h2>
         <div className="entourage-grid">
-          {entourageGroups.map((group, groupIdx) => (
-            <article key={groupIdx}>
-              <h3>{group.title}</h3>
-              {siteData.attendees
-                .filter((attendee) => group.titles.includes(attendee.Title))
-                .map((attendee) => {
-                const marchesInChurch = attendee.IsChurchPriority
-                const churchIcon = (
-                  <span
-                    className="church-icon"
-                    aria-hidden="true"
-                    style={{ maskImage: `url(${import.meta.env.BASE_URL}star.svg)` }}
-                  />
-                )
+          {entourageGroups.flatMap((group, groupIdx) => {
+            const getAttendees = (titles: string[], side?: string) =>
+              siteData.attendees.filter(
+                (attendee) => titles.includes(attendee.Title) && (!side || attendee.Side === side),
+              )
+            const renderGroup = (title: string, titles: string[], side: string | undefined, isLeft: boolean) => {
+              const groupAttendees = getAttendees(titles, side)
+              const sponsorPlaceholders = (count: number, offset: number) =>
+                Array.from({ length: count }, (_, index) => ({
+                  Id: `sponsor-placeholder-${offset}-${index}`,
+                  FirstName: '...',
+                  LastName: '',
+                  Title: 'Ninong' as const,
+                  Side: 'Groom' as const,
+                  IsChurchPriority: false,
+                  IsFoodSpecial: false,
+                  CompanionOf: null,
+                }))
+              const displayAttendees =
+                title === 'Principal Sponsors'
+                  ? isLeft
+                    ? [
+                        ...groupAttendees.slice(0, 5),
+                        ...sponsorPlaceholders(1, 0),
+                        ...groupAttendees.slice(5),
+                        ...sponsorPlaceholders(2, 1),
+                      ]
+                    : groupAttendees
+                  : groupAttendees
 
-                return (
-                  <p key={attendee.Id} className="entourage-name">
-                    {marchesInChurch && groupIdx % 2 === 0 ? churchIcon : null}
-                    {attendeeName(attendee)}
-                    {marchesInChurch && groupIdx % 2 !== 0 ? churchIcon : null}
-                  </p>
-                )
-              })}
-            </article>
-          ))}
+              return (
+                <article key={`${groupIdx}-${title}`}>
+                  <h3>{title}</h3>
+                  {displayAttendees.map((attendee) => {
+                    const churchIcon = (
+                      <span
+                        className="church-icon"
+                        aria-hidden="true"
+                        style={{ maskImage: `url(${import.meta.env.BASE_URL}star.svg)` }}
+                      />
+                    )
+
+                    return (
+                      <p key={attendee.Id} className="entourage-name">
+                        {attendee.IsChurchPriority && isLeft ? churchIcon : null}
+                        {attendeeName(attendee)}
+                        {attendee.IsChurchPriority && !isLeft ? churchIcon : null}
+                      </p>
+                    )
+                  })}
+                </article>
+              )
+            }
+
+            return [
+              renderGroup(group.leftTitle, group.leftTitles, group.leftSide, true),
+              renderGroup(group.rightTitle, group.rightTitles, group.rightSide, false),
+            ]
+          })}
         </div>
       </section>
 
