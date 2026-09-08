@@ -608,6 +608,15 @@ function PriorityPage() {
           <div className="priority-quota-column" key={side}>
             <h2>{side} side</h2>
             <label>
+              <span>Total Guests</span>
+              <input
+                type="number"
+                value={guests.filter((guest) => guest.side === side && guest.willAttend).length}
+                disabled
+                readOnly
+              />
+            </label>
+            <label>
               <span>Food Count</span>
               <input
                 type="number"

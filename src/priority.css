@@ -107,7 +107,7 @@
 
 .priority-quota-column {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: end;
   gap: 16px;
   border-bottom: 1px solid var(--line);
@@ -150,6 +150,12 @@
   font: inherit;
   font-size: 1rem;
   text-align: right;
+}
+
+.priority-quota-column input:disabled {
+  border-style: dashed;
+  color: var(--muted);
+  cursor: default;
 }
 
 .priority-sections {
@@ -367,7 +373,7 @@
   }
 
   .priority-quota-column {
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
   }
 
   .priority-table-side-title {
