@@ -443,14 +443,14 @@ export const siteData: SiteData = {
 }
 
 const attendeeRows: Array<[string, string, string, AttendeeTitle, 'Groom' | 'Bride' | '', boolean, boolean, boolean, boolean, string | null]> = [
-  ["001"   , "Budaden"        , "Lee"                  , "Groom"         , "Groom"  , false, false, true, true, null],
-  ["002"   , "Lacza"          , "Kish"                 , "Bride"         , "Bride"  , false, false, true, true, null],
-  ["003"   , "Budaden"        , "Alfredo"              , "Parent"        , "Groom"  , false, false, true, true, null],
-  ["004"   , "Budaden"        , "Angelina"             , "Parent"        , "Groom"  , false, false, true, true, null],
-  ["005"   , "Lacza"          , "Reynaldo"             , "Parent"        , "Bride"  , false, false, true, true, null],
-  ["006"   , "Lacza"          , "Julieta"              , "Parent"        , "Bride"  , false, false, true, true, null],
-  ["007"   , "Budaden"        , "Alfred II"            , "Best Man"      , "Groom"  , false, false, true, true, null],
-  ["008"   , "Lockhart"       , "Krizel Jane"          , "Maid Of Honor" , "Bride"  , false, false, true, true, null],
+  ["001"   , "Budaden"        , "Lee"                  , "Groom"         , "Groom"  , true, false, true, true, null],
+  ["002"   , "Lacza"          , "Kish"                 , "Bride"         , "Bride"  , true, false, true, true, null],
+  ["003"   , "Budaden"        , "Alfredo"              , "Parent"        , "Groom"  , true, false, true, true, null],
+  ["004"   , "Budaden"        , "Angelina"             , "Parent"        , "Groom"  , true, false, true, true, null],
+  ["005"   , "Lacza"          , "Reynaldo"             , "Parent"        , "Bride"  , true, false, true, true, null],
+  ["006"   , "Lacza"          , "Julieta"              , "Parent"        , "Bride"  , true, false, true, true, null],
+  ["007"   , "Budaden"        , "Alfred II"            , "Best Man"      , "Groom"  , true, false, true, true, null],
+  ["008"   , "Lockhart"       , "Krizel Jane"          , "Maid Of Honor" , "Bride"  , true, false, true, true, null],
   ["009"   , "Jaime"          , "Ermie"                , "Ninong"        , "Bride"  , true, false, true, true, null],
   ["010"   , "Agbaya"         , "Ronald"               , "Ninong"        , "Bride"  , true, false, true, true, null],
   ["011"   , "Marucot"        , "Bayani"               , "Ninong"        , "Bride"  , true, false, true, true, null],
