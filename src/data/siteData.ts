@@ -569,6 +569,10 @@ const attendeeRows: Array<[string, string, string, AttendeeTitle, 'Groom' | 'Bri
   ["124"   , "Macalisang"     , "Xander"               , "Companion"     , "Groom"  , false, false, false, true, "091"],
   ["125"   , "Tolentino"      , "France"               , "Companion"     , "Bride"  , false, false, false, true, "053"],
   ["126"   , "Esquillo"       , "Aidan"                , "Companion"     , "Groom"  , false, false, false, true, "097"],
+  ["127"   , "Claveria"       , "Annie"                , "Relative"      , "Bride"  , false, false, false, true, null],
+  ["128"   , "Claveria"       , "Cheska"               , "Relative"      , "Bride"  , false, false, false, true, null],
+  ["129"   , "Claveria"       , "Venice"               , "Relative"      , "Bride"  , false, false, false, true, null],
+  ["130"   , "Dela Peña"      , "Honey Ryza"           , "Companion"     , "Groom"  , false, false, false, true, "035"],
 ]
 
 siteData.attendees = attendeeRows.map(([Id, LastName, FirstName, Title, Side, IsChurchPriority, IsFoodSpecial, IsFoodPackage, WillAttend, CompanionOf]) => ({
