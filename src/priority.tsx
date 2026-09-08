@@ -163,12 +163,6 @@ function reconcileFoodPackage(guests: PriorityGuest[], counts: FoodCounts) {
     )
     const selected = eligible.filter((guest) => guest.isFoodPackage)
     const packageIds = new Set(selected.slice(0, counts[side]).map((guest) => guest.id))
-    for (const guest of eligible) {
-      if (packageIds.size >= counts[side]) {
-        break
-      }
-      packageIds.add(guest.id)
-    }
     return currentGuests.map((guest) =>
       guest.side === side ? { ...guest, isFoodPackage: packageIds.has(guest.id) } : guest,
     )
