@@ -228,22 +228,32 @@ function PriorityPage() {
           }
         : null
     }).filter((attendee): attendee is NonNullable<typeof attendee> => attendee !== null)
-    const generatedData = {
-      attendees,
-      priorityOrder: guests.map((guest, index) => ({
-        attendeeId: guest.id,
-        priority: index + 1,
-      })),
-      priorityFood: foodCounts,
-      prioritySeating: seatingCounts,
-    }
-    const blob = new Blob([`${JSON.stringify(generatedData, null, 2)}\n`], {
-      type: 'application/json',
-    })
+    const priorityOrder = guests.map((guest, index) => ({
+      attendeeId: guest.id,
+      priority: index + 1,
+    }))
+
+    // Format as TypeScript source that matches the layout in siteData.ts:
+    // one object literal per line, unquoted keys, ready to paste directly.
+    const formatValue = (value: string | boolean | null) =>
+      typeof value === 'string' ? `"${value}"` : String(value)
+    const attendeeLine = (attendee: (typeof attendees)[number]) =>
+      `    { Id: ${formatValue(attendee.Id)}, LastName: ${formatValue(attendee.LastName)}, FirstName: ${formatValue(attendee.FirstName)}, Title: ${formatValue(attendee.Title)}, Side: ${formatValue(attendee.Side)}, IsChurchPriority: ${formatValue(attendee.IsChurchPriority)}, IsFoodSpecial: ${formatValue(attendee.IsFoodSpecial)}, IsFoodPackage: ${formatValue(attendee.IsFoodPackage)}, WillAttend: ${formatValue(attendee.WillAttend)}, CompanionOf: ${formatValue(attendee.CompanionOf)} },`
+    const priorityLine = (order: (typeof priorityOrder)[number]) =>
+      `    { attendeeId: ${formatValue(order.attendeeId)}, priority: ${order.priority} },`
+
+    const attendeesBlock = `const attendees: Attendee[] = [\n${attendees.map(attendeeLine).join('\n')}\n]`
+    const priorityOrderBlock =
+      priorityOrder.length > 0
+        ? `const priorityOrder: PriorityOrder[] = [\n${priorityOrder.map(priorityLine).join('\n')}\n]`
+        : 'const priorityOrder: PriorityOrder[] = []'
+    const fileContents = `${attendeesBlock}\n\n${priorityOrderBlock}\n`
+
+    const blob = new Blob([fileContents], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'attendee-data.json'
+    link.download = 'attendee-data.ts'
     link.click()
     URL.revokeObjectURL(url)
   }
