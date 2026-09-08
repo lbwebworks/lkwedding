@@ -94,7 +94,16 @@ function getInitialSpecialFoodNames() {
 
   try {
     const savedNames = JSON.parse(saved) as string[]
-    return Array.isArray(savedNames) ? savedNames : defaultSpecialFoodNames
+    if (!Array.isArray(savedNames)) {
+      return defaultSpecialFoodNames
+    }
+
+    // Drop saved names that no longer match anyone in the current roster.
+    // This prevents stale localStorage entries (from removed or renamed
+    // attendees) from inflating the special-food count. Manual flags on
+    // still-valid attendees are preserved.
+    const rosterNames = new Set(siteData.attendees.map(attendeeName))
+    return savedNames.filter((name) => rosterNames.has(name))
   } catch {
     return defaultSpecialFoodNames
   }
@@ -583,7 +592,22 @@ function PriorityPage() {
 
       <section className="priority-capacity" aria-label="Guest capacity summary">
         <div>
-          <span>Priority food</span>
+          <span>Roster</span>
+          <strong>{guests.length}</strong>
+          <small>guests currently listed</small>
+        </div>
+        <div>
+          <span>Attendees</span>
+          <strong>{guests.filter((guest) => guest.willAttend).length}</strong>
+          <small>guests who will attend</small>
+        </div>
+        <div>
+          <span>Hall cap</span>
+          <strong>{hallCapacity}</strong>
+          <small>maximum seats available</small>
+        </div>
+        <div>
+          <span>Food package cap</span>
           <strong>{foodCounts.Groom + foodCounts.Bride}</strong>
           <small>food stamps available</small>
         </div>
@@ -591,16 +615,6 @@ function PriorityPage() {
           <span>Special food</span>
           <strong>{specialFoodNames.length}</strong>
           <small>separate food arrangement</small>
-        </div>
-        <div>
-          <span>Hall capacity</span>
-          <strong>{hallCapacity}</strong>
-          <small>maximum seats available</small>
-        </div>
-        <div>
-          <span>Priority roster</span>
-          <strong>{guests.length}</strong>
-          <small>guests currently listed</small>
         </div>
       </section>
 
