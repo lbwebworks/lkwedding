@@ -113,6 +113,8 @@ function getInitialFoodCounts(): FoodCounts {
     const groom = parsed.Groom
     const bride = parsed.Bride
     if (
+      typeof groom === 'number' &&
+      typeof bride === 'number' &&
       Number.isInteger(groom) &&
       Number.isInteger(bride) &&
       groom >= 0 &&
@@ -141,6 +143,8 @@ function getInitialSeatingCounts(): SeatingCounts {
     const groom = parsed.Groom
     const bride = parsed.Bride
     if (
+      typeof groom === 'number' &&
+      typeof bride === 'number' &&
       Number.isInteger(groom) &&
       Number.isInteger(bride) &&
       groom >= 0 &&
@@ -552,7 +556,6 @@ function PriorityPage() {
     )
   }
 
-  const foodCapacity = FOOD_CAPACITY
   const hallCapacity = HALL_CAPACITY
 
   return (

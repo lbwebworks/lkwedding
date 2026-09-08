@@ -927,7 +927,10 @@ function App() {
           {entourageGroups.flatMap((group, groupIdx) => {
             const getAttendees = (titles: string[], side?: string) =>
               siteData.attendees.filter(
-                (attendee) => titles.includes(attendee.Title) && (!side || attendee.Side === side),
+                (attendee) =>
+                  attendee.WillAttend &&
+                  titles.includes(attendee.Title) &&
+                  (!side || attendee.Side === side),
               )
             const renderGroup = (title: string, titles: string[], side: string | undefined, isLeft: boolean) => {
               const groupAttendees = getAttendees(titles, side)
@@ -940,6 +943,8 @@ function App() {
                   Side: 'Groom' as const,
                   IsChurchPriority: false,
                   IsFoodSpecial: false,
+                  IsFoodPackage: false,
+                  WillAttend: true,
                   CompanionOf: null,
                 }))
               const displayAttendees =
@@ -990,7 +995,7 @@ function App() {
         <div className="guest-list-group">
           <h2>Family and Relatives</h2>
           <div className="guest-list-grid">
-            {siteData.attendees.filter((attendee) => attendee.Title === 'Relative').map((attendee) => (
+            {siteData.attendees.filter((attendee) => attendee.WillAttend && attendee.Title === 'Relative').map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
               </p>
@@ -1002,7 +1007,7 @@ function App() {
           <h2>Coworkers and Friends</h2>
           <div className="guest-list-grid">
             {siteData.attendees
-              .filter((attendee) => attendee.Title === 'Coworker' || attendee.Title === 'Friend')
+              .filter((attendee) => attendee.WillAttend && (attendee.Title === 'Coworker' || attendee.Title === 'Friend'))
               .map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
