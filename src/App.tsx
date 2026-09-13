@@ -641,7 +641,7 @@ function App() {
     ? pickStoryImage(activeStoryChapter.title, activeStoryIndex ?? 0)
     : ''
   const isStoryViewerOpen = activeStoryChapter !== null
-  const attendeeName = (attendee: (typeof siteData.attendees)[number]) =>
+  const attendeeName = (attendee: (typeof siteData.rosters)[number]) =>
     `${attendee.LastName}, ${attendee.FirstName}`.trim()
   const entourageGroups = [
     { leftTitle: "Groom's Parents", leftTitles: ['Parent'], leftSide: 'Groom', rightTitle: "Bride's Parents", rightTitles: ['Parent'], rightSide: 'Bride' },
@@ -926,10 +926,10 @@ function App() {
         <div className="entourage-grid">
           {entourageGroups.flatMap((group, groupIdx) => {
             const getAttendees = (titles: string[], side?: string) =>
-              siteData.attendees.filter(
+              siteData.rosters.filter(
                 (attendee) =>
                   attendee.WillAttend &&
-                  titles.includes(attendee.Title) &&
+                  titles.includes(attendee.Relationship) &&
                   (!side || attendee.Side === side),
               )
             const renderGroup = (title: string, titles: string[], side: string | undefined, isLeft: boolean) => {
@@ -939,7 +939,7 @@ function App() {
                   Id: `sponsor-placeholder-${offset}-${index}`,
                   FirstName: '...',
                   LastName: '',
-                  Title: 'Ninong' as const,
+                  Relationship: 'Ninong' as const,
                   Side: 'Groom' as const,
                   IsChurchPriority: false,
                   IsFoodSpecial: false,
@@ -995,7 +995,7 @@ function App() {
         <div className="guest-list-group">
           <h2>Family and Relatives</h2>
           <div className="guest-list-grid">
-            {siteData.attendees.filter((attendee) => attendee.WillAttend && attendee.Title === 'Relative').map((attendee) => (
+            {siteData.rosters.filter((attendee) => attendee.WillAttend && attendee.Relationship === 'Relative').map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
               </p>
@@ -1006,8 +1006,8 @@ function App() {
         <div className="guest-list-group">
           <h2>Coworkers and Friends</h2>
           <div className="guest-list-grid">
-            {siteData.attendees
-              .filter((attendee) => attendee.WillAttend && (attendee.Title === 'Coworker' || attendee.Title === 'Friend'))
+            {siteData.rosters
+              .filter((attendee) => attendee.WillAttend && (attendee.Relationship === 'Coworker' || attendee.Relationship === 'Friend'))
               .map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}

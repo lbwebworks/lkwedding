@@ -265,6 +265,40 @@
   opacity: 0.45;
 }
 
+/* Drop indicator: a highlighted insertion line showing where the dragged
+   item will land. Shown above the hovered row, or below the last row when
+   dropping at the end of a list. */
+.priority-row {
+  position: relative;
+}
+
+.priority-row.is-drop-before::before,
+.priority-list.is-drop-end > .priority-row:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--action-strong);
+  box-shadow: 0 0 6px var(--action-strong);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.priority-row.is-drop-before::before {
+  top: -2px;
+}
+
+.priority-list.is-drop-end > .priority-row:last-child::after {
+  bottom: -2px;
+}
+
+/* Empty list (no rows) still needs an end-of-list drop cue. */
+.priority-list.is-drop-end {
+  outline: 2px dashed var(--action-strong);
+  outline-offset: -2px;
+}
+
 .priority-drag-handle {
   align-self: stretch;
   border: 0;
@@ -497,4 +531,78 @@
     align-self: center;
     padding-right: 8px;
   }
+}
+
+.priority-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.priority-dialog {
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 24px;
+  background: var(--surface, #0f1e2e);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+}
+
+.priority-dialog h2 {
+  margin: 0 0 18px;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.priority-dialog-form {
+  display: grid;
+  gap: 14px;
+}
+
+.priority-dialog-form label {
+  display: grid;
+  gap: 5px;
+}
+
+.priority-dialog-form label span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.priority-dialog-form input,
+.priority-dialog-form select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 9px 10px;
+  background: transparent;
+  color: var(--heading);
+  font: inherit;
+  font-size: 0.95rem;
+}
+
+.priority-dialog-form input:focus-visible,
+.priority-dialog-form select:focus-visible {
+  outline: 2px solid var(--action-strong);
+  outline-offset: 2px;
+}
+
+.priority-dialog-form select option {
+  color: #0f1e2e;
+}
+
+.priority-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
 }
