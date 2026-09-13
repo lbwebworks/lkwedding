@@ -10,7 +10,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        priority: resolve(__dirname, 'priority.html'),
+        roster: resolve(__dirname, 'roster.html'),
+        seatplan: resolve(__dirname, 'seatplan.html'),
       },
     },
   },

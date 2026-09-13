@@ -2,7 +2,7 @@ import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { siteData, type Roster, type Relationship } from './data/siteData'
 import './index.css'
-import './priority.css'
+import './roster.css'
 
 type PriorityGuest = {
   id: string
@@ -438,7 +438,7 @@ const getInitialPackageIds = () => {
   }
 }
 
-function PriorityPage() {
+function RosterPage() {
   const [guests, setGuests] = useState(() => {
     const packageIds = getInitialPackageIds()
     const initialGuests = getInitialGuests().map((guest) => ({
@@ -495,41 +495,89 @@ function PriorityPage() {
 
   const downloadGeneratedData = () => {
     const attendeeById = new Map(siteData.rosters.map((roster) => [roster.Id, roster]))
-    const attendees = guests.map((guest) =>
-      guestToAttendee(
-        guest,
-        attendeeById.get(guest.id),
-        guest.isSpecialFood || specialFoodNames.includes(guest.name),
-      ),
-    )
-    // Use the shared slot numbering so the exported priority matches the
-    // on-screen rank and the Excel #. Entries are already slot-ordered.
-    const priorityOrder = priority.entries.map((entry) => ({
-      attendeeId: entry.guest.id,
-      priority: entry.slot,
-    }))
+    // Emit the same shape as rosterData.ts: a `rosters` array (all guests, in
+    // priority order) plus a `groups` object whose bucket arrays hold the ids in
+    // order. Array position is the priority — no separate priority number.
+    const isSpecial = (guest: PriorityGuest) =>
+      guest.isSpecialFood || specialFoodNames.includes(guest.name)
 
-    // Format as TypeScript source that matches the layout in siteData.ts:
-    // one object literal per line, unquoted keys, ready to paste directly.
+    // rosters: keep the guests array order (the drag-and-drop order).
+    const rosterRecords = guests.map((guest) =>
+      guestToAttendee(guest, attendeeById.get(guest.id), isSpecial(guest)),
+    )
+
+    // groups: derive membership from the same predicates the on-screen sections
+    // use, preserving the guests array order within each bucket.
+    const buckets = {
+      foodPackage: [] as string[],
+      extraPackage: [] as string[],
+      special: [] as string[],
+      others: [] as string[],
+      notAttending: [] as string[],
+    }
+    for (const guest of guests) {
+      if (!guest.willAttend) {
+        buckets.notAttending.push(guest.id)
+      } else if (guest.isExtraPackage) {
+        buckets.extraPackage.push(guest.id)
+      } else if (isSpecial(guest)) {
+        buckets.special.push(guest.id)
+      } else if (guest.isFoodPackage) {
+        buckets.foodPackage.push(guest.id)
+      } else {
+        buckets.others.push(guest.id)
+      }
+    }
+
+    // Format as TypeScript source matching rosterData.ts: one roster object per
+    // line with unquoted keys, and wrapped id arrays, ready to paste directly.
     const formatValue = (value: string | boolean | null) =>
       typeof value === 'string' ? `"${value}"` : String(value)
-    const attendeeLine = (attendee: (typeof attendees)[number]) =>
-      `    { Id: ${formatValue(attendee.Id)}, LastName: ${formatValue(attendee.LastName)}, FirstName: ${formatValue(attendee.FirstName)}, Relationship: ${formatValue(attendee.Relationship)}, Side: ${formatValue(attendee.Side)}, IsChurchPriority: ${formatValue(attendee.IsChurchPriority)}, IsFoodSpecial: ${formatValue(attendee.IsFoodSpecial)}, IsFoodPackage: ${formatValue(attendee.IsFoodPackage)}, WillAttend: ${formatValue(attendee.WillAttend)}, CompanionOf: ${formatValue(attendee.CompanionOf)} },`
-    const priorityLine = (order: (typeof priorityOrder)[number]) =>
-      `    { attendeeId: ${formatValue(order.attendeeId)}, priority: ${order.priority} },`
+    const rosterLine = (roster: (typeof rosterRecords)[number]) =>
+      `  { Id: ${formatValue(roster.Id)}, LastName: ${formatValue(roster.LastName)}, FirstName: ${formatValue(roster.FirstName)}, Relationship: ${formatValue(roster.Relationship)}, Side: ${formatValue(roster.Side)}, IsChurchPriority: ${formatValue(roster.IsChurchPriority)}, IsFoodSpecial: ${formatValue(roster.IsFoodSpecial)}, IsFoodPackage: ${formatValue(roster.IsFoodPackage)}, WillAttend: ${formatValue(roster.WillAttend)}, CompanionOf: ${formatValue(roster.CompanionOf)} },`
+    // Wrap a bucket's ids onto lines of 12 for readability, like rosterData.ts.
+    const idArray = (ids: string[]) => {
+      if (ids.length === 0) {
+        return '[]'
+      }
+      const lines: string[] = []
+      for (let i = 0; i < ids.length; i += 12) {
+        lines.push(`    ${ids.slice(i, i + 12).map((id) => `"${id}"`).join(', ')},`)
+      }
+      return `[\n${lines.join('\n')}\n  ]`
+    }
 
-    const attendeesBlock = `const attendees: Attendee[] = [\n${attendees.map(attendeeLine).join('\n')}\n]`
-    const priorityOrderBlock =
-      priorityOrder.length > 0
-        ? `const priorityOrder: PriorityOrder[] = [\n${priorityOrder.map(priorityLine).join('\n')}\n]`
-        : 'const priorityOrder: PriorityOrder[] = []'
-    const fileContents = `${attendeesBlock}\n\n${priorityOrderBlock}\n`
+    const header = `// Roster data (separate file so it can be copy-pasted to update, like the
+// seat plan pattern in seatPlanData.ts). \`rosters\` holds everyone (attending +
+// not attending). \`groups\` holds the ordering per bucket; array position is the
+// priority — there is no separate priority number. \`foodPackage\` may contain
+// null entries for vacant slots.
+//
+// Paste an exported roster here to update it.
+
+import type { Roster } from './siteData'
+`
+    const rostersBlock = `export const rosters: Roster[] = [\n${rosterRecords.map(rosterLine).join('\n')}\n]`
+    const groupsBlock = `export const groups: {
+  foodPackage: (string | null)[]
+  extraPackage: string[]
+  special: string[]
+  others: string[]
+  notAttending: string[]
+} = {
+  foodPackage: ${idArray(buckets.foodPackage)},
+  extraPackage: ${idArray(buckets.extraPackage)},
+  special: ${idArray(buckets.special)},
+  others: ${idArray(buckets.others)},
+  notAttending: ${idArray(buckets.notAttending)},
+}`
+    const fileContents = `${header}\n${rostersBlock}\n\n${groupsBlock}\n`
 
     const blob = new Blob([fileContents], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = 'attendee-data.ts'
+    link.download = 'rosterData.ts'
     link.click()
     URL.revokeObjectURL(url)
   }
@@ -959,7 +1007,7 @@ function PriorityPage() {
     return (
       <li
         key={guest.id}
-        className={`priority-row${draggedGuestId === guest.id ? ' is-dragging' : ''}${isSpecialFood ? ' has-special-food' : ''}${isDropBefore ? ' is-drop-before' : ''}`}
+        className={`roster-row${draggedGuestId === guest.id ? ' is-dragging' : ''}${isSpecialFood ? ' has-special-food' : ''}${isDropBefore ? ' is-drop-before' : ''}`}
         onDragOver={(event) => {
           event.preventDefault()
           if (draggedGuestId && draggedGuestId !== guest.id) {
@@ -975,7 +1023,7 @@ function PriorityPage() {
       >
         <button
           type="button"
-          className="priority-drag-handle"
+          className="roster-drag-handle"
           draggable
           aria-label={`Drag ${guest.name} to reorder priority`}
           onDragStart={(event) => {
@@ -989,14 +1037,14 @@ function PriorityPage() {
         >
           ::
         </button>
-        <span className="priority-rank">{String(priority.slotById.get(guest.id) ?? 0).padStart(2, '0')}</span>
-        <div className="priority-guest"><strong>{guest.name}</strong></div>
-        <span className="priority-group">{displayGroup(guest)}</span>
-        <div className="priority-actions">
-          <div className="priority-menu-wrap">
+        <span className="roster-rank">{String(priority.slotById.get(guest.id) ?? 0).padStart(2, '0')}</span>
+        <div className="roster-guest"><strong>{guest.name}</strong></div>
+        <span className="roster-group">{displayGroup(guest)}</span>
+        <div className="roster-actions">
+          <div className="roster-menu-wrap">
             <button
               type="button"
-              className={`priority-menu-trigger${isMenuOpen ? ' is-open' : ''}`}
+              className={`roster-menu-trigger${isMenuOpen ? ' is-open' : ''}`}
               aria-label={`Actions for ${guest.name}`}
               aria-expanded={isMenuOpen}
               onClick={(event) => {
@@ -1007,46 +1055,46 @@ function PriorityPage() {
               ⋮
             </button>
             {isMenuOpen && (
-              <div className="priority-menu" role="menu" onClick={(event) => event.stopPropagation()}>
-                <button type="button" role="menuitem" className="priority-menu-item is-add" onClick={() => renameGuest(guest.id)}>
+              <div className="roster-menu" role="menu" onClick={(event) => event.stopPropagation()}>
+                <button type="button" role="menuitem" className="roster-menu-item is-add" onClick={() => renameGuest(guest.id)}>
                   Rename
                 </button>
-                <button type="button" role="menuitem" className="priority-menu-item is-add" onClick={() => editGuestRole(guest.id)}>
+                <button type="button" role="menuitem" className="roster-menu-item is-add" onClick={() => editGuestRole(guest.id)}>
                   Edit Role
                 </button>
                 <button
                   type="button"
                   role="menuitem"
-                  className={`priority-menu-item${isSpecialFood ? ' is-remove' : ' is-add'}`}
+                  className={`roster-menu-item${isSpecialFood ? ' is-remove' : ' is-add'}`}
                   onClick={() => toggleSpecialFood(guest.name)}
                 >
                   {isSpecialFood ? 'Move to regular food' : 'Move to special food'}
                 </button>
                 {!isSpecialFood && (
-                  <button type="button" role="menuitem" className={`priority-menu-item${guest.isFoodPackage ? ' is-remove' : ' is-add'}`} onClick={() => toggleFoodPackage(guest.id)}>
+                  <button type="button" role="menuitem" className={`roster-menu-item${guest.isFoodPackage ? ' is-remove' : ' is-add'}`} onClick={() => toggleFoodPackage(guest.id)}>
                     {guest.isFoodPackage ? 'Move to regular seating' : 'Move to food package'}
                   </button>
                 )}
                 {isSpecialFood && (
-                  <button type="button" role="menuitem" className="priority-menu-item is-add" onClick={() => toggleFoodPackage(guest.id)}>
+                  <button type="button" role="menuitem" className="roster-menu-item is-add" onClick={() => toggleFoodPackage(guest.id)}>
                     Move to food package
                   </button>
                 )}
                 <button
                   type="button"
                   role="menuitem"
-                  className={`priority-menu-item${guest.isExtraPackage ? ' is-remove' : ' is-add'}`}
+                  className={`roster-menu-item${guest.isExtraPackage ? ' is-remove' : ' is-add'}`}
                   onClick={() => toggleExtraPackage(guest.id)}
                 >
                   {guest.isExtraPackage ? 'Remove from extra package' : 'Add to extra package'}
                 </button>
-                <button type="button" role="menuitem" className="priority-menu-item is-add" onClick={() => moveGuestToSide(guest.id, guest.side === 'Groom' ? 'Bride' : 'Groom')}>
+                <button type="button" role="menuitem" className="roster-menu-item is-add" onClick={() => moveGuestToSide(guest.id, guest.side === 'Groom' ? 'Bride' : 'Groom')}>
                   Move to {guest.side === 'Groom' ? 'Bride' : 'Groom'}
                 </button>
-                <button type="button" role="menuitem" className={`priority-menu-item${guest.willAttend ? ' is-remove' : ' is-add'}`} onClick={() => setGuestAttendance(guest.id, !guest.willAttend)}>
+                <button type="button" role="menuitem" className={`roster-menu-item${guest.willAttend ? ' is-remove' : ' is-add'}`} onClick={() => setGuestAttendance(guest.id, !guest.willAttend)}>
                   {guest.willAttend ? 'Mark not attending' : 'Mark attending'}
                 </button>
-                <button type="button" role="menuitem" className="priority-menu-item is-remove" onClick={() => deleteGuest(guest.id)}>
+                <button type="button" role="menuitem" className="roster-menu-item is-remove" onClick={() => deleteGuest(guest.id)}>
                   Delete
                 </button>
               </div>
@@ -1060,10 +1108,10 @@ function PriorityPage() {
   const renderTable = (side: 'Groom' | 'Bride', section: TableSection) => {
     const tableGuests = getTableGuests(side, section)
     return (
-      <div className="priority-table-column" aria-label={`${side} side`}>
-        <div className="priority-table-side-title">{side} side</div>
+      <div className="roster-table-column" aria-label={`${side} side`}>
+        <div className="roster-table-side-title">{side} side</div>
         <ol
-          className={`priority-list${
+          className={`roster-list${
             dropTarget?.side === side && dropTarget?.section === section && dropTarget?.guestId === null
               ? ' is-drop-end'
               : ''
@@ -1087,11 +1135,11 @@ function PriorityPage() {
           {section === 'food' && Array.from({
             length: Math.max(0, foodCounts[side] - tableGuests.length),
           }, (_, index) => (
-            <li className="priority-row is-empty-slot" key={`empty-${side}-${index}`}>
+            <li className="roster-row is-empty-slot" key={`empty-${side}-${index}`}>
               <span />
-              <span className="priority-rank">··</span>
-              <div className="priority-guest"><strong>Empty slot</strong></div>
-              <span className="priority-group">Available</span>
+              <span className="roster-rank">··</span>
+              <div className="roster-guest"><strong>Empty slot</strong></div>
+              <span className="roster-group">Available</span>
               <span />
             </li>
           ))}
@@ -1102,9 +1150,9 @@ function PriorityPage() {
 
   const renderSection = (section: TableSection, title: string) => {
     return (
-      <section className="priority-table-section" aria-label={title}>
+      <section className="roster-table-section" aria-label={title}>
         <h3>{title}</h3>
-        <div className="priority-table-pair">
+        <div className="roster-table-pair">
           {renderTable('Groom', section)}
           {renderTable('Bride', section)}
         </div>
@@ -1116,19 +1164,19 @@ function PriorityPage() {
 
   return (
     <>
-    <main className="priority-page">
-      <header className="priority-header">
-        <a className="priority-back-link" href={`${import.meta.env.BASE_URL}`}>
+    <main className="roster-page">
+      <header className="roster-header">
+        <a className="roster-back-link" href={`${import.meta.env.BASE_URL}`}>
           Back to invitation
         </a>
-        <p className="priority-eyebrow">Coordinator workspace</p>
-        <h1>Guest Priority</h1>
-        <p className="priority-description">
+        <p className="roster-eyebrow">Coordinator workspace</p>
+        <h1>Guest Roster</h1>
+        <p className="roster-description">
           Arrange attendance priority for food stamps and spare seating. Changes are kept in this browser.
         </p>
       </header>
 
-      <section className="priority-capacity" aria-label="Guest capacity summary">
+      <section className="roster-capacity" aria-label="Guest capacity summary">
         <div>
           <span>Roster</span>
           <strong>{guests.length}</strong>
@@ -1156,14 +1204,14 @@ function PriorityPage() {
         </div>
       </section>
 
-      <div className="priority-list-heading">
+      <div className="roster-list-heading">
         <div>
-          <p className="priority-eyebrow">Attendance order</p>
+          <p className="roster-eyebrow">Attendance order</p>
           <h2>Priority tables</h2>
         </div>
         <button
           type="button"
-          className="priority-reset"
+          className="roster-reset"
           onClick={() => {
             window.localStorage.removeItem(PROFILE_STORAGE_KEY)
             saveOrder(defaultGuests)
@@ -1171,19 +1219,19 @@ function PriorityPage() {
         >
           Reset order
         </button>
-        <button type="button" className="priority-save" onClick={openAddDialog}>
+        <button type="button" className="roster-save" onClick={openAddDialog}>
           Add attendee
         </button>
-        <button type="button" className="priority-save" onClick={downloadGeneratedData}>
+        <button type="button" className="roster-save" onClick={downloadGeneratedData}>
           Download data
         </button>
-        <button type="button" className="priority-save" onClick={downloadExcel}>
+        <button type="button" className="roster-save" onClick={downloadExcel}>
           Export Excel
         </button>
       </div>
-      <div className="priority-quota-pair">
+      <div className="roster-quota-pair">
         {(['Groom', 'Bride'] as const).map((side) => (
-          <div className="priority-quota-column" key={side}>
+          <div className="roster-quota-column" key={side}>
             <h2>{side} side</h2>
             <label>
               <span>Total Guests</span>
@@ -1223,7 +1271,7 @@ function PriorityPage() {
           </div>
         ))}
       </div>
-      <div className="priority-sections">
+      <div className="roster-sections">
         {renderSection('food', 'Food Package')}
         {renderSection('extra', 'Extra Food Package')}
         {renderSection('special', 'Special Food')}
@@ -1235,12 +1283,12 @@ function PriorityPage() {
 
     {isAddDialogOpen && (
       <div
-        className="priority-dialog-backdrop"
+        className="roster-dialog-backdrop"
         role="presentation"
         onClick={() => setIsAddDialogOpen(false)}
       >
         <div
-          className="priority-dialog"
+          className="roster-dialog"
           role="dialog"
           aria-modal="true"
           aria-label="Add attendee"
@@ -1248,7 +1296,7 @@ function PriorityPage() {
         >
           <h2>Add attendee</h2>
           <form
-            className="priority-dialog-form"
+            className="roster-dialog-form"
             onSubmit={(event) => {
               event.preventDefault()
               submitNewAttendee()
@@ -1333,17 +1381,17 @@ function PriorityPage() {
                 <option value="other">Other</option>
               </select>
             </label>
-            <div className="priority-dialog-actions">
+            <div className="roster-dialog-actions">
               <button
                 type="button"
-                className="priority-reset"
+                className="roster-reset"
                 onClick={() => setIsAddDialogOpen(false)}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="priority-save"
+                className="roster-save"
                 disabled={newAttendeeForm.role === 'Companion' && !newAttendeeForm.companionOf}
               >
                 Add attendee
@@ -1356,12 +1404,12 @@ function PriorityPage() {
 
     {roleEditGuestId !== null && (
       <div
-        className="priority-dialog-backdrop"
+        className="roster-dialog-backdrop"
         role="presentation"
         onClick={() => setRoleEditGuestId(null)}
       >
         <div
-          className="priority-dialog"
+          className="roster-dialog"
           role="dialog"
           aria-modal="true"
           aria-label="Edit role"
@@ -1369,7 +1417,7 @@ function PriorityPage() {
         >
           <h2>Edit Role</h2>
           <form
-            className="priority-dialog-form"
+            className="roster-dialog-form"
             onSubmit={(event) => {
               event.preventDefault()
               submitRoleEdit()
@@ -1405,17 +1453,17 @@ function PriorityPage() {
                 </select>
               </label>
             )}
-            <div className="priority-dialog-actions">
+            <div className="roster-dialog-actions">
               <button
                 type="button"
-                className="priority-reset"
+                className="roster-reset"
                 onClick={() => setRoleEditGuestId(null)}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="priority-save"
+                className="roster-save"
                 disabled={roleEditValue === 'Companion' && !roleEditCompanionOf}
               >
                 Save
@@ -1431,6 +1479,6 @@ function PriorityPage() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <PriorityPage />
+    <RosterPage />
   </StrictMode>,
 )

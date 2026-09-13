@@ -1,4 +1,4 @@
-.priority-page {
+.roster-page {
   width: 80vw;
   max-width: none;
   margin: 0 auto;
@@ -6,12 +6,12 @@
   font-family: var(--font-modern);
 }
 
-.priority-header {
+.roster-header {
   max-width: 700px;
   margin-bottom: 28px;
 }
 
-.priority-back-link {
+.roster-back-link {
   display: inline-block;
   margin-bottom: 34px;
   color: var(--muted);
@@ -19,12 +19,12 @@
   text-decoration: none;
 }
 
-.priority-back-link:hover,
-.priority-back-link:focus-visible {
+.roster-back-link:hover,
+.roster-back-link:focus-visible {
   color: var(--heading);
 }
 
-.priority-eyebrow {
+.roster-eyebrow {
   margin: 0;
   color: var(--action-strong);
   font-size: 0.73rem;
@@ -33,8 +33,8 @@
   text-transform: uppercase;
 }
 
-.priority-header h1,
-.priority-list-heading h2 {
+.roster-header h1,
+.roster-list-heading h2 {
   margin: 6px 0 10px;
   color: var(--heading);
   font-family: var(--font-display);
@@ -42,16 +42,16 @@
   letter-spacing: 0.05em;
 }
 
-.priority-header h1 {
+.roster-header h1 {
   font-size: clamp(2rem, 5vw, 3.2rem);
 }
 
-.priority-description {
+.roster-description {
   max-width: 620px;
   color: var(--text);
 }
 
-.priority-capacity {
+.roster-capacity {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   border-top: 1px solid var(--line);
@@ -59,29 +59,29 @@
   margin-bottom: 42px;
 }
 
-.priority-capacity div {
+.roster-capacity div {
   display: grid;
   gap: 3px;
   padding: 20px 24px;
 }
 
-.priority-capacity div + div {
+.roster-capacity div + div {
   border-left: 1px solid var(--line);
 }
 
-.priority-capacity span,
-.priority-capacity small {
+.roster-capacity span,
+.roster-capacity small {
   color: var(--muted);
   font-size: 0.76rem;
 }
 
-.priority-capacity strong {
+.roster-capacity strong {
   color: var(--heading);
   font-size: 2rem;
   line-height: 1.1;
 }
 
-.priority-list-heading {
+.roster-list-heading {
   display: flex;
   align-items: end;
   justify-content: space-between;
@@ -89,23 +89,23 @@
   margin-bottom: 14px;
 }
 
-.priority-list-heading h2 {
+.roster-list-heading h2 {
   margin-bottom: 0;
   font-size: 1.3rem;
 }
 
-.priority-quota-pair,
-.priority-table-pair {
+.roster-quota-pair,
+.roster-table-pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 28px;
 }
 
-.priority-quota-pair {
+.roster-quota-pair {
   margin-bottom: 34px;
 }
 
-.priority-quota-column {
+.roster-quota-column {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: end;
@@ -114,13 +114,13 @@
   padding-bottom: 14px;
 }
 
-.priority-quota-column + .priority-quota-column,
-.priority-table-column + .priority-table-column {
+.roster-quota-column + .roster-quota-column,
+.roster-table-column + .roster-table-column {
   border-left: 1px solid var(--line);
   padding-left: 28px;
 }
 
-.priority-quota-column h2 {
+.roster-quota-column h2 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-display);
@@ -130,7 +130,7 @@
   text-transform: uppercase;
 }
 
-.priority-quota-column label {
+.roster-quota-column label {
   display: grid;
   gap: 5px;
   color: var(--muted);
@@ -140,7 +140,7 @@
   letter-spacing: 0.08em;
 }
 
-.priority-quota-column input {
+.roster-quota-column input {
   width: 68px;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -152,22 +152,22 @@
   text-align: right;
 }
 
-.priority-quota-column input:disabled {
+.roster-quota-column input:disabled {
   border-style: dashed;
   color: var(--muted);
   cursor: default;
 }
 
-.priority-sections {
+.roster-sections {
   display: grid;
   gap: 34px;
 }
 
-.priority-table-column {
+.roster-table-column {
   min-width: 0;
 }
 
-.priority-table-section h3 {
+.roster-table-section h3 {
   margin: 0;
   color: var(--heading);
   font-family: var(--font-display);
@@ -176,16 +176,16 @@
   text-transform: uppercase;
 }
 
-.priority-quota-column input:focus-visible {
+.roster-quota-column input:focus-visible {
   outline: 2px solid var(--action-strong);
   outline-offset: 2px;
 }
 
-.priority-table-section {
+.roster-table-section {
   margin-bottom: 0;
 }
 
-.priority-table-section h3 {
+.roster-table-section h3 {
   margin-bottom: 9px;
   color: var(--heading);
   font-family: var(--font-display);
@@ -194,21 +194,21 @@
   text-align: center;
 }
 
-.priority-table-section h3::before,
-.priority-table-section h3::after {
+.roster-table-section h3::before,
+.roster-table-section h3::after {
   content: ' - ';
   color: rgba(167, 191, 216, 0.65);
 }
 
-.priority-table-section .priority-list {
+.roster-table-section .roster-list {
   overflow: visible;
 }
 
-.priority-table-side-title {
+.roster-table-side-title {
   display: none;
 }
 
-.priority-reset {
+.roster-reset {
   border: 1px solid var(--line);
   border-radius: 5px;
   padding: 8px 11px;
@@ -219,7 +219,7 @@
   cursor: pointer;
 }
 
-.priority-save {
+.roster-save {
   border: 1px solid var(--action-strong);
   border-radius: 5px;
   padding: 8px 11px;
@@ -230,25 +230,25 @@
   cursor: pointer;
 }
 
-.priority-save:hover,
-.priority-save:focus-visible {
+.roster-save:hover,
+.roster-save:focus-visible {
   filter: brightness(1.08);
 }
 
-.priority-reset:hover,
-.priority-reset:focus-visible {
+.roster-reset:hover,
+.roster-reset:focus-visible {
   border-color: var(--action-strong);
   color: var(--heading);
 }
 
-.priority-list {
+.roster-list {
   margin: 0;
   padding: 0;
   list-style: none;
   border-top: 1px solid var(--line);
 }
 
-.priority-row {
+.roster-row {
   display: grid;
   grid-template-columns: 36px 42px minmax(0, 1.35fr) minmax(76px, 0.65fr) 68px;
   align-items: center;
@@ -257,23 +257,23 @@
   background: rgba(19, 38, 59, 0.32);
 }
 
-.priority-row.has-special-food {
+.roster-row.has-special-food {
   background: rgba(19, 38, 59, 0.50);
 }
 
-.priority-row.is-dragging {
+.roster-row.is-dragging {
   opacity: 0.45;
 }
 
 /* Drop indicator: a highlighted insertion line showing where the dragged
    item will land. Shown above the hovered row, or below the last row when
    dropping at the end of a list. */
-.priority-row {
+.roster-row {
   position: relative;
 }
 
-.priority-row.is-drop-before::before,
-.priority-list.is-drop-end > .priority-row:last-child::after {
+.roster-row.is-drop-before::before,
+.roster-list.is-drop-end > .roster-row:last-child::after {
   content: '';
   position: absolute;
   left: 0;
@@ -285,21 +285,21 @@
   pointer-events: none;
 }
 
-.priority-row.is-drop-before::before {
+.roster-row.is-drop-before::before {
   top: -2px;
 }
 
-.priority-list.is-drop-end > .priority-row:last-child::after {
+.roster-list.is-drop-end > .roster-row:last-child::after {
   bottom: -2px;
 }
 
 /* Empty list (no rows) still needs an end-of-list drop cue. */
-.priority-list.is-drop-end {
+.roster-list.is-drop-end {
   outline: 2px dashed var(--action-strong);
   outline-offset: -2px;
 }
 
-.priority-drag-handle {
+.roster-drag-handle {
   align-self: stretch;
   border: 0;
   border-right: 1px solid var(--line);
@@ -311,29 +311,29 @@
   touch-action: none;
 }
 
-.priority-drag-handle:active {
+.roster-drag-handle:active {
   cursor: grabbing;
 }
 
-.priority-drag-handle:focus-visible {
+.roster-drag-handle:focus-visible {
   outline: 2px solid var(--action-strong);
   outline-offset: -3px;
 }
 
-.priority-rank {
+.roster-rank {
   color: var(--muted);
   font-size: 0.8rem;
   text-align: center;
 }
 
-.priority-guest {
+.roster-guest {
   min-width: 0;
   display: grid;
   gap: 2px;
   padding: 8px 10px;
 }
 
-.priority-guest strong {
+.roster-guest strong {
   overflow: hidden;
   color: var(--heading);
   font-family: var(--font-reading);
@@ -343,7 +343,7 @@
   white-space: nowrap;
 }
 
-.priority-group {
+.roster-group {
   min-width: 0;
   overflow: hidden;
   color: var(--muted);
@@ -354,63 +354,63 @@
 }
 
 @media (max-width: 640px) {
-  .priority-page {
+  .roster-page {
     width: calc(100% - 24px);
     padding-top: 24px;
   }
 
-  .priority-back-link {
+  .roster-back-link {
     margin-bottom: 24px;
   }
 
-  .priority-capacity {
+  .roster-capacity {
     grid-template-columns: 1fr;
     margin-bottom: 30px;
   }
 
-  .priority-capacity div {
+  .roster-capacity div {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     padding: 14px 0;
   }
 
-  .priority-capacity div + div {
+  .roster-capacity div + div {
     border-top: 1px solid var(--line);
     border-left: 0;
   }
 
-  .priority-capacity small {
+  .roster-capacity small {
     grid-column: 1;
   }
 
-  .priority-capacity strong {
+  .roster-capacity strong {
     grid-row: 1 / span 2;
     grid-column: 2;
   }
 
-  .priority-list-heading {
+  .roster-list-heading {
     align-items: center;
   }
 
-  .priority-quota-pair,
-  .priority-table-pair {
+  .roster-quota-pair,
+  .roster-table-pair {
     grid-template-columns: 1fr;
     gap: 34px;
   }
 
-  .priority-quota-column + .priority-quota-column,
-  .priority-table-column + .priority-table-column {
+  .roster-quota-column + .roster-quota-column,
+  .roster-table-column + .roster-table-column {
     border-top: 1px solid var(--line);
     border-left: 0;
     padding-top: 30px;
     padding-left: 0;
   }
 
-  .priority-quota-column {
+  .roster-quota-column {
     grid-template-columns: minmax(0, 1fr) auto auto auto;
   }
 
-  .priority-table-side-title {
+  .roster-table-side-title {
     display: block;
     margin: 12px 0 8px;
     color: var(--muted);
@@ -419,16 +419,16 @@
     text-transform: uppercase;
   }
 
-  .priority-row {
+  .roster-row {
     grid-template-columns: 40px 40px minmax(0, 1fr) auto;
     min-height: 76px;
   }
 
-  .priority-group {
+  .roster-group {
     display: none;
   }
 
-  .priority-guest {
+  .roster-guest {
     padding: 10px 12px;
   }
 
@@ -436,7 +436,7 @@
 
 /* ── Special food actions column ── */
 
-.priority-actions {
+.roster-actions {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -444,11 +444,11 @@
   padding-right: 6px;
 }
 
-.priority-menu-wrap {
+.roster-menu-wrap {
   position: relative;
 }
 
-.priority-menu-trigger {
+.roster-menu-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -464,19 +464,19 @@
   transition: border-color 0.15s, color 0.15s;
 }
 
-.priority-menu-trigger:hover,
-.priority-menu-trigger:focus-visible,
-.priority-menu-trigger.is-open {
+.roster-menu-trigger:hover,
+.roster-menu-trigger:focus-visible,
+.roster-menu-trigger.is-open {
   border-color: var(--line);
   color: var(--heading);
 }
 
-.priority-menu-trigger:focus-visible {
+.roster-menu-trigger:focus-visible {
   outline: 2px solid var(--action-strong);
   outline-offset: -3px;
 }
 
-.priority-menu {
+.roster-menu {
   position: absolute;
   right: 0;
   top: calc(100% + 6px);
@@ -489,7 +489,7 @@
   overflow: hidden;
 }
 
-.priority-menu-item {
+.roster-menu-item {
   display: block;
   width: 100%;
   padding: 11px 16px;
@@ -503,29 +503,29 @@
   transition: background 0.12s;
 }
 
-.priority-menu-item + .priority-menu-item {
+.roster-menu-item + .roster-menu-item {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.priority-menu-item:hover,
-.priority-menu-item:focus-visible {
+.roster-menu-item:hover,
+.roster-menu-item:focus-visible {
   background: rgba(255, 255, 255, 0.06);
 }
 
-.priority-menu-item.is-add {
+.roster-menu-item.is-add {
   color: #b7d7a4;
 }
 
-.priority-menu-item.is-remove {
+.roster-menu-item.is-remove {
   color: #f4a89a;
 }
 
 @media (max-width: 640px) {
-  .priority-row {
+  .roster-row {
     grid-template-columns: 40px 40px minmax(0, 1fr) auto;
   }
 
-  .priority-actions {
+  .roster-actions {
     grid-row: 1 / span 2;
     grid-column: 4;
     align-self: center;
@@ -533,7 +533,7 @@
   }
 }
 
-.priority-dialog-backdrop {
+.roster-dialog-backdrop {
   position: fixed;
   inset: 0;
   z-index: 50;
@@ -544,7 +544,7 @@
   background: rgba(0, 0, 0, 0.55);
 }
 
-.priority-dialog {
+.roster-dialog {
   width: 100%;
   max-width: 420px;
   border: 1px solid var(--line);
@@ -554,7 +554,7 @@
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
 }
 
-.priority-dialog h2 {
+.roster-dialog h2 {
   margin: 0 0 18px;
   color: var(--heading);
   font-family: var(--font-display);
@@ -562,24 +562,24 @@
   font-weight: 600;
 }
 
-.priority-dialog-form {
+.roster-dialog-form {
   display: grid;
   gap: 14px;
 }
 
-.priority-dialog-form label {
+.roster-dialog-form label {
   display: grid;
   gap: 5px;
 }
 
-.priority-dialog-form label span {
+.roster-dialog-form label span {
   color: var(--muted);
   font-size: 0.78rem;
   font-weight: 600;
 }
 
-.priority-dialog-form input,
-.priority-dialog-form select {
+.roster-dialog-form input,
+.roster-dialog-form select {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -590,17 +590,17 @@
   font-size: 0.95rem;
 }
 
-.priority-dialog-form input:focus-visible,
-.priority-dialog-form select:focus-visible {
+.roster-dialog-form input:focus-visible,
+.roster-dialog-form select:focus-visible {
   outline: 2px solid var(--action-strong);
   outline-offset: 2px;
 }
 
-.priority-dialog-form select option {
+.roster-dialog-form select option {
   color: #0f1e2e;
 }
 
-.priority-dialog-actions {
+.roster-dialog-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;

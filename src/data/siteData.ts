@@ -1,4 +1,8 @@
-﻿export type Relationship =
+﻿// rosterData.ts is the source of truth for the guest roster and groupings; the
+// values are assigned onto siteData at the bottom of this file.
+import { rosters, groups } from './rosterData'
+
+export type Relationship =
   | 'Groom'
   | 'Bride'
   | 'Best Man'
@@ -113,7 +117,7 @@ export type SiteData = {
     buttonDisabled: boolean
   }
   // rosters holds everyone (attending + not attending). groups hold the ordering
-  // per bucket; array position is the priority — no separate priority number.
+  // per bucket; array position is the priority � no separate priority number.
   // foodPackage may contain null entries for vacant slots (whose number is not
   // occupied).
   rosters: Roster[]
@@ -207,7 +211,7 @@ export const siteData: SiteData = {
         time: '2:00 PM',
         icon: 'wi-rings',
         title: 'Wedding Ceremony',
-        note: 'Iglesia Ni Cristo [Pampanga West] â€” Betis, Guagua, Pampanga. The exchange of vows and rings.',
+        note: 'Iglesia Ni Cristo [Pampanga West] — Betis, Guagua, Pampanga. The exchange of vows and rings.',
       },
       {
         time: '3:15 PM',
@@ -225,7 +229,7 @@ export const siteData: SiteData = {
         time: '4:00 PM',
         icon: 'wi-toast',
         title: 'Reception Program Begins',
-        note: 'The celebration officially starts â€” toasts, messages, and the first moments as a married couple.',
+        note: 'The celebration officially starts — toasts, messages, and the first moments as a married couple.',
       },
       {
         time: 'TBD',
@@ -299,13 +303,13 @@ export const siteData: SiteData = {
         title: 'From South to Guagua',
         routes: [
           {
-            label: 'NLEX Balintawak â†’ San Fernando Exit â†’ Casa Agustin Resort',
+            label: 'NLEX Balintawak → San Fernando Exit → Casa Agustin Resort',
             url: 'https://maps.app.goo.gl/bHuGZcZV9Ayppgs3A',
             mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via San Fernando Exit',
             image: 'south_to_guagua1.PNG'
           },
           {
-            label: 'NLEX Balintawak â†’ Pulilan Exit â†’ Baliwag â†’ Mexico â†’ Casa Agustin Resort (Alternative Route)',
+            label: 'NLEX Balintawak → Pulilan Exit → Baliwag → Mexico → Casa Agustin Resort (Alternative Route)',
             url: 'https://maps.app.goo.gl/ptCxkKh4h8qorkrx8',
             mapImageAlt: 'Route map: NLEX Balintawak to Casa Agustin Resort via Pulilan and Mexico (alternative route)',
             image: 'south_to_guagua2.PNG'
@@ -316,13 +320,13 @@ export const siteData: SiteData = {
         title: 'From North to San Agustin Resort',
         routes: [
           {
-            label: 'SCTEX CLLEX â†’ NLEX â†’ San Fernando Exit â†’ Guagua',
+            label: 'SCTEX CLLEX → NLEX → San Fernando Exit → Guagua',
             url: 'https://maps.app.goo.gl/CNWJkZv58zoM9itTA',
             mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via NLEX San Fernando Exit',
             image: 'north_to_guagua1.PNG'
           },
           {
-            label: 'SCTEX CLLEX â†’ Porac Exit â†’ San Agustin Resort',
+            label: 'SCTEX CLLEX → Porac Exit → San Agustin Resort',
             url: 'https://maps.app.goo.gl/BiZPHh2kihxgyTam8',
             mapImageAlt: 'Route map: SCTEX CLLEX Tarlac to Casa Agustin Resort via Porac Exit',
             image: 'north_to_guagua2.PNG'
@@ -355,14 +359,8 @@ export const siteData: SiteData = {
       'https://docs.google.com/forms/d/e/1FAIpQLSfauH9uhHz90QOeYDGblW21KUGaS-rM7_Mrw0s3ryMA8HT3cA/viewform?usp=publish-editor',
     buttonDisabled: false,
   },
-  rosters: [],
-  groups: {
-    foodPackage: [],
-    extraPackage: [],
-    special: [],
-    others: [],
-    notAttending: [],
-  },
+  rosters,
+  groups,
   priorityFood: {
     Groom: 50,
     Bride: 50,
@@ -451,165 +449,5 @@ export const siteData: SiteData = {
     line: 'We look forward to your presence',
     names: 'Lee & Kish',
   },
-}
-
-// Paste the exported "rosters" array here directly to update (same shape as Roster).
-const rosters: Roster[] = [
-    { Id: "001", LastName: "Budaden", FirstName: "Lee", Relationship: "Groom", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "002", LastName: "Lacza", FirstName: "Kish", Relationship: "Bride", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "003", LastName: "Budaden", FirstName: "Alfredo", Relationship: "Parent", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "004", LastName: "Budaden", FirstName: "Angelina", Relationship: "Parent", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "005", LastName: "Lacza", FirstName: "Reynaldo", Relationship: "Parent", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "006", LastName: "Lacza", FirstName: "Julieta", Relationship: "Parent", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "007", LastName: "Budaden", FirstName: "Alfred II", Relationship: "Best Man", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "008", LastName: "Lockhart", FirstName: "Krizel Jane", Relationship: "Maid Of Honor", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "009", LastName: "Jaime", FirstName: "Ermie", Relationship: "Ninong", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "010", LastName: "Agbaya", FirstName: "Ronald", Relationship: "Ninong", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "011", LastName: "Marucot", FirstName: "Bayani", Relationship: "Ninong", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "012", LastName: "Budaden", FirstName: "Morris", Relationship: "Ninong", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "013", LastName: "Alcantara", FirstName: "Tristan", Relationship: "Ninong", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "014", LastName: "Dawey", FirstName: "Abel", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "015", LastName: "Dauzon", FirstName: "Remeo Jr.", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "016", LastName: "Galangco", FirstName: "Juanito", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "017", LastName: "Dawey", FirstName: "Melchor", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "018", LastName: "Budaden", FirstName: "Mark", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "019", LastName: "Domingo", FirstName: "Dionisio", Relationship: "Ninong", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "020", LastName: "Red", FirstName: "Arlene", Relationship: "Ninang", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "021", LastName: "Dimla", FirstName: "Yolanda", Relationship: "Ninang", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "022", LastName: "Marucot", FirstName: "Anastasia", Relationship: "Ninang", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "023", LastName: "Mapalo", FirstName: "Amelia", Relationship: "Ninang", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "024", LastName: "Reus", FirstName: "Elnora Luistro", Relationship: "Ninang", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "025", LastName: "Escovidal", FirstName: "Josephine", Relationship: "Ninang", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "026", LastName: "Rojo", FirstName: "Cynthia", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "027", LastName: "Cortez", FirstName: "Daisy", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "028", LastName: "Budaden", FirstName: "Nena", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "029", LastName: "Dawey", FirstName: "Francisca", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "030", LastName: "Budaden", FirstName: "Elizabeth", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "031", LastName: "Dawey", FirstName: "Cristeta", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "032", LastName: "Budaden", FirstName: "Cerila", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "033", LastName: "Balang", FirstName: "Rebecca", Relationship: "Ninang", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "034", LastName: "Budaden", FirstName: "Allan", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "035", LastName: "Budaden", FirstName: "Frewell", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "036", LastName: "Budaden", FirstName: "Eliezer", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "037", LastName: "Budaden", FirstName: "Jonathan", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "038", LastName: "Lucero", FirstName: "Gerald", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "039", LastName: "Sabado", FirstName: "Rhenish Rhey", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "040", LastName: "Villamar", FirstName: "John Reynold", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "041", LastName: "Garcia", FirstName: "Ervin", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "042", LastName: "Soriaga", FirstName: "Jose Rafael", Relationship: "Groomsmen", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "043", LastName: "Jaime", FirstName: "Christian Era", Relationship: "Groomsmen", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "044", LastName: "Jaime", FirstName: "Eagle Mark", Relationship: "Groomsmen", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "045", LastName: "Tropicales", FirstName: "Kristine Ayra", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "046", LastName: "Tropicales", FirstName: "Angel Wisdom", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "047", LastName: "Budaden", FirstName: "Beta Joy", Relationship: "Bridesmaid", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "048", LastName: "Budaden", FirstName: "Junemae", Relationship: "Bridesmaid", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "049", LastName: "Jusay", FirstName: "Anna Joy", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "050", LastName: "Garcia", FirstName: "Coleen Keith", Relationship: "Bridesmaid", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "051", LastName: "Yamanaka", FirstName: "Erin Eliza", Relationship: "Bridesmaid", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "053", LastName: "Ramos", FirstName: "Rosette", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "054", LastName: "Claveria", FirstName: "Camille Shane", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "055", LastName: "Claveria", FirstName: "Charlene Mae", Relationship: "Bridesmaid", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "056", LastName: "Wacnang", FirstName: "Lex Jander", Relationship: "Ring Bearer", Side: "Groom", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "057", LastName: "Budaden", FirstName: "Nathaniel", Relationship: "Ring Bearer", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "058", LastName: "Recio", FirstName: "Calvin Wise", Relationship: "Ring Bearer", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "059", LastName: "Tropicales", FirstName: "Kristell Yvonne", Relationship: "Flower Girl", Side: "Bride", IsChurchPriority: true, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "060", LastName: "Budaden", FirstName: "Chloelie Mutya", Relationship: "Flower Girl", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "061", LastName: "Wacnang", FirstName: "Juris Jamie B.", Relationship: "Flower Girl", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "062", LastName: "Budaden", FirstName: "Nalla", Relationship: "Flower Girl", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "063", LastName: "Budaden", FirstName: "Athea", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "132", LastName: "Abagat", FirstName: "Kayle", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "134", LastName: "Gregory", FirstName: "Ben", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "135", LastName: "Subebe", FirstName: "Maricris", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "137", LastName: "Rosales", FirstName: "Bryan", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "136", LastName: "Maranan", FirstName: "Kristine Mae", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "064", LastName: "Budaden", FirstName: "Grail", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "074", LastName: "Dimara", FirstName: "Natasha", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "065", LastName: "Budaden", FirstName: "Jahaziel", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "066", LastName: "Budaden", FirstName: "Jasmin", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "067", LastName: "Budaden", FirstName: "Jayvee", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "068", LastName: "Budaden", FirstName: "Morris Jr.", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "069", LastName: "Budaden", FirstName: "Ralph", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "070", LastName: "Claveria", FirstName: "Charmaine", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "071", LastName: "Claveria", FirstName: "Ronald", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "072", LastName: "Claveria-Maniaga", FirstName: "Grace", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "073", LastName: "Delos Reyes", FirstName: "Josie", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "075", LastName: "Dimara", FirstName: "Shania", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "076", LastName: "Dimla", FirstName: "Bong", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "077", LastName: "Galangco", FirstName: "Veronica", Relationship: "Relative", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "078", LastName: "Jaime", FirstName: "Norberta", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "079", LastName: "Lacza", FirstName: "Lourdes", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "080", LastName: "Razon", FirstName: "Charizel", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "081", LastName: "Razon", FirstName: "Denis", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "082", LastName: "Tropicales", FirstName: "Darell", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "083", LastName: "Alburo", FirstName: "Rosette", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "084", LastName: "Andal", FirstName: "Venet", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "085", LastName: "Arenas", FirstName: "Bea", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "091", LastName: "Macalisang", FirstName: "Jackyloyd", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "087", LastName: "Condeza", FirstName: "Angelyn", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "088", LastName: "Endonela", FirstName: "Eunice", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "089", LastName: "Gatmaitan", FirstName: "Darryl", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "092", LastName: "Mancenido", FirstName: "Vincent", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "093", LastName: "Manzanares", FirstName: "Alvin", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "094", LastName: "Montera", FirstName: "Jennica", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "095", LastName: "Masiglat", FirstName: "Alex Czar", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "086", LastName: "Buenafe", FirstName: "Joseph", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "097", LastName: "Viloria", FirstName: "Rogelio", Relationship: "Friend", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "098", LastName: "Agbaya", FirstName: "Rosalie", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "010" },
-    { Id: "090", LastName: "Gimenez", FirstName: "Mark", Relationship: "Friend", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "099", LastName: "Arde", FirstName: "Apolinario", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "047" },
-    { Id: "100", LastName: "Maniaga", FirstName: "Bobby", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: "072" },
-    { Id: "101", LastName: "Escovidal", FirstName: "Joy Arces", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "025" },
-    { Id: "102", LastName: "Alburo", FirstName: "Rhamie Jade", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: "043" },
-    { Id: "103", LastName: "Delos Santos", FirstName: "Althea", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "044" },
-    { Id: "104", LastName: "Jusay", FirstName: "Justine", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: "049" },
-    { Id: "105", LastName: "Jusay", FirstName: "Zane Theodore", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: false, CompanionOf: "049" },
-    { Id: "106", LastName: "Garcia", FirstName: "Miffie", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "041" },
-    { Id: "107", LastName: "Lucero", FirstName: "Elaine", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "038" },
-    { Id: "108", LastName: "Red", FirstName: "John Charl", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "020" },
-    { Id: "109", LastName: "Red", FirstName: "Lavern Paula", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "020" },
-    { Id: "110", LastName: "Reus", FirstName: "Andrei", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "024" },
-    { Id: "111", LastName: "Ongoco", FirstName: "Arlo Lyxander", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "046" },
-    { Id: "112", LastName: "Arre", FirstName: "James", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "051" },
-    { Id: "113", LastName: "Arre", FirstName: "Kziv", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: "051" },
-    { Id: "114", LastName: "Acuavera", FirstName: "Alice", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "115", LastName: "Pelaez", FirstName: "Alex", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "084" },
-    { Id: "116", LastName: "Alburo", FirstName: "Jeff Adrian", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "117", LastName: "Alburo", FirstName: "Samantha Irish", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "118", LastName: "Gatmaitan", FirstName: "Lukas Dominique", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "089" },
-    { Id: "119", LastName: "Gatmaitan", FirstName: "Marie Laurinne", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "089" },
-    { Id: "120", LastName: "Balagot", FirstName: "Janine", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "090" },
-    { Id: "121", LastName: "Costales", FirstName: "Daniela May", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "090" },
-    { Id: "122", LastName: "Gimenez", FirstName: "Naomi Belle", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "090" },
-    { Id: "123", LastName: "Gimenez", FirstName: "Neriah Nyx", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "090" },
-    { Id: "124", LastName: "Macalisang", FirstName: "Xander", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "091" },
-    { Id: "125", LastName: "Tolentino", FirstName: "France", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: "053" },
-    { Id: "126", LastName: "Esquillo", FirstName: "Aidan", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: "097" },
-    { Id: "127", LastName: "Claveria", FirstName: "Annie", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "128", LastName: "Claveria", FirstName: "Cheska", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "129", LastName: "Claveria", FirstName: "Venice", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: true, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-    { Id: "130", LastName: "Dela Peña", FirstName: "Honey Ryza", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: "035" },
-    { Id: "131", LastName: "Claveria", FirstName: "Grace", Relationship: "Relative", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "133", LastName: "Tibayan", FirstName: "Benedick", Relationship: "Friend", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "138", LastName: "Esmedilla", FirstName: "Hazel", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "139", LastName: "Cates", FirstName: "Arian Chie", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "140", LastName: "Reyes", FirstName: "Glenn", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "141", LastName: "Avenilla", FirstName: "Jeanson", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "142", LastName: "Aguinaldo", FirstName: "Bryan", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "143", LastName: "Nolasco", FirstName: "Arjay", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: false, CompanionOf: null },
-    { Id: "144", LastName: "Murillo", FirstName: "Kobe", Relationship: "Companion", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "145", LastName: "Bernardo", FirstName: "Jennifer Anne", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "146", LastName: "Dominguez", FirstName: "Mark Raven", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: true, WillAttend: true, CompanionOf: null },
-    { Id: "147", LastName: "Paghari-on", FirstName: "Divina", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, IsFoodSpecial: false, IsFoodPackage: false, WillAttend: true, CompanionOf: null },
-]
-
-siteData.rosters = rosters
-siteData.groups = {
-  foodPackage: [
-    "001","002","003","004","079","005","006","007","045","082","046","008","059","021","076","024","078","009","011","022","020","025","098","010","012","013","014","015","016","017","018","023","026","027","028","029","030","031","032","033","034","035","036","037","038","039","040","041","042","043","054","044","047","048","103","049","050","051","053","055","056","057","063","074","065","070","071","075","080","081","083","084","085","091","087","088","089","092","093","094","095","086","097","090","099","101","106","107","108","109","110","112","115","127","130","131","144","145","146",
-  ],
-  extraPackage: [],
-  special: ["058","060","061","062","113","128","129"],
-  others: ["132","134","135","137","136","067","064","066","068","111","114","118","119","120","121","122","123","124","126","147"],
-  notAttending: ["077","019","069","072","073","100","102","104","105","116","117","125","133","138","139","140","141","142","143"],
 }
 

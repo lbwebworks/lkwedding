@@ -1,0 +1,375 @@
+.seatplan-page {
+  width: 92vw;
+  max-width: none;
+  margin: 0 auto;
+  padding: 32px 0 72px;
+  font-family: var(--font-modern);
+}
+
+.seatplan-header {
+  max-width: 760px;
+  margin-bottom: 22px;
+}
+
+.seatplan-back-link {
+  display: inline-block;
+  margin-bottom: 26px;
+  color: var(--muted);
+  font-size: 0.83rem;
+  text-decoration: none;
+}
+
+.seatplan-back-link:hover,
+.seatplan-back-link:focus-visible {
+  color: var(--heading);
+}
+
+.seatplan-eyebrow {
+  margin: 0;
+  color: var(--action-strong);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.seatplan-header h1 {
+  margin: 6px 0 10px;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.seatplan-description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Controls ---------------------------------------------------------------- */
+.seatplan-controls {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.seatplan-columns-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seatplan-columns-control span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.seatplan-columns-control input {
+  width: 64px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 7px 8px;
+  background: transparent;
+  color: var(--heading);
+  font: inherit;
+}
+
+.seatplan-btn {
+  border: 1px solid var(--action-strong);
+  border-radius: 5px;
+  padding: 8px 13px;
+  background: var(--action-strong);
+  color: var(--surface, #0f1e2e);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seatplan-btn:hover,
+.seatplan-btn:focus-visible {
+  filter: brightness(1.08);
+}
+
+.seatplan-summary {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* Two-pane body ----------------------------------------------------------- */
+.seatplan-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 20px;
+  align-items: start;
+}
+
+.seatplan-content {
+  min-height: 300px;
+}
+
+.seatplan-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.seatplan-grid {
+  display: grid;
+  gap: 14px;
+}
+
+/* Table card -------------------------------------------------------------- */
+.seatplan-table {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-2, #13263b);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.seatplan-table.is-drop-target {
+  border-color: var(--action-strong);
+  box-shadow: 0 0 0 2px var(--action-strong) inset;
+}
+
+.seatplan-table-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-3, #162d46);
+}
+
+.seatplan-table-name {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 6px;
+  background: transparent;
+  color: var(--heading);
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.seatplan-table-name:hover {
+  border-color: var(--line);
+}
+
+.seatplan-table-name:focus-visible {
+  outline: 2px solid var(--action-strong);
+  outline-offset: 1px;
+}
+
+.seatplan-table-count {
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: var(--surface, #101f31);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.seatplan-table-delete {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.seatplan-table-delete:hover,
+.seatplan-table-delete:focus-visible {
+  color: #e88;
+}
+
+.seatplan-seats {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+}
+
+.seatplan-seat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background: var(--surface, #101f31);
+  cursor: grab;
+}
+
+.seatplan-seat.is-dragging {
+  opacity: 0.45;
+}
+
+.seatplan-seat.is-empty {
+  justify-content: center;
+  background: transparent;
+  border: 1px dashed var(--line);
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: default;
+}
+
+.seatplan-seat-num {
+  min-width: 20px;
+  color: var(--action-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.seatplan-seat-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--heading);
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seatplan-seat-remove {
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 7px;
+}
+
+.seatplan-seat-remove:hover,
+.seatplan-seat-remove:focus-visible {
+  color: #e88;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Attendees pane ---------------------------------------------------------- */
+.seatplan-attendees {
+  position: sticky;
+  top: 16px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-2, #13263b);
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+.seatplan-attendees.is-drop-target {
+  border-color: var(--action-strong);
+  box-shadow: 0 0 0 2px var(--action-strong) inset;
+}
+
+.seatplan-attendees-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.seatplan-attendees-head h2 {
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.seatplan-attendees-count {
+  min-width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--surface, #101f31);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.seatplan-attendees-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seatplan-attendee {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  background: var(--surface, #101f31);
+  cursor: grab;
+}
+
+.seatplan-attendee.is-dragging {
+  opacity: 0.45;
+}
+
+.seatplan-attendee.is-empty {
+  justify-content: center;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.82rem;
+  cursor: default;
+}
+
+.seatplan-attendee-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--heading);
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seatplan-attendee-side {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 860px) {
+  .seatplan-body {
+    grid-template-columns: 1fr;
+  }
+
+  .seatplan-attendees {
+    position: static;
+    max-height: 360px;
+  }
+}
