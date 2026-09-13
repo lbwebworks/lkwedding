@@ -4,6 +4,7 @@ import fallbackHeroImg from './assets/hero.png'
 import calendarDayImage from './assets/wedding/calendar/sept_20.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData } from './data/siteData'
+import { entourage } from './data/entourageData'
 import './App.css'
 
 const SAVE_DATE_VISIBLE_COUNT = 6
@@ -643,12 +644,14 @@ function App() {
   const isStoryViewerOpen = activeStoryChapter !== null
   const attendeeName = (attendee: (typeof siteData.rosters)[number]) =>
     `${attendee.LastName}, ${attendee.FirstName}`.trim()
+  // Entourage groups reference ordered id lists from entourageData.ts. Left/right
+  // map to the two columns rendered per row.
   const entourageGroups = [
-    { leftTitle: "Groom's Parents", leftTitles: ['Parent'], leftSide: 'Groom', rightTitle: "Bride's Parents", rightTitles: ['Parent'], rightSide: 'Bride' },
-    { leftTitle: 'Principal Sponsors', leftTitles: ['Ninong'], rightTitle: 'Principal Sponsors', rightTitles: ['Ninang'] },
-    { leftTitle: 'Best Man', leftTitles: ['Best Man'], rightTitle: 'Maid Of Honor', rightTitles: ['Maid Of Honor'] },
-    { leftTitle: 'Groomsmen', leftTitles: ['Groomsmen'], rightTitle: 'Bridesmaids', rightTitles: ['Bridesmaid'] },
-    { leftTitle: 'Ring Bearers', leftTitles: ['Ring Bearer'], rightTitle: 'Flower Girls', rightTitles: ['Flower Girl'] },
+    { leftTitle: "Groom's Parents", leftIds: entourage.parentsGroom, rightTitle: "Bride's Parents", rightIds: entourage.parentsBride },
+    { leftTitle: 'Principal Sponsors', leftIds: entourage.principalSponsorsNinong, rightTitle: 'Principal Sponsors', rightIds: entourage.principalSponsorsNinang },
+    { leftTitle: 'Best Man', leftIds: entourage.bestMan, rightTitle: 'Maid Of Honor', rightIds: entourage.maidOfHonor },
+    { leftTitle: 'Groomsmen', leftIds: entourage.groomsmen, rightTitle: 'Bridesmaids', rightIds: entourage.bridesmaids },
+    { leftTitle: 'Ring Bearers', leftIds: entourage.ringBearers, rightTitle: 'Flower Girls', rightIds: entourage.flowerGirls },
   ]
 
   return (
@@ -925,15 +928,18 @@ function App() {
         <h2>Entourage</h2>
         <div className="entourage-grid">
           {entourageGroups.flatMap((group, groupIdx) => {
-            const getAttendees = (titles: string[], side?: string) =>
-              siteData.rosters.filter(
-                (attendee) =>
-                  attendee.WillAttend &&
-                  titles.includes(attendee.Relationship) &&
-                  (!side || attendee.Side === side),
-              )
-            const renderGroup = (title: string, titles: string[], side: string | undefined, isLeft: boolean) => {
-              const groupAttendees = getAttendees(titles, side)
+            const rosterById = new Map(siteData.rosters.map((attendee) => [attendee.Id, attendee]))
+            // Resolve an ordered id list to rosters, preserving array order and
+            // skipping unknown or not-attending ids.
+            const getAttendees = (ids: string[]) =>
+              ids
+                .map((id) => rosterById.get(id))
+                .filter(
+                  (attendee): attendee is (typeof siteData.rosters)[number] =>
+                    attendee !== undefined && attendee.WillAttend,
+                )
+            const renderGroup = (title: string, ids: string[], isLeft: boolean) => {
+              const groupAttendees = getAttendees(ids)
               const sponsorPlaceholders = (count: number, offset: number) =>
                 Array.from({ length: count }, (_, index) => ({
                   Id: `sponsor-placeholder-${offset}-${index}`,
@@ -984,8 +990,8 @@ function App() {
             }
 
             return [
-              renderGroup(group.leftTitle, group.leftTitles, group.leftSide, true),
-              renderGroup(group.rightTitle, group.rightTitles, group.rightSide, false),
+              renderGroup(group.leftTitle, group.leftIds, true),
+              renderGroup(group.rightTitle, group.rightIds, false),
             ]
           })}
         </div>

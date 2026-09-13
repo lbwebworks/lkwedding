@@ -95,8 +95,8 @@ const toPriorityGuest = (roster: Roster, bucket: GuestBucket): PriorityGuest => 
 }
 
 // Build the default guest list from rosters + groups. The ordered lists define
-// both order and bucket membership. Array position is the priority. Vacant food
-// slots (null) are skipped here — they hold a slot number but no guest.
+// both order and bucket membership; array position is the order. Vacant food
+// slots (null) are skipped here — they reserve capacity but hold no guest.
 const defaultGuests: PriorityGuest[] = (() => {
   const rosterById = new Map(siteData.rosters.map((roster) => [roster.Id, roster]))
   const { foodPackage, extraPackage, special, others, notAttending } = siteData.groups
@@ -167,63 +167,10 @@ const guestToAttendee = (
   } as Roster
 }
 
-// --- Priority numbering (single source of truth) -------------------------
-// Every consumer (on-screen rank, Excel #, and the .ts priority export) reads
-// slot numbers from here so they always agree. Grouping and slot rules:
-//   1..foodCapacity  -> food package block (fixed size; unfilled slots are
-//                       left vacant, i.e. the numbers are skipped)
-//   next             -> special food (always begins above foodCapacity)
-//   next             -> other attending guests
-//   last             -> not attending guests
-// Order within each group follows the guests array order.
-type PriorityBucket = 'food' | 'special' | 'other' | 'not-attending'
-
-type PriorityEntry = {
-  guest: PriorityGuest
-  slot: number
-  bucket: PriorityBucket
-}
-
+// A guest is "special food" if flagged on their profile or listed by name in the
+// browser-managed special-food set.
 const isSpecialFoodMember = (guest: PriorityGuest, specialFoodNames: string[]) =>
   guest.isSpecialFood || specialFoodNames.includes(guest.name)
-
-const computePriority = (
-  guests: PriorityGuest[],
-  specialFoodNames: string[],
-  foodCapacity: number,
-): { entries: PriorityEntry[]; slotById: Map<string, number>; bucketById: Map<string, PriorityBucket> } => {
-  const foodPackage = guests.filter(
-    (guest) => guest.willAttend && guest.isFoodPackage && !isSpecialFoodMember(guest, specialFoodNames),
-  )
-  const special = guests.filter(
-    (guest) => guest.willAttend && isSpecialFoodMember(guest, specialFoodNames),
-  )
-  const other = guests.filter(
-    (guest) => guest.willAttend && !guest.isFoodPackage && !isSpecialFoodMember(guest, specialFoodNames),
-  )
-  const notAttending = guests.filter((guest) => !guest.willAttend)
-
-  const entries: PriorityEntry[] = []
-  // Food package fills 1..N inside the reserved block.
-  foodPackage.forEach((guest, index) => {
-    entries.push({ guest, slot: index + 1, bucket: 'food' })
-  })
-  // Everything after the reserved food block is numbered sequentially.
-  let nextSlot = foodCapacity + 1
-  const pushGroup = (group: PriorityGuest[], bucket: PriorityBucket) => {
-    for (const guest of group) {
-      entries.push({ guest, slot: nextSlot, bucket })
-      nextSlot += 1
-    }
-  }
-  pushGroup(special, 'special')
-  pushGroup(other, 'other')
-  pushGroup(notAttending, 'not-attending')
-
-  const slotById = new Map(entries.map((entry) => [entry.guest.id, entry.slot]))
-  const bucketById = new Map(entries.map((entry) => [entry.guest.id, entry.bucket]))
-  return { entries, slotById, bucketById }
-}
 
 type StoredProfile = Pick<
   PriorityGuest,
@@ -459,10 +406,6 @@ function RosterPage() {
   const [roleEditCompanionOf, setRoleEditCompanionOf] = useState<string | null>(null)
   const [dropTarget, setDropTarget] = useState<{ side: 'Groom' | 'Bride'; section: TableSection; guestId: string | null } | null>(null)
 
-  // Single source of truth for priority slot numbers, shared by the on-screen
-  // rank, the Excel export, and the .ts priority export.
-  const priority = computePriority(guests, specialFoodNames, FOOD_CAPACITY)
-
   const saveOrder = (nextGuests: PriorityGuest[]) => {
     setGuests(nextGuests)
     window.localStorage.setItem(
@@ -586,10 +529,10 @@ import type { Roster } from './siteData'
     const columns = ['#', 'Name', 'Title', 'Side', 'IsSpecialFood', 'WillAttend']
     // Wrap each cell so commas, quotes, or newlines don't break the CSV layout.
     const escapeCell = (value: string) => `"${value.replace(/"/g, '""')}"`
-    // Reuse the shared priority numbering so the # column matches everywhere.
-    const rows = priority.entries.map(({ slot, guest }) => {
+    // The # is just the row position; array order is the source of truth.
+    const rows = guests.map((guest, index) => {
       return [
-        String(slot),
+        String(index + 1),
         guest.name,
         displayGroup(guest),
         guest.side,
@@ -992,6 +935,7 @@ import type { Roster } from './siteData'
     guest: PriorityGuest,
     tableSide: 'Groom' | 'Bride',
     section: TableSection,
+    index: number,
   ) => {
     const isSpecialFood = guest.isSpecialFood || specialFoodNames.includes(guest.name)
     const isMenuOpen = openMenuGuestId === guest.id
@@ -1037,7 +981,7 @@ import type { Roster } from './siteData'
         >
           ::
         </button>
-        <span className="roster-rank">{String(priority.slotById.get(guest.id) ?? 0).padStart(2, '0')}</span>
+        <span className="roster-rank">{String(index + 1).padStart(2, '0')}</span>
         <div className="roster-guest"><strong>{guest.name}</strong></div>
         <span className="roster-group">{displayGroup(guest)}</span>
         <div className="roster-actions">
@@ -1131,7 +1075,7 @@ import type { Roster } from './siteData'
             setDropTarget(null)
           }}
         >
-          {tableGuests.map((guest) => renderGuestRow(guest, side, section))}
+          {tableGuests.map((guest, index) => renderGuestRow(guest, side, section, index))}
           {section === 'food' && Array.from({
             length: Math.max(0, foodCounts[side] - tableGuests.length),
           }, (_, index) => (
