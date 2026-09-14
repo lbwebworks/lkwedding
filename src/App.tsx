@@ -642,8 +642,12 @@ function App() {
     ? pickStoryImage(activeStoryChapter.title, activeStoryIndex ?? 0)
     : ''
   const isStoryViewerOpen = activeStoryChapter !== null
-  const attendeeName = (attendee: (typeof siteData.rosters)[number]) =>
-    `${attendee.LastName}, ${attendee.FirstName}`.trim()
+  const attendeeName = (attendee: (typeof siteData.rosters)[number]) => {
+    const name = `${attendee.LastName}, ${attendee.FirstName}`.trim()
+    // A bare comma means both parts were empty (e.g. a vacant sponsor slot);
+    // render it blank instead.
+    return name === ',' ? '' : name
+  }
   // Entourage groups reference ordered id lists from entourageData.ts. Left/right
   // map to the two columns rendered per row.
   const entourageGroups = [
@@ -943,7 +947,7 @@ function App() {
               const sponsorPlaceholders = (count: number, offset: number) =>
                 Array.from({ length: count }, (_, index) => ({
                   Id: `sponsor-placeholder-${offset}-${index}`,
-                  FirstName: '...',
+                  FirstName: '',
                   LastName: '',
                   Relationship: 'Ninong' as const,
                   Side: 'Groom' as const,
@@ -957,9 +961,7 @@ function App() {
                 title === 'Principal Sponsors'
                   ? isLeft
                     ? [
-                        ...groupAttendees.slice(0, 5),
-                        ...sponsorPlaceholders(1, 0),
-                        ...groupAttendees.slice(5),
+                        ...groupAttendees,
                         ...sponsorPlaceholders(2, 1),
                       ]
                     : groupAttendees
@@ -977,10 +979,14 @@ function App() {
                       />
                     )
 
+                    // Vacant slots have no name; render a non-breaking space so
+                    // the line still occupies its place in the column.
+                    const displayName = attendeeName(attendee)
+
                     return (
                       <p key={attendee.Id} className="entourage-name">
                         {attendee.IsChurchPriority && isLeft ? churchIcon : null}
-                        {attendeeName(attendee)}
+                        {displayName === '' ? '\u00A0' : displayName}
                         {attendee.IsChurchPriority && !isLeft ? churchIcon : null}
                       </p>
                     )
