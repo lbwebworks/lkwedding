@@ -19,6 +19,9 @@ export type Relationship =
   | 'Friend'
   | 'Companion'
 
+// Note: food/attendance status is no longer stored per-roster. It is derived
+// from the `groups` buckets (foodPackage / extraPackage / special / notAttending).
+// Use the helpers exported below (isAttending, isFoodPackage, isFoodSpecial).
 export type Roster = {
   Id: string
   LastName: string
@@ -26,9 +29,6 @@ export type Roster = {
   Relationship: Relationship
   Side: 'Groom' | 'Bride' | ''
   IsChurchPriority: boolean
-  IsFoodSpecial: boolean
-  IsFoodPackage: boolean
-  WillAttend: boolean
   CompanionOf: string | null
 }
 
@@ -451,3 +451,14 @@ export const siteData: SiteData = {
   },
 }
 
+
+// --- Derived status helpers ------------------------------------------------
+// Food/attendance status now lives in the `groups` buckets rather than on each
+// Roster. These helpers answer the questions the removed fields used to.
+const notAttendingIds = new Set(groups.notAttending)
+const foodPackageIds = new Set(groups.foodPackage.filter((id): id is string => id !== null))
+const specialFoodIds = new Set(groups.special)
+
+export const isAttending = (id: string): boolean => !notAttendingIds.has(id)
+export const isFoodPackage = (id: string): boolean => foodPackageIds.has(id)
+export const isFoodSpecial = (id: string): boolean => specialFoodIds.has(id)

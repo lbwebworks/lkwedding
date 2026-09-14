@@ -136,7 +136,6 @@ const splitDisplayName = (name: string): { LastName: string; FirstName: string }
 const guestToAttendee = (
   guest: PriorityGuest,
   original: Roster | undefined,
-  isSpecialFood: boolean,
 ): Roster => {
   const { LastName, FirstName } = splitDisplayName(guest.name)
   // Companions always export as Title "Companion" with a CompanionOf link.
@@ -160,9 +159,6 @@ const guestToAttendee = (
     FirstName,
     Relationship: title,
     Side: guest.side,
-    IsFoodSpecial: isSpecialFood,
-    IsFoodPackage: guest.isFoodPackage,
-    WillAttend: guest.willAttend,
     CompanionOf: guest.isCompanion ? guest.companionOf : null,
   } as Roster
 }
@@ -446,7 +442,7 @@ function RosterPage() {
 
     // rosters: keep the guests array order (the drag-and-drop order).
     const rosterRecords = guests.map((guest) =>
-      guestToAttendee(guest, attendeeById.get(guest.id), isSpecial(guest)),
+      guestToAttendee(guest, attendeeById.get(guest.id)),
     )
 
     // groups: derive membership from the same predicates the on-screen sections
@@ -477,7 +473,7 @@ function RosterPage() {
     const formatValue = (value: string | boolean | null) =>
       typeof value === 'string' ? `"${value}"` : String(value)
     const rosterLine = (roster: (typeof rosterRecords)[number]) =>
-      `  { Id: ${formatValue(roster.Id)}, LastName: ${formatValue(roster.LastName)}, FirstName: ${formatValue(roster.FirstName)}, Relationship: ${formatValue(roster.Relationship)}, Side: ${formatValue(roster.Side)}, IsChurchPriority: ${formatValue(roster.IsChurchPriority)}, IsFoodSpecial: ${formatValue(roster.IsFoodSpecial)}, IsFoodPackage: ${formatValue(roster.IsFoodPackage)}, WillAttend: ${formatValue(roster.WillAttend)}, CompanionOf: ${formatValue(roster.CompanionOf)} },`
+      `  { Id: ${formatValue(roster.Id)}, LastName: ${formatValue(roster.LastName)}, FirstName: ${formatValue(roster.FirstName)}, Relationship: ${formatValue(roster.Relationship)}, Side: ${formatValue(roster.Side)}, IsChurchPriority: ${formatValue(roster.IsChurchPriority)}, CompanionOf: ${formatValue(roster.CompanionOf)} },`
     // Wrap a bucket's ids onto lines of 12 for readability, like rosterData.ts.
     const idArray = (ids: string[]) => {
       if (ids.length === 0) {
@@ -493,8 +489,8 @@ function RosterPage() {
     const header = `// Roster data (separate file so it can be copy-pasted to update, like the
 // seat plan pattern in seatPlanData.ts). \`rosters\` holds everyone (attending +
 // not attending). \`groups\` holds the ordering per bucket; array position is the
-// priority — there is no separate priority number. \`foodPackage\` may contain
-// null entries for vacant slots.
+// order. Food/attendance status is derived from these buckets, not stored per
+// roster. \`foodPackage\` may contain null entries for vacant slots.
 //
 // Paste an exported roster here to update it.
 

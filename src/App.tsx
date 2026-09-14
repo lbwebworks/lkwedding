@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import fallbackHeroImg from './assets/hero.png'
 import calendarDayImage from './assets/wedding/calendar/sept_20.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
-import { siteData } from './data/siteData'
+import { siteData, isAttending } from './data/siteData'
 import { entourage } from './data/entourageData'
 import './App.css'
 
@@ -940,7 +940,7 @@ function App() {
                 .map((id) => rosterById.get(id))
                 .filter(
                   (attendee): attendee is (typeof siteData.rosters)[number] =>
-                    attendee !== undefined && attendee.WillAttend,
+                    attendee !== undefined && isAttending(attendee.Id),
                 )
             const renderGroup = (title: string, ids: string[], isLeft: boolean) => {
               const groupAttendees = getAttendees(ids)
@@ -952,9 +952,6 @@ function App() {
                   Relationship: 'Ninong' as const,
                   Side: 'Groom' as const,
                   IsChurchPriority: false,
-                  IsFoodSpecial: false,
-                  IsFoodPackage: false,
-                  WillAttend: true,
                   CompanionOf: null,
                 }))
               const displayAttendees =
@@ -1007,7 +1004,7 @@ function App() {
         <div className="guest-list-group">
           <h2>Family and Relatives</h2>
           <div className="guest-list-grid">
-            {siteData.rosters.filter((attendee) => attendee.WillAttend && attendee.Relationship === 'Relative').map((attendee) => (
+            {siteData.rosters.filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Relative').map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
               </p>
@@ -1019,7 +1016,7 @@ function App() {
           <h2>Coworkers and Friends</h2>
           <div className="guest-list-grid">
             {siteData.rosters
-              .filter((attendee) => attendee.WillAttend && (attendee.Relationship === 'Coworker' || attendee.Relationship === 'Friend'))
+              .filter((attendee) => isAttending(attendee.Id) && (attendee.Relationship === 'Coworker' || attendee.Relationship === 'Friend'))
               .map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}

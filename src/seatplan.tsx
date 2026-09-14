@@ -1,6 +1,6 @@
 import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { siteData, type Roster } from './data/siteData'
+import { siteData, isAttending, type Roster } from './data/siteData'
 import { seatPlan as defaultSeatPlan, type SeatPlan, type SeatTable } from './data/seatPlanData'
 import './index.css'
 import './seatplan.css'
@@ -14,7 +14,7 @@ const fullName = (roster: Roster) => `${roster.LastName}, ${roster.FirstName}`.t
 // Only attending guests can be seated. The couple (Groom/Bride) have dedicated
 // front seating, so they are excluded from the seat plan.
 const attendingRoster = siteData.rosters.filter(
-  (roster) => roster.WillAttend && roster.Relationship !== 'Groom' && roster.Relationship !== 'Bride',
+  (roster) => isAttending(roster.Id) && roster.Relationship !== 'Groom' && roster.Relationship !== 'Bride',
 )
 const rosterById = new Map(attendingRoster.map((roster) => [roster.Id, roster]))
 
