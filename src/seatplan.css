@@ -288,9 +288,45 @@
 .seatplan-attendees-head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
+}
+
+/* The head doubles as a collapse toggle button. */
+.seatplan-group-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.seatplan-group-toggle:focus-visible {
+  outline: 2px solid var(--action-strong);
+  outline-offset: -2px;
+}
+
+/* Second group gets a divider above it. */
+.seatplan-group + .seatplan-group .seatplan-attendees-head {
+  border-top: 1px solid var(--line);
+}
+
+.seatplan-group-chevron {
+  color: var(--muted);
+  font-size: 0.8rem;
+  transition: transform 0.12s ease;
+}
+
+.seatplan-group-chevron.is-open {
+  transform: rotate(90deg);
+}
+
+/* The count sits at the far right of the toggle. */
+.seatplan-attendees-head .seatplan-attendees-count {
+  margin-left: auto;
 }
 
 .seatplan-attendees-head h2 {
@@ -361,6 +397,25 @@
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+/* Not-attending distinction — applies to both the side-pane rows and to
+   not-attending guests that have been pre-seated at a table. Dimmed with a warm
+   amber accent so it's clear at a glance they haven't confirmed. */
+.seatplan-attendee.is-not-attending,
+.seatplan-seat.is-not-attending {
+  background: rgba(120, 82, 30, 0.22);
+  box-shadow: inset 3px 0 0 #d9a441;
+}
+
+.seatplan-attendee.is-not-attending .seatplan-attendee-name,
+.seatplan-seat.is-not-attending .seatplan-seat-name {
+  color: #e6c98a;
+}
+
+.seatplan-attendee.is-not-attending .seatplan-attendee-name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(217, 164, 65, 0.5);
 }
 
 @media (max-width: 860px) {

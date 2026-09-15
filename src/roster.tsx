@@ -64,6 +64,44 @@ const SPECIAL_FOOD_STORAGE_KEY = 'lee-kish-priority-special-food'
 const FOOD_PACKAGE_STORAGE_KEY = 'lee-kish-priority-membership-v1'
 const FOOD_QUOTA_STORAGE_KEY = 'lee-kish-priority-food-quota-v4'
 const SEATING_QUOTA_STORAGE_KEY = 'lee-kish-priority-seating-quota-v1'
+// When the page last wrote to localStorage. Compared against the data files'
+// build-time mtime so newer file data supersedes stale saved state.
+const SAVED_AT_STORAGE_KEY = 'lee-kish-priority-saved-at'
+
+// Every localStorage key this page owns. Cleared together when file data wins.
+const ROSTER_STORAGE_KEYS = [
+  STORAGE_KEY,
+  PROFILE_STORAGE_KEY,
+  SPECIAL_FOOD_STORAGE_KEY,
+  FOOD_PACKAGE_STORAGE_KEY,
+  FOOD_QUOTA_STORAGE_KEY,
+  SEATING_QUOTA_STORAGE_KEY,
+  SAVED_AT_STORAGE_KEY,
+]
+
+// The roster page's data comes from rosterData.ts (rosters + groups) and
+// siteData.ts (quotas). Take the most recent of their build-time mtimes.
+const ROSTER_DATA_MTIME = Math.max(__ROSTER_DATA_MTIME__, __SITE_DATA_MTIME__)
+
+// If a data file was rebuilt after the coordinator's last local save, drop the
+// saved state so the page loads fresh from the files. Local edits made after
+// the latest build still win (their savedAt is newer). Runs once at load,
+// before any getInitial* reads localStorage.
+const invalidateStaleRosterState = () => {
+  const savedAt = Number(window.localStorage.getItem(SAVED_AT_STORAGE_KEY) ?? 0)
+  if (!Number.isFinite(savedAt) || ROSTER_DATA_MTIME > savedAt) {
+    for (const key of ROSTER_STORAGE_KEYS) {
+      window.localStorage.removeItem(key)
+    }
+  }
+}
+invalidateStaleRosterState()
+
+// Record that local state was just saved (used by the staleness check above).
+const markRosterSaved = () => {
+  window.localStorage.setItem(SAVED_AT_STORAGE_KEY, String(Date.now()))
+}
+
 const FOOD_CAPACITY = 100
 const HALL_CAPACITY = 150
 const SEATING_CAPACITY = 150
@@ -430,6 +468,7 @@ function RosterPage() {
         })),
       ),
     )
+    markRosterSaved()
   }
 
   const downloadGeneratedData = () => {
@@ -562,6 +601,7 @@ import type { Roster } from './siteData'
       JSON.stringify(nextGuests.filter((guest) => guest.isFoodPackage).map((guest) => guest.id)),
     )
     window.localStorage.setItem(FOOD_QUOTA_STORAGE_KEY, JSON.stringify(nextCounts))
+    markRosterSaved()
   }
 
   const setSeatingQuota = (side: 'Groom' | 'Bride', value: number) => {
@@ -570,6 +610,7 @@ import type { Roster } from './siteData'
       : { Groom: SEATING_CAPACITY - value, Bride: value }
     setSeatingCounts(nextCounts)
     window.localStorage.setItem(SEATING_QUOTA_STORAGE_KEY, JSON.stringify(nextCounts))
+    markRosterSaved()
   }
 
   const toggleFoodPackage = (guestId: string) => {
@@ -618,6 +659,7 @@ import type { Roster } from './siteData'
       setSpecialFoodNames((current) => {
         const next = current.filter((name) => name !== guest.name)
         window.localStorage.setItem(SPECIAL_FOOD_STORAGE_KEY, JSON.stringify(next))
+        markRosterSaved()
         return next
       })
     }
@@ -647,6 +689,7 @@ import type { Roster } from './siteData'
       setSpecialFoodNames((current) => {
         const next = current.filter((name) => name !== guest.name)
         window.localStorage.setItem(SPECIAL_FOOD_STORAGE_KEY, JSON.stringify(next))
+        markRosterSaved()
         return next
       })
     }
@@ -782,6 +825,7 @@ import type { Roster } from './siteData'
         }
         const next = [...current, name]
         window.localStorage.setItem(SPECIAL_FOOD_STORAGE_KEY, JSON.stringify(next))
+        markRosterSaved()
         return next
       })
     }

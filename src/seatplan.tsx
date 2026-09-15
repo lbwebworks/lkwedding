@@ -6,17 +6,48 @@ import './index.css'
 import './seatplan.css'
 
 const STORAGE_KEY = 'lee-kish-seatplan-v1'
+// When the plan was last saved. Compared to the data files' build-time mtimes
+// so newer file data (a new plan, or a roster change) supersedes stale state.
+const SAVED_AT_STORAGE_KEY = 'lee-kish-seatplan-saved-at'
 const MIN_COLUMNS = 1
 const MAX_COLUMNS = 12
 
+// The seat plan depends on seatPlanData.ts (the plan) and on rosterData.ts /
+// siteData.ts (who is attending). Reset if any of them was built more recently
+// than the last local save.
+const SEATPLAN_DATA_MTIME = Math.max(
+  __SEATPLAN_DATA_MTIME__,
+  __ROSTER_DATA_MTIME__,
+  __SITE_DATA_MTIME__,
+)
+
+// If a data file was rebuilt after the last local save, drop the saved plan so
+// the page loads fresh from seatPlanData.ts. Later local edits still win.
+const invalidateStaleSeatplanState = () => {
+  const savedAt = Number(window.localStorage.getItem(SAVED_AT_STORAGE_KEY) ?? 0)
+  if (!Number.isFinite(savedAt) || SEATPLAN_DATA_MTIME > savedAt) {
+    window.localStorage.removeItem(STORAGE_KEY)
+    window.localStorage.removeItem(SAVED_AT_STORAGE_KEY)
+  }
+}
+invalidateStaleSeatplanState()
+
+// Record that the plan was just saved (module-level so it is not treated as a
+// render-phase impure call).
+const markSeatplanSaved = () => {
+  window.localStorage.setItem(SAVED_AT_STORAGE_KEY, String(Date.now()))
+}
+
 const fullName = (roster: Roster) => `${roster.LastName}, ${roster.FirstName}`.trim()
 
-// Only attending guests can be seated. The couple (Groom/Bride) have dedicated
-// front seating, so they are excluded from the seat plan.
-const attendingRoster = siteData.rosters.filter(
-  (roster) => isAttending(roster.Id) && roster.Relationship !== 'Groom' && roster.Relationship !== 'Bride',
+// Everyone except the couple (Groom/Bride, who have dedicated front seating) can
+// be placed on the plan — including not-yet-attending guests, so a last-minute
+// confirmation doesn't require re-seating. Attendance is shown as a distinction
+// (see isAttending), not by excluding them from the plan.
+const seatableRoster = siteData.rosters.filter(
+  (roster) => roster.Relationship !== 'Groom' && roster.Relationship !== 'Bride',
 )
-const rosterById = new Map(attendingRoster.map((roster) => [roster.Id, roster]))
+const rosterById = new Map(seatableRoster.map((roster) => [roster.Id, roster]))
 
 const clampColumns = (value: number) =>
   Math.min(MAX_COLUMNS, Math.max(MIN_COLUMNS, Math.floor(value) || MIN_COLUMNS))
@@ -61,15 +92,20 @@ function SeatPlanPage() {
   const [plan, setPlan] = useState<SeatPlan>(getInitialSeatPlan)
   const [drag, setDrag] = useState<DragState>(null)
   const [dropTableId, setDropTableId] = useState<string | 'pane' | null>(null)
+  const [attendingOpen, setAttendingOpen] = useState(true)
+  const [nonAttendingOpen, setNonAttendingOpen] = useState(true)
 
   const savePlan = (next: SeatPlan) => {
     setPlan(next)
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+    markSeatplanSaved()
   }
 
   // Ids currently seated at any table.
   const seatedIds = new Set(plan.tables.flatMap((table) => table.guestIds))
-  const unseated = attendingRoster.filter((roster) => !seatedIds.has(roster.Id))
+  const unseated = seatableRoster.filter((roster) => !seatedIds.has(roster.Id))
+  const unseatedAttending = unseated.filter((roster) => isAttending(roster.Id))
+  const unseatedNonAttending = unseated.filter((roster) => !isAttending(roster.Id))
 
   const setColumns = (value: number) => {
     savePlan({ ...plan, columns: clampColumns(value) })
@@ -193,6 +229,59 @@ function SeatPlanPage() {
     onDragEnd()
   }
 
+  // A collapsible section of unseated guests in the side pane. Attending and
+  // not-attending guests behave identically (drag onto a table to seat); the
+  // `notAttending` flag only drives the visual distinction.
+  const renderUnseatedGroup = ({
+    title,
+    guests,
+    open,
+    onToggle,
+    emptyLabel,
+    notAttending,
+  }: {
+    title: string
+    guests: Roster[]
+    open: boolean
+    onToggle: () => void
+    emptyLabel: string
+    notAttending: boolean
+  }) => (
+    <section className={`seatplan-group${notAttending ? ' is-not-attending' : ''}`}>
+      <button
+        type="button"
+        className="seatplan-attendees-head seatplan-group-toggle"
+        aria-expanded={open}
+        onClick={onToggle}
+      >
+        <span className={`seatplan-group-chevron${open ? ' is-open' : ''}`} aria-hidden="true">
+          ▸
+        </span>
+        <h2>{title}</h2>
+        <span className="seatplan-attendees-count">{guests.length}</span>
+      </button>
+      {open ? (
+        <ul className="seatplan-attendees-list">
+          {guests.map((roster) => (
+            <li
+              key={roster.Id}
+              className={`seatplan-attendee${drag?.guestId === roster.Id ? ' is-dragging' : ''}${notAttending ? ' is-not-attending' : ''}`}
+              draggable
+              onDragStart={(event) => onDragStartGuest(event, roster.Id, 'pane')}
+              onDragEnd={onDragEnd}
+            >
+              <span className="seatplan-attendee-name">{fullName(roster)}</span>
+              <span className="seatplan-attendee-side">{roster.Side}</span>
+            </li>
+          ))}
+          {guests.length === 0 ? (
+            <li className="seatplan-attendee is-empty">{emptyLabel}</li>
+          ) : null}
+        </ul>
+      ) : null}
+    </section>
+  )
+
   return (
     <main className="seatplan-page">
       <header className="seatplan-header">
@@ -202,8 +291,9 @@ function SeatPlanPage() {
         <p className="seatplan-eyebrow">Coordinator workspace</p>
         <h1>Seat Plan</h1>
         <p className="seatplan-description">
-          Arrange attending guests into tables. Drag a guest from the right onto a table, or drag
-          them back to unseat. Changes are kept in this browser.
+          Arrange guests into tables. Drag a guest from the right onto a table, or drag them back to
+          unseat. Not-attending guests can be pre-seated too (shown dimmed) in case they confirm
+          later. Changes are kept in this browser.
         </p>
       </header>
 
@@ -225,7 +315,7 @@ function SeatPlanPage() {
           Export
         </button>
         <span className="seatplan-summary">
-          {seatedIds.size} seated · {unseated.length} unseated
+          {seatedIds.size} seated · {unseatedAttending.length} unseated · {unseatedNonAttending.length} not attending
         </span>
       </div>
 
@@ -276,7 +366,7 @@ function SeatPlanPage() {
                       return (
                         <li
                           key={id}
-                          className={`seatplan-seat${drag?.guestId === id ? ' is-dragging' : ''}`}
+                          className={`seatplan-seat${drag?.guestId === id ? ' is-dragging' : ''}${roster && !isAttending(id) ? ' is-not-attending' : ''}`}
                           draggable
                           onDragStart={(event) => onDragStartGuest(event, id, table.id)}
                           onDragEnd={onDragEnd}
@@ -318,7 +408,7 @@ function SeatPlanPage() {
 
         <aside
           className={`seatplan-attendees${dropTableId === 'pane' ? ' is-drop-target' : ''}`}
-          aria-label="Unseated attendees"
+          aria-label="Unseated guests"
           onDragOver={(event) => {
             if (drag && drag.from !== 'pane') {
               event.preventDefault()
@@ -330,27 +420,22 @@ function SeatPlanPage() {
             onDropPane()
           }}
         >
-          <div className="seatplan-attendees-head">
-            <h2>Attendees</h2>
-            <span className="seatplan-attendees-count">{unseated.length}</span>
-          </div>
-          <ul className="seatplan-attendees-list">
-            {unseated.map((roster) => (
-              <li
-                key={roster.Id}
-                className={`seatplan-attendee${drag?.guestId === roster.Id ? ' is-dragging' : ''}`}
-                draggable
-                onDragStart={(event) => onDragStartGuest(event, roster.Id, 'pane')}
-                onDragEnd={onDragEnd}
-              >
-                <span className="seatplan-attendee-name">{fullName(roster)}</span>
-                <span className="seatplan-attendee-side">{roster.Side}</span>
-              </li>
-            ))}
-            {unseated.length === 0 ? (
-              <li className="seatplan-attendee is-empty">Everyone is seated.</li>
-            ) : null}
-          </ul>
+          {renderUnseatedGroup({
+            title: 'Attendees',
+            guests: unseatedAttending,
+            open: attendingOpen,
+            onToggle: () => setAttendingOpen((open) => !open),
+            emptyLabel: 'Everyone is seated.',
+            notAttending: false,
+          })}
+          {renderUnseatedGroup({
+            title: 'Not attending',
+            guests: unseatedNonAttending,
+            open: nonAttendingOpen,
+            onToggle: () => setNonAttendingOpen((open) => !open),
+            emptyLabel: 'No one marked not attending.',
+            notAttending: true,
+          })}
         </aside>
       </div>
     </main>
