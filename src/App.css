@@ -1583,6 +1583,117 @@ a.hero-nav-pill:hover {
   }
 }
 
+/* Read-only seating plan ---------------------------------------------------- */
+.seating-intro {
+  margin: 0 0 18px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.92rem;
+}
+
+.seating-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.seating-table {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.seating-table-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-3);
+}
+
+.seating-table-head h3 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--heading);
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+
+.seating-table-count {
+  min-width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.seating-seats {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.seating-seat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  background: var(--surface);
+}
+
+.seating-seat-num {
+  min-width: 18px;
+  color: var(--action-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.seating-seat-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+/* Guests who haven't confirmed yet — dimmed with a warm amber accent, matching
+   the coordinator seat plan. */
+.seating-seat.is-not-attending {
+  background: rgba(120, 82, 30, 0.22);
+  box-shadow: inset 3px 0 0 #d9a441;
+}
+
+.seating-seat.is-not-attending .seating-seat-name {
+  color: #e6c98a;
+  text-decoration-color: rgba(217, 164, 65, 0.5);
+}
+
+@media (max-width: 860px) {
+  .seating-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .seating-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .faq details {
   border: 1px solid var(--line);
   border-radius: 10px;

@@ -5,6 +5,7 @@ import calendarDayImage from './assets/wedding/calendar/sept_20.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData, isAttending } from './data/siteData'
 import { entourage } from './data/entourageData'
+import { seatPlan } from './data/seatPlanData'
 import './App.css'
 
 const SAVE_DATE_VISIBLE_COUNT = 6
@@ -248,6 +249,7 @@ const HERO_NAV_LINKS = [
   { label: 'Dress Code', href: '#dress-code' },
   { label: 'Entourage', href: '#entourage' },
   { label: 'Guests', href: '#guests' },
+  { label: 'Seating', href: '#seating' },
   { label: 'Venue', href: '#venue' },
   { label: 'Directions', href: '#directions' },
   { label: 'Gallery', href: '#gallery' },
@@ -648,6 +650,8 @@ function App() {
     // render it blank instead.
     return name === ',' ? '' : name
   }
+  // Look up a roster by id, used by the read-only seat plan below.
+  const rosterById = new Map(siteData.rosters.map((attendee) => [attendee.Id, attendee]))
   // Entourage groups reference ordered id lists from entourageData.ts. Left/right
   // map to the two columns rendered per row.
   const entourageGroups = [
@@ -1023,6 +1027,40 @@ function App() {
               </p>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="panel seating" id="seating">
+        <h2>Seating Plan</h2>
+        <p className="seating-intro">
+          Find your table below. Our coordinators will also be happy to guide you to your seat on the day.
+        </p>
+        <div className="seating-grid">
+          {seatPlan.tables.map((table) => (
+            <article key={table.id} className="seating-table">
+              <div className="seating-table-head">
+                <h3>{table.name}</h3>
+                <span className="seating-table-count">{table.guestIds.length}</span>
+              </div>
+              <ol className="seating-seats">
+                {table.guestIds.map((id, index) => {
+                  const attendee = rosterById.get(id)
+                  const notAttending = attendee ? !isAttending(id) : false
+                  return (
+                    <li
+                      key={id}
+                      className={`seating-seat${notAttending ? ' is-not-attending' : ''}`}
+                    >
+                      <span className="seating-seat-num">{index + 1}</span>
+                      <span className="seating-seat-name">
+                        {attendee ? attendeeName(attendee) : id}
+                      </span>
+                    </li>
+                  )
+                })}
+              </ol>
+            </article>
+          ))}
         </div>
       </section>
 

@@ -276,8 +276,9 @@
   border-radius: 9px;
   background: var(--surface-2, #13263b);
   max-height: calc(100vh - 40px);
-  display: flex;
-  flex-direction: column;
+  /* The pane itself scrolls; the two groups flow naturally inside it and their
+     headers stick to the top while scrolling. */
+  overflow-y: auto;
 }
 
 .seatplan-attendees.is-drop-target {
@@ -291,6 +292,11 @@
   gap: 8px;
   padding: 12px 14px;
   border-bottom: 1px solid var(--line);
+  /* Keep each group's header visible while its list scrolls under it. */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--surface-2, #13263b);
 }
 
 /* The head doubles as a collapse toggle button. */
@@ -354,7 +360,6 @@
   list-style: none;
   margin: 0;
   padding: 8px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 4px;
