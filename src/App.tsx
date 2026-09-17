@@ -249,6 +249,7 @@ const HERO_NAV_LINKS = [
   { label: 'Dress Code', href: '#dress-code' },
   { label: 'Entourage', href: '#entourage' },
   { label: 'Guests', href: '#guests' },
+  { label: 'Companions', href: '#companions' },
   { label: 'Seating', href: '#seating' },
   { label: 'Venue', href: '#venue' },
   { label: 'Directions', href: '#directions' },
@@ -256,6 +257,45 @@ const HERO_NAV_LINKS = [
   { label: 'FAQ', href: '#faq' },
   { label: 'RSVP', href: '#rsvp' },
 ] as const
+
+// Desktop breakpoint for the seating grid (matches the 4-column layout in
+// App.css; below this it collapses to 2 columns).
+const SEATING_DESKTOP_QUERY = '(min-width: 861px)'
+
+// Track whether a CSS media query currently matches (SSR-safe default false).
+const useMediaQuery = (query: string) => {
+  const [matches, setMatches] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches,
+  )
+  useEffect(() => {
+    const mql = window.matchMedia(query)
+    const onChange = () => setMatches(mql.matches)
+    onChange()
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [query])
+  return matches
+}
+
+// Reorder tables so each row of 4 is centered on the aisle: within every group
+// of four (highest-priority pair first in the array), the two priority tables
+// sit in the middle columns and the next two on the outer columns.
+// [a, b, c, d] -> [c, a, b, d]. Partial trailing rows keep priority centered.
+const toAisleOrder = <T,>(tables: T[]): T[] => {
+  const result: T[] = []
+  for (let i = 0; i < tables.length; i += 4) {
+    const row = tables.slice(i, i + 4)
+    if (row.length === 4) {
+      result.push(row[2], row[0], row[1], row[3])
+    } else if (row.length === 3) {
+      result.push(row[2], row[0], row[1])
+    } else {
+      // 1 or 2 tables: already the center-most, keep as-is.
+      result.push(...row)
+    }
+  }
+  return result
+}
 
 function App() {
   const [countdown, setCountdown] = useState(() =>
@@ -652,6 +692,12 @@ function App() {
   }
   // Look up a roster by id, used by the read-only seat plan below.
   const rosterById = new Map(siteData.rosters.map((attendee) => [attendee.Id, attendee]))
+  // On desktop the seating grid represents the real hall: 4 columns with the
+  // aisle down the middle, so priority tables sit in the center. Below the
+  // desktop breakpoint (2 columns) the natural priority order is kept.
+  const isSeatingDesktop = useMediaQuery(SEATING_DESKTOP_QUERY)
+  const seatingTables = seatPlan.tables.filter((table) => table.guestIds.length > 0)
+  const orderedSeatingTables = isSeatingDesktop ? toAisleOrder(seatingTables) : seatingTables
   // Entourage groups reference ordered id lists from entourageData.ts. Left/right
   // map to the two columns rendered per row.
   const entourageGroups = [
@@ -1030,13 +1076,26 @@ function App() {
         </div>
       </section>
 
+      <section className="panel companions" id="companions">
+        <h2>Companions</h2>
+        <div className="guest-list-grid">
+          {siteData.rosters
+            .filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Companion')
+            .map((attendee) => (
+              <p key={attendee.Id} className="guest-list-name">
+                {attendeeName(attendee)}
+              </p>
+            ))}
+        </div>
+      </section>
+
       <section className="panel seating" id="seating">
         <h2>Seating Plan</h2>
         <p className="seating-intro">
           Find your table below. Our coordinators will also be happy to guide you to your seat on the day.
         </p>
         <div className="seating-grid">
-          {seatPlan.tables.map((table) => (
+          {orderedSeatingTables.map((table) => (
             <article key={table.id} className="seating-table">
               <div className="seating-table-head">
                 <h3>{table.name}</h3>

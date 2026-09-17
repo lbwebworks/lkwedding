@@ -287,6 +287,8 @@ a.hero-nav-pill:hover {
 .rsvp h2,
 .entourage h2,
 .guest-list h2,
+.companions h2,
+.seating h2,
 .contacts h2,
 .faq h2,
 .closing h2 {
@@ -319,6 +321,10 @@ a.hero-nav-pill:hover {
 .entourage h2::after,
 .guest-list h2::before,
 .guest-list h2::after,
+.companions h2::before,
+.companions h2::after,
+.seating h2::before,
+.seating h2::after,
 .contacts h2::before,
 .contacts h2::after,
 .faq h2::before,
@@ -1534,7 +1540,9 @@ a.hero-nav-pill:hover {
   mask-size: contain;
 }
 
-.guest-list h2 {
+.guest-list h2,
+.companions h2,
+.seating h2 {
   font-family: var(--font-modern);
 }
 
@@ -1574,12 +1582,6 @@ a.hero-nav-pill:hover {
 @media (max-width: 720px) {
   .guest-list-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .guest-list-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -1668,6 +1670,9 @@ a.hero-nav-pill:hover {
   min-width: 0;
   color: var(--text);
   font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Guests who haven't confirmed yet — dimmed with a warm amber accent, matching
@@ -1685,12 +1690,6 @@ a.hero-nav-pill:hover {
 @media (max-width: 860px) {
   .seating-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .seating-grid {
-    grid-template-columns: 1fr;
   }
 }
 
