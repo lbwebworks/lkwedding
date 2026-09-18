@@ -672,6 +672,11 @@ function App() {
   }
   // Look up a roster by id, used by the read-only seat plan below.
   const rosterById = new Map(siteData.rosters.map((attendee) => [attendee.Id, attendee]))
+  // Sort a roster list alphabetically by display name ("LastName, FirstName").
+  // Used for the flat guest/companion lists so they read A–Z regardless of the
+  // order stored in the data files.
+  const byName = (list: (typeof siteData.rosters)[number][]) =>
+    [...list].sort((a, b) => attendeeName(a).localeCompare(attendeeName(b)))
   // On desktop the seating grid represents the real hall: 4 columns with the
   // aisle down the middle, so priority tables sit in the center. Below the
   // desktop breakpoint (2 columns) the natural priority order is kept.
@@ -1038,7 +1043,7 @@ function App() {
         <div className="guest-list-group">
           <h2>Family and Relatives</h2>
           <div className="guest-list-grid">
-            {siteData.rosters.filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Relative').map((attendee) => (
+            {byName(siteData.rosters.filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Relative')).map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
               </p>
@@ -1049,9 +1054,11 @@ function App() {
         <div className="guest-list-group">
           <h2>Coworkers and Friends</h2>
           <div className="guest-list-grid">
-            {siteData.rosters
-              .filter((attendee) => isAttending(attendee.Id) && (attendee.Relationship === 'Coworker' || attendee.Relationship === 'Friend'))
-              .map((attendee) => (
+            {byName(
+              siteData.rosters.filter(
+                (attendee) => isAttending(attendee.Id) && (attendee.Relationship === 'Coworker' || attendee.Relationship === 'Friend'),
+              ),
+            ).map((attendee) => (
               <p key={attendee.Id} className="guest-list-name">
                 {attendeeName(attendee)}
               </p>
@@ -1063,13 +1070,13 @@ function App() {
       <section className="panel companions" id="companions">
         <h2>Companions</h2>
         <div className="guest-list-grid">
-          {siteData.rosters
-            .filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Companion')
-            .map((attendee) => (
-              <p key={attendee.Id} className="guest-list-name">
-                {attendeeName(attendee)}
-              </p>
-            ))}
+          {byName(
+            siteData.rosters.filter((attendee) => isAttending(attendee.Id) && attendee.Relationship === 'Companion'),
+          ).map((attendee) => (
+            <p key={attendee.Id} className="guest-list-name">
+              {attendeeName(attendee)}
+            </p>
+          ))}
         </div>
       </section>
 
