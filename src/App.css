@@ -1607,6 +1607,12 @@ a.hero-nav-pill:hover {
   overflow: hidden;
 }
 
+/* Empty tables keep their grid slot (so the aisle layout stays aligned) but
+   show nothing. */
+.seating-table-placeholder {
+  visibility: hidden;
+}
+
 .seating-table-head {
   display: flex;
   align-items: center;

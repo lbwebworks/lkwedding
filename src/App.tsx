@@ -5,7 +5,7 @@ import calendarDayImage from './assets/wedding/calendar/sept_20.png'
 import { weddingImageEntries, weddingImages } from './data/imageLibrary'
 import { siteData, isAttending } from './data/siteData'
 import { entourage } from './data/entourageData'
-import { seatPlan } from './data/seatPlanData'
+import { seatPlan, toAisleOrder } from './data/seatPlanData'
 import './App.css'
 
 const SAVE_DATE_VISIBLE_COUNT = 6
@@ -275,26 +275,6 @@ const useMediaQuery = (query: string) => {
     return () => mql.removeEventListener('change', onChange)
   }, [query])
   return matches
-}
-
-// Reorder tables so each row of 4 is centered on the aisle: within every group
-// of four (highest-priority pair first in the array), the two priority tables
-// sit in the middle columns and the next two on the outer columns.
-// [a, b, c, d] -> [c, a, b, d]. Partial trailing rows keep priority centered.
-const toAisleOrder = <T,>(tables: T[]): T[] => {
-  const result: T[] = []
-  for (let i = 0; i < tables.length; i += 4) {
-    const row = tables.slice(i, i + 4)
-    if (row.length === 4) {
-      result.push(row[2], row[0], row[1], row[3])
-    } else if (row.length === 3) {
-      result.push(row[2], row[0], row[1])
-    } else {
-      // 1 or 2 tables: already the center-most, keep as-is.
-      result.push(...row)
-    }
-  }
-  return result
 }
 
 function App() {
@@ -696,8 +676,12 @@ function App() {
   // aisle down the middle, so priority tables sit in the center. Below the
   // desktop breakpoint (2 columns) the natural priority order is kept.
   const isSeatingDesktop = useMediaQuery(SEATING_DESKTOP_QUERY)
-  const seatingTables = seatPlan.tables.filter((table) => table.guestIds.length > 0)
-  const orderedSeatingTables = isSeatingDesktop ? toAisleOrder(seatingTables) : seatingTables
+  // Keep empty tables in place so their grid slot (and the aisle-centered
+  // arrangement) is preserved — they render as a blank placeholder rather than
+  // collapsing and shifting the other tables.
+  const orderedSeatingTables = isSeatingDesktop
+    ? toAisleOrder(seatPlan.tables)
+    : seatPlan.tables
   // Entourage groups reference ordered id lists from entourageData.ts. Left/right
   // map to the two columns rendered per row.
   const entourageGroups = [
@@ -1095,31 +1079,37 @@ function App() {
           Find your table below. Our coordinators will also be happy to guide you to your seat on the day.
         </p>
         <div className="seating-grid">
-          {orderedSeatingTables.map((table) => (
-            <article key={table.id} className="seating-table">
-              <div className="seating-table-head">
-                <h3>{table.name}</h3>
-                <span className="seating-table-count">{table.guestIds.length}</span>
-              </div>
-              <ol className="seating-seats">
-                {table.guestIds.map((id, index) => {
-                  const attendee = rosterById.get(id)
-                  const notAttending = attendee ? !isAttending(id) : false
-                  return (
-                    <li
-                      key={id}
-                      className={`seating-seat${notAttending ? ' is-not-attending' : ''}`}
-                    >
-                      <span className="seating-seat-num">{index + 1}</span>
-                      <span className="seating-seat-name">
-                        {attendee ? attendeeName(attendee) : id}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ol>
-            </article>
-          ))}
+          {orderedSeatingTables.map((table) =>
+            table.guestIds.length === 0 ? (
+              // Empty table: keep its slot so the aisle arrangement stays aligned,
+              // but render nothing visible.
+              <div key={table.id} className="seating-table-placeholder" aria-hidden="true" />
+            ) : (
+              <article key={table.id} className="seating-table">
+                <div className="seating-table-head">
+                  <h3>{table.name}</h3>
+                  <span className="seating-table-count">{table.guestIds.length}</span>
+                </div>
+                <ol className="seating-seats">
+                  {table.guestIds.map((id, index) => {
+                    const attendee = rosterById.get(id)
+                    const notAttending = attendee ? !isAttending(id) : false
+                    return (
+                      <li
+                        key={id}
+                        className={`seating-seat${notAttending ? ' is-not-attending' : ''}`}
+                      >
+                        <span className="seating-seat-num">{index + 1}</span>
+                        <span className="seating-seat-name">
+                          {attendee ? attendeeName(attendee) : id}
+                        </span>
+                      </li>
+                    )
+                  })}
+                </ol>
+              </article>
+            ),
+          )}
         </div>
       </section>
 

@@ -13,6 +13,26 @@ export type SeatPlan = {
   tables: SeatTable[]
 }
 
+// Reorder tables so each row of 4 is centered on the aisle (which runs down the
+// middle of the hall): within every group of four — highest-priority pair first
+// in the array — the two priority tables sit in the middle columns and the next
+// two on the outer columns. [a, b, c, d] -> [c, a, b, d]. Trailing partial rows
+// keep priority centered. Only meaningful for a 4-column layout.
+export const toAisleOrder = <T>(tables: T[]): T[] => {
+  const result: T[] = []
+  for (let i = 0; i < tables.length; i += 4) {
+    const row = tables.slice(i, i + 4)
+    if (row.length === 4) {
+      result.push(row[2], row[0], row[1], row[3])
+    } else if (row.length === 3) {
+      result.push(row[2], row[0], row[1])
+    } else {
+      result.push(...row)
+    }
+  }
+  return result
+}
+
 // Default arrangement. Paste an exported seat plan here to update it.
 export const seatPlan: SeatPlan = {
   columns: 4,
@@ -32,6 +52,6 @@ export const seatPlan: SeatPlan = {
     { id: "table-1789296816997", name: "Table 11", guestIds: ["038", "107", "097", "126", "090", "120", "122", "123"] },
     { id: "table-1789296817429", name: "Table 12", guestIds: ["041", "106", "132", "134", "135", "136"] },
     { id: "table-1789296816813", name: "Table 13", guestIds: [] },
-    { id: "table-1789296817605", name: "Table 14", guestIds: ["089", "119", "118", "091", "124", "093", "086"] },
+    { id: "table-1789296817605", name: "Table 14", guestIds: ["089", "119", "118", "091", "124", "093", "152", "086"] },
   ],
 }

@@ -158,6 +158,7 @@ export const rosters: Roster[] = [
   { Id: "149", LastName: "Caringal", FirstName: "Mafe", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
   { Id: "150", LastName: "Lanuza", FirstName: "Mayeth", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
   { Id: "151", LastName: "Tutor", FirstName: "Celine", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
+  { Id: "152", LastName: "Fortes", FirstName: "Glaiza", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, CompanionOf: "093" },
 ]
 
 export const groups: {
@@ -179,7 +180,7 @@ export const groups: {
     "145", "146", "149", "150",
   ],
   extraPackage: [
-    "132", "134", "135", "136", "067", "064", "066", "068", "119", "126", "120",
+    "132", "134", "135", "136", "067", "064", "066", "068", "119", "126", "120", "152",
   ],
   special: [
     "058", "060", "061", "062", "113", "118", "122", "123", "124", "128", "129", "147",

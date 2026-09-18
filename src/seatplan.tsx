@@ -1,7 +1,7 @@
 import { StrictMode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { siteData, isAttending, type Roster } from './data/siteData'
-import { seatPlan as defaultSeatPlan, type SeatPlan, type SeatTable } from './data/seatPlanData'
+import { seatPlan as defaultSeatPlan, toAisleOrder, type SeatPlan, type SeatTable } from './data/seatPlanData'
 import './index.css'
 import './seatplan.css'
 
@@ -106,6 +106,10 @@ function SeatPlanPage() {
   const unseated = seatableRoster.filter((roster) => !seatedIds.has(roster.Id))
   const unseatedAttending = unseated.filter((roster) => isAttending(roster.Id))
   const unseatedNonAttending = unseated.filter((roster) => !isAttending(roster.Id))
+  // Display tables in the same aisle-centered arrangement as the main page when
+  // using the hall's 4-column layout. This is display-only; drag/drop handlers
+  // still work by table id, so editing is unaffected.
+  const displayTables = plan.columns === 4 ? toAisleOrder(plan.tables) : plan.tables
 
   const setColumns = (value: number) => {
     savePlan({ ...plan, columns: clampColumns(value) })
@@ -328,7 +332,7 @@ function SeatPlanPage() {
               className="seatplan-grid"
               style={{ gridTemplateColumns: `repeat(${plan.columns}, minmax(0, 1fr))` }}
             >
-              {plan.tables.map((table) => (
+              {displayTables.map((table) => (
                 <article
                   key={table.id}
                   className={`seatplan-table${dropTableId === table.id ? ' is-drop-target' : ''}`}
