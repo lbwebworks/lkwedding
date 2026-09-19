@@ -157,7 +157,7 @@ export const rosters: Roster[] = [
   { Id: "143", LastName: "Nolasco", FirstName: "Arjay", Relationship: "Coworker", Side: "Groom", IsChurchPriority: false, CompanionOf: null },
   { Id: "149", LastName: "Caringal", FirstName: "Mafe", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
   { Id: "150", LastName: "Lanuza", FirstName: "Mayeth", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
-  { Id: "151", LastName: "Tutor", FirstName: "Celine", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
+  { Id: "151", LastName: "Ricardo", FirstName: "Daisy", Relationship: "Friend", Side: "Bride", IsChurchPriority: false, CompanionOf: null },
   { Id: "152", LastName: "Fortes", FirstName: "Glaiza", Relationship: "Companion", Side: "Groom", IsChurchPriority: false, CompanionOf: "093" },
 ]
 
